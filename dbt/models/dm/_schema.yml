@@ -3,7 +3,7 @@ version: 2
 models:
   - name: dim_drivers
     columns:
-      - name: driver_id
+      - name: id
         tests:
           - unique
           - not_null

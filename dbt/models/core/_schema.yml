@@ -3,13 +3,13 @@ version: 2
 models:
   - name: drivers
     columns:
-      - name: driver_id
+      - name: id
         tests:
           - unique
           - not_null
   - name: circuits
     columns:
-      - name: circuit_id
+      - name: id
         tests:
           - unique
           - not_null

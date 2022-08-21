@@ -1,12 +1,12 @@
 {{
     config(
         materialized = 'incremental',
-        unique_key='circuit_id'
+        unique_key='id'
     )
 }}
 
-WITH circuits AS (
-    SELECT circuitId AS circuit_id
+WITH stage AS (
+    SELECT circuitId AS id
       , circuitName AS name
       , Location AS location
       , url AS url
@@ -18,9 +18,5 @@ WITH circuits AS (
     {%- endif %}
 
 )
-SELECT circuit_id
-    , name
-    , location
-    , url
-    , load_dts
-FROM circuits
+SELECT *
+FROM stage

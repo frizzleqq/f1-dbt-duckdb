@@ -1,12 +1,12 @@
 {{
     config(
         materialized = 'incremental',
-        unique_key='driver_id'
+        unique_key='id'
     )
 }}
 
-WITH drivers AS (
-    SELECT driverId AS driver_id
+WITH stage AS (
+    SELECT driverId AS id
         , familyName AS second_name
         , givenName AS first_name
         , code AS code
@@ -22,13 +22,5 @@ WITH drivers AS (
     {%- endif %}
 
 )
-SELECT driver_id
-    , second_name
-    , first_name
-    , code
-    , permanent_number
-    , date_of_birth
-    , nationality
-    , url
-    , load_dts
-FROM drivers
+SELECT *
+FROM stage
