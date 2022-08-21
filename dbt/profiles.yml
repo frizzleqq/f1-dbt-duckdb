@@ -1,0 +1,8 @@
+f1warehouse_duckdb:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: './../data/f1.duckdb'
+      threads: 1
+      schema: public

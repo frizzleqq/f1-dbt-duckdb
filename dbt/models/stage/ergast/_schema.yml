@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: ergast_drivers
+    columns:
+      - name: driverId
+        tests:
+          - unique
+          - not_null
+  - name: ergast_circuits
+    columns:
+      - name: circuitId
+        tests:
+          - unique
+          - not_null
