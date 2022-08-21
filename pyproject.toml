@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "f1warehouse"
+name = "f1-dbt-duckdb"
 version = "0.1.0"
 description = "Some experimenting with dbt/DuckDB using Ergast API as main source."
 authors = ["frizzleqq"]
