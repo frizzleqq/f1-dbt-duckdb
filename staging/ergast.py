@@ -5,12 +5,19 @@ import requests
 from requests.adapters import HTTPAdapter, Retry
 
 """
-from ergast import Ergast
+import ergast
 
-list(Ergast.read_table("drivers"))
-list(Ergast.read_table("drivers", year=2017, race=5))
-list(Ergast.read_table_last_race("drivers", year=2020))
-list(Ergast.read_table_last_race("drivers"))
+# Dataframe of last race
+list(ergast.read_table("drivers"))
+# Dataframe full history
+list(ergast.read_table("drivers", read_full=True))
+
+# JSON (API) full history
+list(ergast.Ergast.read_table("drivers")
+# JSON (API) specific event/year
+list(ergast.Ergast.read_table("drivers", year=2017, race=5))
+list(ergast.Ergast.read_table_current_year("drivers"))
+list(ergast.Ergast.read_table_last_race("drivers"))
 """
 
 str_or_int = Union[str, int]
