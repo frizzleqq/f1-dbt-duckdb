@@ -10,7 +10,7 @@ poetry install
 
 ## Staging:
 ```
-python .\staging\staging.py
+python ./staging/staging.py
 ```
 
 Staging is done by
@@ -22,3 +22,5 @@ Staging is done by
 ```
 dbt run --project-dir="./dbt" --profiles-dir="./dbt"
 ```
+
+Note that currently the database is assumed to be in the project-directory under '_data/f1.duckdb_'.
