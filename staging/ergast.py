@@ -1,4 +1,5 @@
-from typing import Iterator, Union
+from dataclasses import dataclass
+from typing import Iterator, Union, Tuple
 
 import pandas as pd
 import requests
@@ -7,10 +8,10 @@ from requests.adapters import HTTPAdapter, Retry
 """
 import ergast
 
-# Dataframe of last race
-list(ergast.read_table("drivers"))
-# Dataframe full history
-list(ergast.read_table("drivers", read_full=True))
+# Dataframe
+list(ergast_table.get_dataframe())
+# Dataframe (always full history)
+list(ergast_table.get_dataframe(read_full=True))
 
 # JSON (API) full history
 list(ergast.Ergast.read_table("drivers")
@@ -23,30 +24,97 @@ list(ergast.Ergast.read_table_last_race("drivers"))
 str_or_int = Union[str, int]
 
 
-table_column_types = {
-    "drivers": {
-        "driverId": str,
-        "url": str,
-        "givenName": str,
-        "familyName": str,
-        "dateOfBirth": "datetime64[ns]",
-        "nationality": str,
-        "permanentNumber": "Int16",
-        "code": str,
-    },
-    "circuits": {"circuitId": str, "url": str, "circuitName": str, "Location": str},
-}
+@dataclass
+class Table:
+    schema_name: str
+    table_name: str
+    response_path: Tuple
+    column_mapping: dict = None
+    read_full: bool = False
+
+    def get_dataframe(self, read_full: bool = None) -> pd.DataFrame:
+        if read_full is None:
+            read_full = self.read_full
+        if read_full:
+            df = pd.DataFrame(
+                list(ErgastAPI.read_table(self.table_name, self.response_path))
+            )
+        else:
+            df = pd.DataFrame(
+                list(
+                    ErgastAPI.read_table_last_race(self.table_name, self.response_path)
+                )
+            )
+        if self.column_mapping:
+            df = df.astype(self.column_mapping)
+        return df
 
 
-def read_table(table_name: str, read_full: bool = False) -> pd.DataFrame:
-    if read_full:
-        df = pd.DataFrame(list(ErgastAPI.read_table(table_name)))
-    else:
-        df = pd.DataFrame(list(ErgastAPI.read_table_last_race(table_name)))
-    mapping = table_column_types.get(table_name, None)
-    if mapping:
-        df = df.astype(mapping)
-    return df
+TABLES = [
+    Table(
+        schema_name="stage_ergast",
+        table_name="drivers",
+        read_full=True,
+        response_path=("DriverTable", "Drivers"),
+        column_mapping={
+            "driverId": str,
+            "url": str,
+            "givenName": str,
+            "familyName": str,
+            "dateOfBirth": "datetime64[ns]",
+            "nationality": str,
+            "permanentNumber": "Int16",
+            "code": str,
+        },
+    ),
+    Table(
+        schema_name="stage_ergast",
+        table_name="circuits",
+        read_full=True,
+        response_path=("CircuitTable", "Circuits"),
+        column_mapping={
+            "circuitId": str,
+            "url": str,
+            "circuitName": str,
+            "Location": str,
+        },
+    ),
+    Table(
+        schema_name="stage_ergast",
+        table_name="seasons",
+        read_full=True,
+        response_path=("SeasonTable", "Seasons"),
+        # column_mapping={"circuitId": str, "url": str, "circuitName": str, "Location": str},
+    ),
+    Table(
+        schema_name="stage_ergast",
+        table_name="constructors",
+        read_full=True,
+        response_path=("ConstructorTable", "Constructors"),
+        # column_mapping={"circuitId": str, "url": str, "circuitName": str, "Location": str},
+    ),
+    Table(
+        schema_name="stage_ergast",
+        table_name="qualifying",
+        read_full=False,
+        response_path=("RaceTable", "Races"),
+        # column_mapping={"circuitId": str, "url": str, "circuitName": str, "Location": str},
+    ),
+    Table(
+        schema_name="stage_ergast",
+        table_name="results",
+        read_full=False,
+        response_path=("RaceTable", "Races"),
+        # column_mapping={"circuitId": str, "url": str, "circuitName": str, "Location": str},
+    ),
+    Table(
+        schema_name="stage_ergast",
+        table_name="laps",
+        read_full=False,
+        response_path=("RaceTable", "Races"),
+        # column_mapping={"circuitId": str, "url": str, "circuitName": str, "Location": str},
+    ),
+]
 
 
 class ErgastAPI:
@@ -90,17 +158,16 @@ class ErgastAPI:
             offset = offset + ErgastAPI.paging
 
     @staticmethod
-    def _extract_table_from_response(response: dict, table: str):
-        tables_mapping = {
-            "drivers": ("DriverTable", "Drivers"),
-            "circuits": ("CircuitTable", "Circuits"),
-        }
-        table_key, list_key = tables_mapping[table]
+    def _extract_table_from_response(response: dict, response_path: Tuple) -> list:
+        table_key, list_key = response_path
         return response["MRData"][table_key][list_key]
 
     @staticmethod
     def read_table(
-        table: str, year: str_or_int = None, race: str_or_int = None
+        table: str,
+        response_path: Tuple = None,
+        year: str_or_int = None,
+        race: str_or_int = None,
     ) -> Iterator[dict]:
         if year is None and race is not None:
             raise ValueError("Cannot get race without specifying year.")
@@ -111,15 +178,24 @@ class ErgastAPI:
         url = ErgastAPI._build_url(table, year=year, race=race)
 
         for response in ErgastAPI._response_paging(url):
-            for row in ErgastAPI._extract_table_from_response(response, table):
-                yield row
+            if response_path is None:
+                yield response
+            else:
+                for row in ErgastAPI._extract_table_from_response(
+                    response, response_path
+                ):
+                    yield row
 
     @staticmethod
-    def read_table_current_year(table: str) -> Iterator[dict]:
-        for row in ErgastAPI.read_table(table, year="current"):
+    def read_table_current_year(
+        table: str, response_path: Tuple = None
+    ) -> Iterator[dict]:
+        for row in ErgastAPI.read_table(table, response_path, year="current"):
             yield row
 
     @staticmethod
-    def read_table_last_race(table: str) -> Iterator[dict]:
-        for row in ErgastAPI.read_table(table, year="current", race="last"):
+    def read_table_last_race(table: str, response_path: Tuple = None) -> Iterator[dict]:
+        for row in ErgastAPI.read_table(
+            table, response_path, year="current", race="last"
+        ):
             yield row

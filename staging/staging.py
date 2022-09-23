@@ -38,11 +38,12 @@ def print_schema(connection: duckdb.DuckDBPyConnection, schema_name: str) -> Non
     with cursor_duckdb(connection) as cursor:
         for row in cursor.execute(
             f"""
-            SELECT t.table_schema, t.table_name, t.table_type, c.column_name, c.data_type
+            SELECT t.table_schema, t.table_name, t.table_type, c.ordinal_position, c.column_name, c.data_type
             FROM information_schema.tables as t
             INNER JOIN information_schema.columns as c on c.table_schema = t.table_schema
                 and c.table_name = t.table_name
             WHERE t.table_schema = '{schema_name}'
+            ORDER BY t.table_schema, t.table_name, c.ordinal_position
         """
         ).fetchall():
             print(row)
@@ -87,18 +88,13 @@ def main() -> None:
     DB_DIR.mkdir(exist_ok=True)
     conn = duckdb.connect(database=str(DB_PATH), read_only=False)
 
-    stage_table_from_dataframe(
-        connection=conn,
-        schema_name="stage_ergast",
-        table_name="drivers",
-        df=ergast.read_table("drivers", read_full=True),
-    )
-    stage_table_from_dataframe(
-        connection=conn,
-        schema_name="stage_ergast",
-        table_name="circuits",
-        df=ergast.read_table("circuits", read_full=True),
-    )
+    for table in ergast.TABLES:
+        stage_table_from_dataframe(
+            connection=conn,
+            schema_name=table.schema_name,
+            table_name=table.table_name,
+            df=table.get_dataframe(read_full=None),
+        )
 
     print_schema(conn, "stage_ergast")
     print_schema(conn, "dm")
