@@ -29,22 +29,29 @@ class Table:
     schema_name: str
     table_name: str
     response_path: Tuple
+    record_path: str = None
+    record_meta: list = None
     column_mapping: dict = None
     read_full: bool = False
+
+    def _extract_table_from_response(self, response) -> Iterator[dict]:
+        table_key, list_key = self.response_path
+        return (row for row in response["MRData"][table_key][list_key])
 
     def get_dataframe(self, read_full: bool = None) -> pd.DataFrame:
         if read_full is None:
             read_full = self.read_full
         if read_full:
-            df = pd.DataFrame(
-                list(ErgastAPI.read_table(self.table_name, self.response_path))
-            )
+            response_generator = ErgastAPI.read_table(self.table_name)
         else:
-            df = pd.DataFrame(
-                list(
-                    ErgastAPI.read_table_last_race(self.table_name, self.response_path)
-                )
-            )
+            response_generator = ErgastAPI.read_table_last_race(self.table_name)
+        rows = []
+        for response in response_generator:
+            for row in self._extract_table_from_response(response):
+                rows.append(row)
+        df = pd.json_normalize(
+            rows, record_path=self.record_path, meta=self.record_meta, sep="_"
+        )
         if self.column_mapping:
             df = df.astype(self.column_mapping)
         return df
@@ -76,7 +83,10 @@ TABLES = [
             "circuitId": str,
             "url": str,
             "circuitName": str,
-            "Location": str,
+            "Location_country": str,
+            "Location_locality": str,
+            "Location_lat": float,
+            "Location_long": float,
         },
     ),
     Table(
@@ -98,6 +108,16 @@ TABLES = [
         table_name="qualifying",
         read_full=False,
         response_path=("RaceTable", "Races"),
+        record_path="QualifyingResults",
+        record_meta=[
+            "season",
+            "round",
+            "date",
+            "time",
+            "raceName",
+            "url",
+            ["Circuit", "circuitId"],
+        ]
         # column_mapping={"circuitId": str, "url": str, "circuitName": str, "Location": str},
     ),
     Table(
@@ -158,14 +178,8 @@ class ErgastAPI:
             offset = offset + ErgastAPI.paging
 
     @staticmethod
-    def _extract_table_from_response(response: dict, response_path: Tuple) -> list:
-        table_key, list_key = response_path
-        return response["MRData"][table_key][list_key]
-
-    @staticmethod
     def read_table(
         table: str,
-        response_path: Tuple = None,
         year: str_or_int = None,
         race: str_or_int = None,
     ) -> Iterator[dict]:
@@ -178,24 +192,14 @@ class ErgastAPI:
         url = ErgastAPI._build_url(table, year=year, race=race)
 
         for response in ErgastAPI._response_paging(url):
-            if response_path is None:
-                yield response
-            else:
-                for row in ErgastAPI._extract_table_from_response(
-                    response, response_path
-                ):
-                    yield row
+            yield response
 
     @staticmethod
-    def read_table_current_year(
-        table: str, response_path: Tuple = None
-    ) -> Iterator[dict]:
-        for row in ErgastAPI.read_table(table, response_path, year="current"):
+    def read_table_current_year(table: str) -> Iterator[dict]:
+        for row in ErgastAPI.read_table(table, year="current"):
             yield row
 
     @staticmethod
-    def read_table_last_race(table: str, response_path: Tuple = None) -> Iterator[dict]:
-        for row in ErgastAPI.read_table(
-            table, response_path, year="current", race="last"
-        ):
+    def read_table_last_race(table: str) -> Iterator[dict]:
+        for row in ErgastAPI.read_table(table, year="current", race="last"):
             yield row
