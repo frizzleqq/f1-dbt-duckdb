@@ -1,4 +1,5 @@
-from typing import Iterator, Union
+from dataclasses import dataclass
+from typing import Iterator, Union, Tuple
 
 import pandas as pd
 import requests
@@ -7,10 +8,10 @@ from requests.adapters import HTTPAdapter, Retry
 """
 import ergast
 
-# Dataframe of last race
-list(ergast.read_table("drivers"))
-# Dataframe full history
-list(ergast.read_table("drivers", read_full=True))
+# Dataframe
+list(ergast_table.get_dataframe())
+# Dataframe (always full history)
+list(ergast_table.get_dataframe(read_full=True))
 
 # JSON (API) full history
 list(ergast.Ergast.read_table("drivers")
@@ -21,32 +22,166 @@ list(ergast.Ergast.read_table_last_race("drivers"))
 """
 
 str_or_int = Union[str, int]
+str_or_list = Union[str, list]
 
 
-table_column_types = {
-    "drivers": {
-        "driverId": str,
-        "url": str,
-        "givenName": str,
-        "familyName": str,
-        "dateOfBirth": "datetime64[ns]",
-        "nationality": str,
-        "permanentNumber": "Int16",
-        "code": str,
-    },
-    "circuits": {"circuitId": str, "url": str, "circuitName": str, "Location": str},
-}
+@dataclass
+class Table:
+    schema_name: str
+    table_name: str
+    response_path: Tuple
+    record_path: str_or_list = None
+    record_meta: list = None
+    column_mapping: dict = None
+    read_full: bool = False
+
+    def _extract_table_from_response(self, response) -> Iterator[dict]:
+        table_key, list_key = self.response_path
+        return (row for row in response["MRData"][table_key][list_key])
+
+    def get_dataframe(self, read_full: bool = None) -> pd.DataFrame:
+        if read_full is None:
+            read_full = self.read_full
+        if read_full:
+            response_generator = ErgastAPI.read_table(self.table_name)
+        else:
+            response_generator = ErgastAPI.read_table_last_race(self.table_name)
+        rows = []
+        for response in response_generator:
+            for row in self._extract_table_from_response(response):
+                rows.append(row)
+        df = pd.json_normalize(
+            rows, record_path=self.record_path, meta=self.record_meta, sep="_"
+        )
+        if self.column_mapping:
+            df = df.astype(self.column_mapping)
+        return df
 
 
-def read_table(table_name: str, read_full: bool = False) -> pd.DataFrame:
-    if read_full:
-        df = pd.DataFrame(list(ErgastAPI.read_table(table_name)))
-    else:
-        df = pd.DataFrame(list(ErgastAPI.read_table_last_race(table_name)))
-    mapping = table_column_types.get(table_name, None)
-    if mapping:
-        df = df.astype(mapping)
-    return df
+TABLES = [
+    Table(
+        schema_name="stage_ergast",
+        table_name="drivers",
+        read_full=True,
+        response_path=("DriverTable", "Drivers"),
+        column_mapping={
+            "dateOfBirth": "datetime64[ns]",
+            "permanentNumber": "Int16",
+        },
+    ),
+    Table(
+        schema_name="stage_ergast",
+        table_name="circuits",
+        read_full=True,
+        response_path=("CircuitTable", "Circuits"),
+        column_mapping={
+            "Location_lat": float,
+            "Location_long": float,
+        },
+    ),
+    Table(
+        schema_name="stage_ergast",
+        table_name="seasons",
+        read_full=True,
+        response_path=("SeasonTable", "Seasons"),
+        column_mapping={"season": "Int16"},
+    ),
+    Table(
+        schema_name="stage_ergast",
+        table_name="constructors",
+        read_full=True,
+        response_path=("ConstructorTable", "Constructors"),
+    ),
+    Table(
+        schema_name="stage_ergast",
+        table_name="races",
+        read_full=True,
+        response_path=("RaceTable", "Races"),
+        column_mapping={
+            "season": "Int16",
+            "round": "Int16",
+            "date": "datetime64[ns]",
+            "FirstPractice_date": "datetime64[ns]",
+            "SecondPractice_date": "datetime64[ns]",
+            "ThirdPractice_date": "datetime64[ns]",
+            "Qualifying_date": "datetime64[ns]",
+            "Sprint_date": "datetime64[ns]",
+        },
+    ),
+    Table(
+        schema_name="stage_ergast",
+        table_name="qualifying",
+        read_full=False,
+        response_path=("RaceTable", "Races"),
+        record_path="QualifyingResults",
+        record_meta=[
+            "season",
+            "round",
+            "date",
+            "time",
+            "raceName",
+            "url",
+            ["Circuit", "circuitId"],
+        ],
+        column_mapping={
+            "number": "Int16",
+            "position": "Int16",
+            "season": "Int16",
+            "round": "Int16",
+            "date": "datetime64[ns]",
+        },
+    ),
+    Table(
+        schema_name="stage_ergast",
+        table_name="results",
+        read_full=False,
+        response_path=("RaceTable", "Races"),
+        record_path="Results",
+        record_meta=[
+            "season",
+            "round",
+            "url",
+            "raceName",
+            "date",
+            "time",
+            ["Circuit", "circuitId"],
+        ],
+        column_mapping={
+            "number": "Int16",
+            "position": "Int16",
+            "points": float,
+            "grid": "Int16",
+            "laps": "Int16",
+            "Time_millis": "Int16",
+            "FastestLap_rank": "Int16",
+            "FastestLap_lap": "Int16",
+            "FastestLap_AverageSpeed_speed": float,
+            "season": "Int16",
+            "round": "Int16",
+            "date": "datetime64[ns]",
+        },
+    ),
+    Table(
+        schema_name="stage_ergast",
+        table_name="laps",
+        read_full=False,
+        response_path=("RaceTable", "Races"),
+        record_path=["Laps", "Timings"],
+        record_meta=[
+            "season",
+            "round",
+            "url",
+            "raceName",
+            "date",
+        ],
+        column_mapping={
+            "position": "Int16",
+            "season": "Int16",
+            "round": "Int16",
+            "date": "datetime64[ns]",
+        },
+    ),
+]
 
 
 class ErgastAPI:
@@ -90,17 +225,10 @@ class ErgastAPI:
             offset = offset + ErgastAPI.paging
 
     @staticmethod
-    def _extract_table_from_response(response: dict, table: str):
-        tables_mapping = {
-            "drivers": ("DriverTable", "Drivers"),
-            "circuits": ("CircuitTable", "Circuits"),
-        }
-        table_key, list_key = tables_mapping[table]
-        return response["MRData"][table_key][list_key]
-
-    @staticmethod
     def read_table(
-        table: str, year: str_or_int = None, race: str_or_int = None
+        table: str,
+        year: str_or_int = None,
+        race: str_or_int = None,
     ) -> Iterator[dict]:
         if year is None and race is not None:
             raise ValueError("Cannot get race without specifying year.")
@@ -111,8 +239,7 @@ class ErgastAPI:
         url = ErgastAPI._build_url(table, year=year, race=race)
 
         for response in ErgastAPI._response_paging(url):
-            for row in ErgastAPI._extract_table_from_response(response, table):
-                yield row
+            yield response
 
     @staticmethod
     def read_table_current_year(table: str) -> Iterator[dict]:

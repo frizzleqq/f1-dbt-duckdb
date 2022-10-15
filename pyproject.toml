@@ -5,15 +5,16 @@ description = "Some experimenting with dbt/DuckDB using Ergast API as main sourc
 authors = ["frizzleqq"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 requests = "^2.28.1"
-duckdb = "^0.4.0"
-pandas = "^1.4.3"
-dbt-duckdb = "^1.1.4"
+duckdb = "^0.5.0"
+pandas = "^1.5.0"
+dbt-duckdb = "^1.2.2"
 
-[tool.poetry.dev-dependencies]
-black = "^22.6.0"
+[tool.poetry.group.dev.dependencies]
+black = "^22.10.0"
+isort = "^5.10.1"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.2.0"]
 build-backend = "poetry.core.masonry.api"

@@ -1,8 +1,12 @@
 {{ config(materialized = 'view') }}
 
-WITH source AS (
-    SELECT *
-    FROM {{ source('ergast', 'drivers') }}
-)
-SELECT *
-FROM source
+SELECT driverId
+    , url
+    , givenName
+    , familyName
+    , dateOfBirth
+    , nationality
+    , permanentNumber
+    , code
+    , load_dts
+FROM {{ source('ergast', 'drivers') }}

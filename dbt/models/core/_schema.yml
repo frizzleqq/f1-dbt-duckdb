@@ -13,3 +13,21 @@ models:
         tests:
           - unique
           - not_null
+  - name: constructors
+    columns:
+      - name: id
+        tests:
+          - unique
+          - not_null
+  - name: seasons
+    columns:
+      - name: id
+        tests:
+          - unique
+          - not_null
+  - name: races
+    columns:
+      - name: id
+        tests:
+          - unique
+          - not_null

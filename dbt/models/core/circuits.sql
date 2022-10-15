@@ -8,8 +8,11 @@
 WITH stage AS (
     SELECT circuitId AS id
       , circuitName AS name
-      , Location AS location
+      , location_country AS country
+      , location_locality AS locality
       , url AS url
+      , location_lat AS latitude
+      , location_long AS longitude
       , load_dts
     FROM {{ ref('ergast_circuits') }}
 
