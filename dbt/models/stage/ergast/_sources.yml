@@ -8,3 +8,6 @@ sources:
     tables:
       - name: drivers
       - name: circuits
+      - name: constructors
+      - name: seasons
+      - name: races

@@ -22,6 +22,7 @@ list(ergast.Ergast.read_table_last_race("drivers"))
 """
 
 str_or_int = Union[str, int]
+str_or_list = Union[str, list]
 
 
 @dataclass
@@ -29,7 +30,7 @@ class Table:
     schema_name: str
     table_name: str
     response_path: Tuple
-    record_path: str = None
+    record_path: str_or_list = None
     record_meta: list = None
     column_mapping: dict = None
     read_full: bool = False
@@ -64,14 +65,8 @@ TABLES = [
         read_full=True,
         response_path=("DriverTable", "Drivers"),
         column_mapping={
-            "driverId": str,
-            "url": str,
-            "givenName": str,
-            "familyName": str,
             "dateOfBirth": "datetime64[ns]",
-            "nationality": str,
             "permanentNumber": "Int16",
-            "code": str,
         },
     ),
     Table(
@@ -80,11 +75,6 @@ TABLES = [
         read_full=True,
         response_path=("CircuitTable", "Circuits"),
         column_mapping={
-            "circuitId": str,
-            "url": str,
-            "circuitName": str,
-            "Location_country": str,
-            "Location_locality": str,
             "Location_lat": float,
             "Location_long": float,
         },
@@ -94,14 +84,29 @@ TABLES = [
         table_name="seasons",
         read_full=True,
         response_path=("SeasonTable", "Seasons"),
-        # column_mapping={"circuitId": str, "url": str, "circuitName": str, "Location": str},
+        column_mapping={"season": "Int16"},
     ),
     Table(
         schema_name="stage_ergast",
         table_name="constructors",
         read_full=True,
         response_path=("ConstructorTable", "Constructors"),
-        # column_mapping={"circuitId": str, "url": str, "circuitName": str, "Location": str},
+    ),
+    Table(
+        schema_name="stage_ergast",
+        table_name="races",
+        read_full=True,
+        response_path=("RaceTable", "Races"),
+        column_mapping={
+            "season": "Int16",
+            "round": "Int16",
+            "date": "datetime64[ns]",
+            "FirstPractice_date": "datetime64[ns]",
+            "SecondPractice_date": "datetime64[ns]",
+            "ThirdPractice_date": "datetime64[ns]",
+            "Qualifying_date": "datetime64[ns]",
+            "Sprint_date": "datetime64[ns]",
+        },
     ),
     Table(
         schema_name="stage_ergast",
@@ -117,22 +122,64 @@ TABLES = [
             "raceName",
             "url",
             ["Circuit", "circuitId"],
-        ]
-        # column_mapping={"circuitId": str, "url": str, "circuitName": str, "Location": str},
+        ],
+        column_mapping={
+            "number": "Int16",
+            "position": "Int16",
+            "season": "Int16",
+            "round": "Int16",
+            "date": "datetime64[ns]",
+        },
     ),
     Table(
         schema_name="stage_ergast",
         table_name="results",
         read_full=False,
         response_path=("RaceTable", "Races"),
-        # column_mapping={"circuitId": str, "url": str, "circuitName": str, "Location": str},
+        record_path="Results",
+        record_meta=[
+            "season",
+            "round",
+            "url",
+            "raceName",
+            "date",
+            "time",
+            ["Circuit", "circuitId"],
+        ],
+        column_mapping={
+            "number": "Int16",
+            "position": "Int16",
+            "points": float,
+            "grid": "Int16",
+            "laps": "Int16",
+            "Time_millis": "Int16",
+            "FastestLap_rank": "Int16",
+            "FastestLap_lap": "Int16",
+            "FastestLap_AverageSpeed_speed": float,
+            "season": "Int16",
+            "round": "Int16",
+            "date": "datetime64[ns]",
+        },
     ),
     Table(
         schema_name="stage_ergast",
         table_name="laps",
         read_full=False,
         response_path=("RaceTable", "Races"),
-        # column_mapping={"circuitId": str, "url": str, "circuitName": str, "Location": str},
+        record_path=["Laps", "Timings"],
+        record_meta=[
+            "season",
+            "round",
+            "url",
+            "raceName",
+            "date",
+        ],
+        column_mapping={
+            "position": "Int16",
+            "season": "Int16",
+            "round": "Int16",
+            "date": "datetime64[ns]",
+        },
     ),
 ]
 

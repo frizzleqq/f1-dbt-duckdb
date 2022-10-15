@@ -4,5 +4,5 @@ f1warehouse_duckdb:
     dev:
       type: duckdb
       path: './../data/f1.duckdb'
-      threads: 1
+      threads: 2
       schema: public
