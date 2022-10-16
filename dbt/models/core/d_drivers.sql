@@ -1,7 +1,7 @@
 {{
     config(
         materialized = 'incremental',
-        unique_key='id'
+        unique_key = 'id'
     )
 }}
 
@@ -9,11 +9,12 @@ WITH stage AS (
     SELECT driverId AS id
         , familyName AS second_name
         , givenName AS first_name
+        , concat(givenName, ' ', familyName) as full_name
         , code AS code
         , permanentNumber AS permanent_number
         , CAST(dateOfBirth AS DATE) AS date_of_birth
         , nationality AS nationality
-        , url AS url
+        , url
         , load_dts
     FROM {{ ref('ergast_drivers') }}
 

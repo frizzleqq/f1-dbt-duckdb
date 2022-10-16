@@ -38,9 +38,6 @@ vars:
 models:
   f1warehouse:
       +materialized: table
-      dm:
-        +schema: dm
-        +materialized: table
       core:
         +schema: core
         +materialized: table

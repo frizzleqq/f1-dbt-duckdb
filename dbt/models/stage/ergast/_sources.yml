@@ -11,3 +11,5 @@ sources:
       - name: constructors
       - name: seasons
       - name: races
+      - name: laps
+      - name: results

@@ -37,3 +37,37 @@ models:
         tests:
           - unique
           - not_null
+  - name: laps
+    columns:
+      - name: season
+        tests:
+          - not_null
+      - name: round
+        tests:
+          - not_null
+      - name: driverId
+        tests:
+          - not_null
+      - name: Laps_number
+        tests:
+          - not_null
+  - name: results
+    columns:
+      - name: season
+        tests:
+          - not_null
+      - name: round
+        tests:
+          - not_null
+      - name: Driver_driverId
+        tests:
+          - not_null
+      - name: Circuit_circuitId
+        tests:
+          - not_null
+      - name: Constructor_constructorId
+        tests:
+          - not_null
+      - name: position
+        tests:
+          - not_null

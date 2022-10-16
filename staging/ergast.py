@@ -173,6 +173,7 @@ TABLES = [
             "url",
             "raceName",
             "date",
+            ["Laps", "number"],
         ],
         column_mapping={
             "position": "Int16",
