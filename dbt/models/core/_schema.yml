@@ -3,37 +3,37 @@ version: 2
 models:
   - name: d_drivers
     columns:
-      - name: id
+      - name: driver_id
         tests:
           - unique
           - not_null
   - name: d_circuits
     columns:
-      - name: id
+      - name: circuit_id
         tests:
           - unique
           - not_null
   - name: d_constructors
     columns:
-      - name: id
+      - name: constructor_id
         tests:
           - unique
           - not_null
   - name: d_seasons
     columns:
-      - name: id
+      - name: season_id
         tests:
           - unique
           - not_null
   - name: d_races
     columns:
-      - name: id
+      - name: race_id
         tests:
           - unique
           - not_null
   - name: f_laps
     columns:
-      - name: id
+      - name: lap_id
         tests:
           - unique
           - not_null
@@ -48,7 +48,7 @@ models:
           - not_null
   - name: f_results
     columns:
-      - name: id
+      - name: result_id
         tests:
           - unique
           - not_null

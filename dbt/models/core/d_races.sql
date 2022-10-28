@@ -1,20 +1,20 @@
 {{
     config(
         materialized = 'incremental',
-        unique_key = 'id'
+        unique_key = 'race_id'
     )
 }}
 
 WITH transformed AS (
     SELECT
-        concat(season, '-', round) AS id
-        , season
-        , round
-        , raceName AS name
-        , url
+        concat(season, '-', round) AS race_id
+        , season AS race_season
+        , round AS race_round
+        , raceName AS race_name
+        , url AS race_url
         , "date" AS race_date
         , "time" AS race_time
-        , Circuit_circuitId
+        , Circuit_circuitId AS circuit_id
         , FirstPractice_date AS free_practice_1_date
         , FirstPractice_time AS free_practice_1_time
         , SecondPractice_date AS free_practice_2_date

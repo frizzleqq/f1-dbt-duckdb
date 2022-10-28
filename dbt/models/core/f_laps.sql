@@ -1,7 +1,7 @@
 {{
     config(
         materialized = 'incremental',
-        unique_key = 'id'
+        unique_key = 'lap_id'
     )
 }}
 
@@ -21,6 +21,13 @@ WITH transformed AS (
 
 ),
 
+joined AS (
+    SELECT f.*
+        , d.circuit_id
+    FROM transformed AS f
+    LEFT JOIN {{ ref('d_races') }} AS d ON d.race_id = f.race_id
+),
+
 increment AS (
     SELECT {{
             dbt_utils.surrogate_key([
@@ -28,9 +35,16 @@ increment AS (
                 'driver_id',
                 'lap_number',
             ])
-        }} AS id
-        , *
-    FROM transformed
+        }} AS lap_id
+        , race_date
+        , circuit_id
+        , race_id
+        , driver_id
+        , lap_number
+        , lap_position
+        , lap_time
+        , load_dts
+    FROM joined
 )
 
 SELECT *

@@ -1,18 +1,18 @@
 {{
     config(
         materialized = 'incremental',
-        unique_key = 'id'
+        unique_key = 'circuit_id'
     )
 }}
 
 WITH transformed AS (
-    SELECT circuitId AS id
-      , circuitName AS name
-      , location_country AS country
-      , location_locality AS locality
-      , url AS url
-      , location_lat AS latitude
-      , location_long AS longitude
+    SELECT circuitId AS circuit_id
+      , circuitName AS circuit_name
+      , location_country AS circuit_country
+      , location_locality AS circuit_locality
+      , url AS circuit_url
+      , location_lat AS circuit_latitude
+      , location_long AS circuit_longitude
       , load_dts
     FROM {{ ref('ergast_circuits') }}
 

@@ -1,15 +1,15 @@
 {{
     config(
         materialized = 'incremental',
-        unique_key = 'id'
+        unique_key = 'constructor_id'
     )
 }}
 
 WITH transformed AS (
-    SELECT constructorId AS id
-        , name
-        , nationality
-        , url
+    SELECT constructorId AS constructor_id
+        , name AS constructor_name
+        , nationality AS constructor_nationality
+        , url AS constructor_url
         , load_dts
     FROM {{ ref('ergast_constructors') }}
 

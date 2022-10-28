@@ -1,7 +1,7 @@
 {{
     config(
         materialized = 'incremental',
-        unique_key = 'id'
+        unique_key = 'result_id'
     )
 }}
 
@@ -12,9 +12,9 @@ WITH transformed AS (
         , Driver_driverId AS driver_id
         , Constructor_constructorId AS constructor_id
         , position AS result_position
-        , positionText AS position_text
-        , points
-        , status
+        , positionText AS result_position_text
+        , points AS result_points
+        , status AS result_status
         , grid AS starting_position
         , laps AS laps_completed
         , Time_time AS result_time
@@ -40,7 +40,7 @@ increment AS (
                 'race_id',
                 'driver_id',
             ])
-        }} AS id
+        }} AS result_id
         , *
     FROM transformed
 )
