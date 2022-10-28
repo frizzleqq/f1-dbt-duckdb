@@ -5,7 +5,7 @@
     )
 }}
 
-WITH stage AS (
+WITH transformed AS (
     SELECT season AS id
         , url
         , load_dts
@@ -16,5 +16,6 @@ WITH stage AS (
     {%- endif %}
 
 )
+
 SELECT *
-FROM stage
+FROM transformed

@@ -5,7 +5,7 @@
     )
 }}
 
-WITH stage AS (
+WITH transformed AS (
     SELECT
         concat(season, '-', round) AS id
         , season
@@ -33,5 +33,6 @@ WITH stage AS (
     {%- endif %}
 
 )
+
 SELECT *
-FROM stage
+FROM transformed

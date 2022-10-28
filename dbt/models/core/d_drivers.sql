@@ -5,7 +5,7 @@
     )
 }}
 
-WITH stage AS (
+WITH transformed AS (
     SELECT driverId AS id
         , familyName AS second_name
         , givenName AS first_name
@@ -23,5 +23,6 @@ WITH stage AS (
     {%- endif %}
 
 )
+
 SELECT *
-FROM stage
+FROM transformed

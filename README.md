@@ -19,6 +19,13 @@ Staging is done by
 3. Create table in DuckDB via CTAS
 
 ## dbt:
+
+Install dbt_utils:
+```
+dbt deps --project-dir="./dbt" --profiles-dir="./dbt"
+```
+
+Run models:
 ```
 dbt run --project-dir="./dbt" --profiles-dir="./dbt"
 ```

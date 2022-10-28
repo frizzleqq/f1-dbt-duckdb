@@ -5,7 +5,7 @@
     )
 }}
 
-WITH stage AS (
+WITH transformed AS (
     SELECT constructorId AS id
         , name
         , nationality
@@ -18,5 +18,6 @@ WITH stage AS (
     {%- endif %}
 
 )
+
 SELECT *
-FROM stage
+FROM transformed

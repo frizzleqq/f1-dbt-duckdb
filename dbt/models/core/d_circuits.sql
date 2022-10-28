@@ -5,7 +5,7 @@
     )
 }}
 
-WITH stage AS (
+WITH transformed AS (
     SELECT circuitId AS id
       , circuitName AS name
       , location_country AS country
@@ -21,5 +21,6 @@ WITH stage AS (
     {%- endif %}
 
 )
+
 SELECT *
-FROM stage
+FROM transformed

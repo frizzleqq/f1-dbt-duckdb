@@ -33,6 +33,10 @@ models:
           - not_null
   - name: f_laps
     columns:
+      - name: id
+        tests:
+          - unique
+          - not_null
       - name: race_id
         tests:
           - not_null
@@ -44,6 +48,10 @@ models:
           - not_null
   - name: f_results
     columns:
+      - name: id
+        tests:
+          - unique
+          - not_null
       - name: race_id
         tests:
           - not_null

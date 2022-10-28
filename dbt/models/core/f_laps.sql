@@ -1,11 +1,11 @@
 {{
     config(
         materialized = 'incremental',
-        unique_key = ['race_id', 'driver_id', 'lap_number']
+        unique_key = 'id'
     )
 }}
 
-WITH stage AS (
+WITH transformed AS (
     SELECT CAST("date" AS DATE) AS race_date
         , concat(season, '-', round) AS race_id
         , driverId AS driver_id
@@ -19,6 +19,19 @@ WITH stage AS (
     WHERE load_dts >= (SELECT MAX(load_dts) FROM {{ this }})
     {%- endif %}
 
+),
+
+increment AS (
+    SELECT {{
+            dbt_utils.surrogate_key([
+                'race_id',
+                'driver_id',
+                'lap_number',
+            ])
+        }} AS id
+        , *
+    FROM transformed
 )
+
 SELECT *
-FROM stage
+FROM increment

@@ -1,7 +1,5 @@
 version: 2
 
-# this is currently unused
-
 sources:
   - name: ergast
     schema: stage_ergast
