@@ -1,5 +1,6 @@
 import contextlib
 import logging
+import os
 from pathlib import Path
 
 import duckdb
@@ -8,9 +9,13 @@ from pandas import DataFrame
 
 import ergast
 
-ROOT_DIR = Path(__file__).parent.parent
-DB_DIR = ROOT_DIR.joinpath("data")
-DB_PATH = DB_DIR.joinpath("f1.duckdb")
+# defaults to <project-root>/data
+DB_PATH = Path(
+    os.environ.get(
+        "DBT_DUCKDB_PATH",
+        Path(__file__).parent.parent.parent.joinpath("data", "f1.duckdb"),
+    )
+)
 
 
 logging.basicConfig(
@@ -85,7 +90,7 @@ def stage_table_from_dataframe(
 
 
 def main() -> None:
-    DB_DIR.mkdir(exist_ok=True)
+    DB_PATH.parent.mkdir(exist_ok=True)
     conn = duckdb.connect(database=str(DB_PATH), read_only=False)
 
     for table in ergast.TABLES:

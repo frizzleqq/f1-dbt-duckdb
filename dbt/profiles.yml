@@ -1,8 +1,8 @@
 f1warehouse_duckdb:
-  target: dev
+  target: "{{ env_var('DBT_ENVIRONMENT', 'dev') }}"
   outputs:
     dev:
       type: duckdb
-      path: './../data/f1.duckdb'
+      path: "{{ env_var('DBT_DUCKDB_PATH', './../data/f1.duckdb') }}"
       threads: 4
       schema: public
