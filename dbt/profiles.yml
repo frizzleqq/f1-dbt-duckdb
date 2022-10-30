@@ -3,6 +3,6 @@ f1warehouse_duckdb:
   outputs:
     dev:
       type: duckdb
-      path: "{{ env_var('DBT_DUCKDB_PATH', './../data/f1.duckdb') }}"
+      path: "{{ env_var('DUCKDB_DIR', './../data') + '/f1.duckdb' }}"
       threads: 4
       schema: public

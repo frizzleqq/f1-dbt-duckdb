@@ -10,10 +10,10 @@ from pandas import DataFrame
 import ergast
 
 # defaults to <project-root>/data
-DB_PATH = Path(
+DUCKDB_DIR = Path(
     os.environ.get(
-        "DBT_DUCKDB_PATH",
-        Path(__file__).parent.parent.parent.joinpath("data", "f1.duckdb"),
+        "DUCKDB_DIR",
+        Path(__file__).parent.parent.parent.joinpath("data"),
     )
 )
 
@@ -90,8 +90,8 @@ def stage_table_from_dataframe(
 
 
 def main() -> None:
-    DB_PATH.parent.mkdir(exist_ok=True)
-    conn = duckdb.connect(database=str(DB_PATH), read_only=False)
+    DUCKDB_DIR.mkdir(exist_ok=True)
+    conn = duckdb.connect(database=str(DUCKDB_DIR.joinpath("f1.duckdb")), read_only=False)
 
     for table in ergast.TABLES:
         stage_table_from_dataframe(

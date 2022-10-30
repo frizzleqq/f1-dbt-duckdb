@@ -34,11 +34,22 @@ Note that currently the database is assumed to be in the project-directory under
 
 ## Airflow
 
+> **_NOTE:_**  We use Airflow version 2.3.2 since as of 2.3.3 'jinja2>=3.0.0' is required, which
+> conflicts with dbt-core.
+> Also: poetry does not play nice with apache-airflow, so right now we work with all extras
+> (unnecessarily) installed.
+
 Initial setup to run it in airflow
 
 ```
 poetry export --without-hashes -f requirements.txt --output requirements.txt
-docker build -t airflow-extended:latest -f Dockerfile .
+docker build -f Dockerfile --progress=plain .
 docker-compose up airflow-init
 docker-compose up
+```
+
+Clean up docker containers
+
+```
+docker-compose down --volumes --remove-orphans
 ```
