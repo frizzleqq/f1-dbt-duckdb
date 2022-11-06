@@ -16,7 +16,7 @@ list(ergast_table.get_dataframe(read_full=True))
 # JSON (API) full history
 list(ergast.Ergast.read_table("drivers")
 # JSON (API) specific event/year
-list(ergast.Ergast.read_table("drivers", year=2017, race=5))
+list(ergast.Ergast.read_table("drivers", year=2017, race_round=5))
 list(ergast.Ergast.read_table_current_year("drivers"))
 list(ergast.Ergast.read_table_last_race("drivers"))
 """
@@ -39,11 +39,15 @@ class Table:
         table_key, list_key = self.response_path
         return (row for row in response["MRData"][table_key][list_key])
 
-    def get_dataframe(self, read_full: bool = None) -> pd.DataFrame:
+    def get_dataframe(
+        self, season: int = None, race_round: int = None, read_full: bool = None
+    ) -> pd.DataFrame:
         if read_full is None:
             read_full = self.read_full
-        if read_full:
-            response_generator = ErgastAPI.read_table(self.table_name)
+        if read_full or (season is not None and race_round is not None):
+            response_generator = ErgastAPI.read_table(
+                self.table_name, season=season, race_round=race_round
+            )
         else:
             response_generator = ErgastAPI.read_table_last_race(self.table_name)
         rows = []
@@ -58,8 +62,8 @@ class Table:
         return df
 
 
-TABLES = [
-    Table(
+TABLES = {
+    "drivers": Table(
         schema_name="stage_ergast",
         table_name="drivers",
         read_full=True,
@@ -69,7 +73,7 @@ TABLES = [
             "permanentNumber": "Int16",
         },
     ),
-    Table(
+    "circuits": Table(
         schema_name="stage_ergast",
         table_name="circuits",
         read_full=True,
@@ -79,20 +83,20 @@ TABLES = [
             "Location_long": float,
         },
     ),
-    Table(
+    "seasons": Table(
         schema_name="stage_ergast",
         table_name="seasons",
         read_full=True,
         response_path=("SeasonTable", "Seasons"),
         column_mapping={"season": "Int16"},
     ),
-    Table(
+    "constructors": Table(
         schema_name="stage_ergast",
         table_name="constructors",
         read_full=True,
         response_path=("ConstructorTable", "Constructors"),
     ),
-    Table(
+    "races": Table(
         schema_name="stage_ergast",
         table_name="races",
         read_full=True,
@@ -108,7 +112,7 @@ TABLES = [
             "Sprint_date": "datetime64[ns]",
         },
     ),
-    Table(
+    "qualifying": Table(
         schema_name="stage_ergast",
         table_name="qualifying",
         read_full=False,
@@ -131,7 +135,7 @@ TABLES = [
             "date": "datetime64[ns]",
         },
     ),
-    Table(
+    "results": Table(
         schema_name="stage_ergast",
         table_name="results",
         read_full=False,
@@ -161,7 +165,7 @@ TABLES = [
             "date": "datetime64[ns]",
         },
     ),
-    Table(
+    "laps": Table(
         schema_name="stage_ergast",
         table_name="laps",
         read_full=False,
@@ -182,7 +186,7 @@ TABLES = [
             "date": "datetime64[ns]",
         },
     ),
-]
+}
 
 
 class ErgastAPI:
@@ -199,12 +203,12 @@ class ErgastAPI:
     http.mount("http://", adapter)
 
     @staticmethod
-    def _build_url(table: str, year: str = None, race: str = None) -> str:
+    def _build_url(table: str, season: str = None, race_round: str = None) -> str:
         url_parts = [ErgastAPI.base_url]
-        if year:
-            url_parts.append(year)
-        if race:
-            url_parts.append(race)
+        if season:
+            url_parts.append(season)
+        if race_round:
+            url_parts.append(race_round)
         url_parts.append(f"{table}.{ErgastAPI.response_format}")
         return "/".join(url_parts)
 
@@ -228,26 +232,26 @@ class ErgastAPI:
     @staticmethod
     def read_table(
         table: str,
-        year: str_or_int = None,
-        race: str_or_int = None,
+        season: str_or_int = None,
+        race_round: str_or_int = None,
     ) -> Iterator[dict]:
-        if year is None and race is not None:
-            raise ValueError("Cannot get race without specifying year.")
-        if year is not None:
-            year = str(year)
-        if race is not None:
-            race = str(race)
-        url = ErgastAPI._build_url(table, year=year, race=race)
+        if season is None and race_round is not None:
+            raise ValueError("Cannot get race_round without specifying year.")
+        if season is not None:
+            season = str(season)
+        if race_round is not None:
+            race_round = str(race_round)
+        url = ErgastAPI._build_url(table, season=season, race_round=race_round)
 
         for response in ErgastAPI._response_paging(url):
             yield response
 
     @staticmethod
     def read_table_current_year(table: str) -> Iterator[dict]:
-        for row in ErgastAPI.read_table(table, year="current"):
+        for row in ErgastAPI.read_table(table, season="current"):
             yield row
 
     @staticmethod
     def read_table_last_race(table: str) -> Iterator[dict]:
-        for row in ErgastAPI.read_table(table, year="current", race="last"):
+        for row in ErgastAPI.read_table(table, season="current", race_round="last"):
             yield row

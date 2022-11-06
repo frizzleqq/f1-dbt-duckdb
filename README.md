@@ -14,7 +14,7 @@ python ./dags/staging/staging.py
 ```
 
 Staging is done by
-1. Read Ergast API via requests (see [staging.ergast.py](dags/staging/ergast.py))
+1. Read Ergast API via requests (see [staging/ergast.py](staging/ergast.py))
 2. Load response into Pandas DataFrame
 3. Create table in DuckDB via CTAS
 
@@ -42,7 +42,6 @@ Note that currently the database is assumed to be in the project-directory under
 Initial setup to run it in airflow
 
 ```
-poetry export --without-hashes -f requirements.txt --output requirements.txt
 docker build -f Dockerfile --progress=plain .
 docker-compose up airflow-init
 docker-compose up

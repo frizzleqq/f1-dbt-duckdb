@@ -56,18 +56,20 @@ x-airflow-common:
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
-    AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth'
     _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
+    AIRFLOW_HOME: ${AIRFLOW_HOME}
     DBT_ENVIRONMENT: ${DBT_ENVIRONMENT}
-    DBT_DIR: ${DBT_DIR}
-    DBT_PROFILES_DIR: ${DBT_DIR}
+    DBT_PROJECT_DIR: ${DBT_PROJECT_DIR}
+    DBT_PROFILES_DIR: ${DBT_PROJECT_DIR}
     DUCKDB_DIR: ${DUCKDB_DIR}
   volumes:
-    - ./airflow/logs:/opt/airflow/logs
-    - ./airflow/plugins:/opt/airflow/plugins
-    - ./dags:/opt/airflow/dags
-    - ./dbt:${DBT_DIR}
+    - ./airflow/logs:${AIRFLOW_HOME}/logs
+    - ./airflow/plugins:${AIRFLOW_HOME}/plugins
+    - ./dags:${AIRFLOW_HOME}/dags
+    - ./staging:${AIRFLOW_HOME}/staging
+    - ./dbt:${DBT_PROJECT_DIR}
     - ./data:${DUCKDB_DIR}
   user: "${AIRFLOW_UID:-50000}:0"
   depends_on:
