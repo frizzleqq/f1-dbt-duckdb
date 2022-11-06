@@ -26,13 +26,33 @@ logging.basicConfig(
 
 def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="DuckDB Staging", description="todo")
-    parser.add_argument("table_name", nargs="?", default=None)
-    group = parser.add_argument_group(
-        "specific race arguments", "stage a specific race"
+    parser.add_argument(
+        "table_names",
+        nargs="*",
+        default=[],
+        help="List of table names to stage, omit to stage all tables",
     )
-    group.add_argument("season", nargs="?", default=None, type=int)
-    group.add_argument("round", nargs="?", default=None, type=int)
-    parser.add_argument("-r", "--read-full", action="store_true", default=None)
+    parser.add_argument(
+        "-a",
+        "--read-full",
+        default=None,
+        action="store_true",
+        help="Experimental, does not work for all tables.",
+    )
+    parser.add_argument(
+        "-s",
+        "--season",
+        default=None,
+        type=int,
+        help="Season (year) of data to stage, omit to stage latest race",
+    )
+    parser.add_argument(
+        "-r",
+        "--round",
+        default=None,
+        type=int,
+        help="Round (race) of data to stage, omit to stage latest race",
+    )
     return parser
 
 
@@ -113,14 +133,30 @@ def stage_table_from_dataframe(
 
 
 def main(
-    table_name: str = None,
+    table_names: list = None,
     season: int = None,
     race_round: int = None,
     read_full: bool = None,
 ) -> None:
     conn = duckdb_connect()
 
-    if table_name is None:
+    if table_names:
+        for table_name in table_names:
+            try:
+                table = ergast.TABLES[table_name]
+            except KeyError:
+                print(f"Available tables: {list(ergast.TABLES.keys())}.")
+                raise
+            logging.info(f"Staging {table_name}...")
+            stage_table_from_dataframe(
+                connection=conn,
+                schema_name=table.schema_name,
+                table_name=table.table_name,
+                df=table.get_dataframe(
+                    season=season, race_round=race_round, read_full=read_full
+                ),
+            )
+    else:
         logging.info("Staging all tables.")
         for table_key, table in ergast.TABLES.items():
             logging.info(f"Staging {table_key}...")
@@ -132,21 +168,6 @@ def main(
                     season=season, race_round=race_round, read_full=read_full
                 ),
             )
-    else:
-        try:
-            table = ergast.TABLES[table_name]
-        except KeyError:
-            print(f"Available tables: {list(ergast.TABLES.keys())}.")
-            raise
-        logging.info(f"Staging {table_name}...")
-        stage_table_from_dataframe(
-            connection=conn,
-            schema_name=table.schema_name,
-            table_name=table.table_name,
-            df=table.get_dataframe(
-                season=season, race_round=race_round, read_full=read_full
-            ),
-        )
 
     # print_schema(conn, "stage_ergast")
     # print_schema(conn, "dm")
@@ -163,7 +184,7 @@ if __name__ == "__main__":
         )
 
     main(
-        table_name=args.table_name,
+        table_names=args.table_names,
         season=args.season,
         race_round=args.round,
         read_full=args.read_full,
