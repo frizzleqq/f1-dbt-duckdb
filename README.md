@@ -18,6 +18,25 @@ Staging is done by
 2. Load response into Pandas DataFrame
 3. Create table in DuckDB via CTAS
 
+### staging.py
+
+Using option _--read-full_ for initial load queries seasons/races since 2000 from Ergast API.
+By default, for Fact tables only the latest race is read. Dimensions are always read full. 
+
+Usage:
+```
+usage: staging.py [-h] [-r] [table_names ...]
+
+Load data from WebService into DuckDB
+
+positional arguments:
+  table_names      List of table names to load, omit to load all tables
+
+options:
+  -h, --help       show this help message and exit
+  -r, --read-full  Read past years (beginning with 2000) for fact tables.
+```
+
 ## dbt
 
 Install dbt_utils:

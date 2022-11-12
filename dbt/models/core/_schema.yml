@@ -46,6 +46,24 @@ models:
       - name: lap_number
         tests:
           - not_null
+  - name: f_qualifying
+    columns:
+      - name: qualifying_id
+        tests:
+          - unique
+          - not_null
+      - name: race_id
+        tests:
+          - not_null
+      - name: driver_id
+        tests:
+          - not_null
+      - name: constructor_id
+        tests:
+          - not_null
+      - name: qualifying_position
+        tests:
+          - not_null
   - name: f_results
     columns:
       - name: result_id

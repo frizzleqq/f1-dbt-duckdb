@@ -4,10 +4,11 @@ sources:
   - name: ergast
     schema: stage_ergast
     tables:
-      - name: drivers
       - name: circuits
       - name: constructors
-      - name: seasons
-      - name: races
+      - name: drivers
       - name: laps
+      - name: qualifying
+      - name: races
       - name: results
+      - name: seasons

@@ -1,5 +1,6 @@
+import itertools
 from dataclasses import dataclass
-from typing import Iterator, Union, Tuple
+from typing import Iterator, Tuple, Union
 
 import pandas as pd
 import requests
@@ -24,6 +25,8 @@ list(ergast.Ergast.read_table_last_race("drivers"))
 str_or_int = Union[str, int]
 str_or_list = Union[str, list]
 
+MIN_SEASON = "2000"
+
 
 @dataclass
 class Table:
@@ -33,21 +36,31 @@ class Table:
     record_path: str_or_list = None
     record_meta: list = None
     column_mapping: dict = None
-    read_full: bool = False
+    always_full: bool = False
 
     def _extract_table_from_response(self, response) -> Iterator[dict]:
         table_key, list_key = self.response_path
         return (row for row in response["MRData"][table_key][list_key])
 
-    def get_dataframe(
-        self, season: int = None, race_round: int = None, read_full: bool = None
-    ) -> pd.DataFrame:
-        if read_full is None:
-            read_full = self.read_full
-        if read_full or (season is not None and race_round is not None):
-            response_generator = ErgastAPI.read_table(
-                self.table_name, season=season, race_round=race_round
-            )
+    def get_seasons_and_rounds(self):
+        response_generator = ErgastAPI.read_table("races")
+        for response in response_generator:
+            for row in self._extract_table_from_response(response):
+                if row["season"] >= MIN_SEASON:
+                    yield row["season"], row["round"]
+
+    def get_dataframe(self, read_full: bool = None) -> pd.DataFrame:
+        if self.always_full:
+            response_generator = ErgastAPI.read_table(self.table_name)
+        elif read_full:
+            generator_list = []
+            for season, race_round in self.get_seasons_and_rounds():
+                generator_list.append(
+                    ErgastAPI.read_table(
+                        self.table_name, season=season, race_round=race_round
+                    ),
+                )
+            response_generator = itertools.chain(*generator_list)
         else:
             response_generator = ErgastAPI.read_table_last_race(self.table_name)
         rows = []
@@ -55,7 +68,11 @@ class Table:
             for row in self._extract_table_from_response(response):
                 rows.append(row)
         df = pd.json_normalize(
-            rows, record_path=self.record_path, meta=self.record_meta, sep="_"
+            rows,
+            record_path=self.record_path,
+            meta=self.record_meta,
+            sep="_",
+            errors="ignore",
         )
         if self.column_mapping:
             df = df.astype(self.column_mapping)
@@ -66,7 +83,7 @@ TABLES = {
     "drivers": Table(
         schema_name="stage_ergast",
         table_name="drivers",
-        read_full=True,
+        always_full=True,
         response_path=("DriverTable", "Drivers"),
         column_mapping={
             "dateOfBirth": "datetime64[ns]",
@@ -76,7 +93,7 @@ TABLES = {
     "circuits": Table(
         schema_name="stage_ergast",
         table_name="circuits",
-        read_full=True,
+        always_full=True,
         response_path=("CircuitTable", "Circuits"),
         column_mapping={
             "Location_lat": float,
@@ -86,20 +103,20 @@ TABLES = {
     "seasons": Table(
         schema_name="stage_ergast",
         table_name="seasons",
-        read_full=True,
+        always_full=True,
         response_path=("SeasonTable", "Seasons"),
         column_mapping={"season": "Int16"},
     ),
     "constructors": Table(
         schema_name="stage_ergast",
         table_name="constructors",
-        read_full=True,
+        always_full=True,
         response_path=("ConstructorTable", "Constructors"),
     ),
     "races": Table(
         schema_name="stage_ergast",
         table_name="races",
-        read_full=True,
+        always_full=True,
         response_path=("RaceTable", "Races"),
         column_mapping={
             "season": "Int16",
@@ -115,7 +132,7 @@ TABLES = {
     "qualifying": Table(
         schema_name="stage_ergast",
         table_name="qualifying",
-        read_full=False,
+        always_full=False,
         response_path=("RaceTable", "Races"),
         record_path="QualifyingResults",
         record_meta=[
@@ -138,7 +155,7 @@ TABLES = {
     "results": Table(
         schema_name="stage_ergast",
         table_name="results",
-        read_full=False,
+        always_full=False,
         response_path=("RaceTable", "Races"),
         record_path="Results",
         record_meta=[
@@ -168,7 +185,7 @@ TABLES = {
     "laps": Table(
         schema_name="stage_ergast",
         table_name="laps",
-        read_full=False,
+        always_full=False,
         response_path=("RaceTable", "Races"),
         record_path=["Laps", "Timings"],
         record_meta=[
