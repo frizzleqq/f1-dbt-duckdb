@@ -63,12 +63,13 @@ x-airflow-common:
     DBT_ENVIRONMENT: ${DBT_ENVIRONMENT}
     DBT_PROJECT_DIR: ${DBT_PROJECT_DIR}
     DBT_PROFILES_DIR: ${DBT_PROJECT_DIR}
+    STAGING_DIR: ${STAGING_DIR}
     DUCKDB_DIR: ${DUCKDB_DIR}
   volumes:
     - ./airflow/logs:${AIRFLOW_HOME}/logs
     - ./airflow/plugins:${AIRFLOW_HOME}/plugins
     - ./dags:${AIRFLOW_HOME}/dags
-    - ./staging:${AIRFLOW_HOME}/staging
+    - ./staging:${STAGING_DIR}
     - ./dbt:${DBT_PROJECT_DIR}
     - ./data:${DUCKDB_DIR}
   user: "${AIRFLOW_UID:-50000}:0"

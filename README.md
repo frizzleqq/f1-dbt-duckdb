@@ -1,7 +1,6 @@
 # F1 dbt warehouse with DuckDB
 
-Some experimenting with dbt/DuckDB and maybe later some reporting using
-[Ergast API](http://ergast.com/mrd/) as main source.
+Some experimenting with dbt/DuckDB using [Ergast API](http://ergast.com/mrd/) as main source.
 
 Used https://pypi.org/project/poetry/ to setup project.
 ```
