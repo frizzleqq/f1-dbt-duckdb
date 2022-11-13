@@ -31,3 +31,7 @@ models:
         +materialized: view
         ergast:
           +schema: stage_ergast
+
+snapshots:
+  f1warehouse:
+    +target_schema: snapshots
