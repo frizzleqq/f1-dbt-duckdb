@@ -1,12 +1,13 @@
 {{ config(materialized = 'view') }}
 
-SELECT driverId
+SELECT
+    driverid
     , url
-    , givenName
-    , familyName
-    , dateOfBirth
+    , givenname
+    , familyname
+    , dateofbirth
     , nationality
-    , permanentNumber
+    , permanentnumber
     , code
     , load_dts
 FROM {{ source('ergast', 'drivers') }}

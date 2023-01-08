@@ -6,10 +6,11 @@
 }}
 
 WITH transformed AS (
-    SELECT CAST("date" AS DATE) AS race_date
-        , concat(season, '-', round) AS race_id
-        , driverId AS driver_id
-        , Laps_number AS lap_number
+    SELECT
+        CAST("date" AS DATE) AS race_date
+        , CONCAT(season, '-', round) AS race_id
+        , driverid AS driver_id
+        , laps_number AS lap_number
         , "position" AS lap_position
         , "time" AS lap_time
         , load_dts
@@ -19,17 +20,23 @@ WITH transformed AS (
     WHERE load_dts > (SELECT MAX(load_dts) FROM {{ this }})
     {%- endif %}
 
-),
+)
 
-joined AS (
-    SELECT f.*
-        , d.circuit_id
-    FROM transformed AS f
-    LEFT JOIN {{ ref('d_races') }} AS d ON d.race_id = f.race_id
-),
+, races AS (
+    SELECT * FROM {{ ref('d_races') }}
+)
 
-increment AS (
-    SELECT {{
+, joined AS (
+    SELECT
+        transformed.*
+        , races.circuit_id
+    FROM transformed
+    LEFT JOIN races ON races.race_id = transformed.race_id
+)
+
+, increment AS (
+    SELECT
+        {{
             dbt_utils.surrogate_key([
                 'race_id',
                 'driver_id',

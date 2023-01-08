@@ -13,6 +13,7 @@ dbt-duckdb = "^1.2.3"
 # as of 2.3.3 airflow is not compatible in same py environment as dbt (due to jinja 3.x)
 # poetry installs all extras for airflow, so may switch to regular setup
 apache-airflow = {version = "2.3.2", extras = ["common.sql"]}
+sqlfluff-templater-dbt = "^1.4.5"
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.10.0"

@@ -1,11 +1,12 @@
 {{ config(materialized = 'view') }}
 
-SELECT driverId
+SELECT
+    driverid
     , "position"
     , "time"
     , season
     , round
     , "date"
-    , Laps_number
+    , laps_number
     , load_dts
 FROM {{ source('ergast', 'laps') }}

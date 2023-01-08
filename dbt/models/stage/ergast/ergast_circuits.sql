@@ -1,8 +1,9 @@
 {{ config(materialized = 'view') }}
 
-SELECT circuitId
+SELECT
+    circuitid
     , url
-    , circuitName
+    , circuitname
     , location_lat
     , location_long
     , location_locality

@@ -1,18 +1,19 @@
 {{ config(materialized = 'view') }}
 
-SELECT "number"
+SELECT
+    "number"
     , "position"
-    , Driver_driverId
-    , Constructor_constructorId
-    , Circuit_circuitId
-    , Q1
-    , Q2
-    , Q3
+    , driver_driverid
+    , constructor_constructorid
+    , circuit_circuitid
+    , q1
+    , q2
+    , q3
     , season
     , round
     , "date"
     , "time"
-    , raceName
+    , racename
     , url
     , load_dts
 FROM {{ source('ergast', 'qualifying') }}

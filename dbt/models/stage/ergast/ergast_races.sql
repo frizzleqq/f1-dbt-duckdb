@@ -1,21 +1,22 @@
 {{ config(materialized = 'view') }}
 
-SELECT season
+SELECT
+    season
     , round
     , url
-    , raceName
+    , racename
     , "date"
-    , Circuit_circuitId
+    , circuit_circuitid
     , "time"
-    , FirstPractice_date
-    , FirstPractice_time
-    , SecondPractice_date
-    , SecondPractice_time
-    , ThirdPractice_date
-    , ThirdPractice_time
-    , Qualifying_date
-    , Qualifying_time
-    , Sprint_date
-    , Sprint_time
+    , firstpractice_date
+    , firstpractice_time
+    , secondpractice_date
+    , secondpractice_time
+    , thirdpractice_date
+    , thirdpractice_time
+    , qualifying_date
+    , qualifying_time
+    , sprint_date
+    , sprint_time
     , load_dts
 FROM {{ source('ergast', 'races') }}

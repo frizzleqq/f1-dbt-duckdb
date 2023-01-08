@@ -6,7 +6,8 @@
 }}
 
 WITH transformed AS (
-    SELECT constructorId AS constructor_id
+    SELECT
+        constructorid AS constructor_id
         , name AS constructor_name
         , nationality AS constructor_nationality
         , url AS constructor_url

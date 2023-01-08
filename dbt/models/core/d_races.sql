@@ -10,26 +10,26 @@ WITH transformed AS (
         concat(season, '-', round) AS race_id
         , season AS race_season
         , round AS race_round
-        , raceName AS race_name
+        , racename AS race_name
         , url AS race_url
         , "date" AS race_date
         , "time" AS race_time
-        , Circuit_circuitId AS circuit_id
-        , FirstPractice_date AS free_practice_1_date
-        , FirstPractice_time AS free_practice_1_time
-        , SecondPractice_date AS free_practice_2_date
-        , SecondPractice_time AS free_practice_2_time
-        , ThirdPractice_date AS free_practice_3_date
-        , ThirdPractice_time AS free_practice_3_time
-        , Qualifying_date AS qualifying_date
-        , Qualifying_time AS qualifying_time
-        , Sprint_date AS sprint_date
-        , Sprint_time AS sprint_time
+        , circuit_circuitid AS circuit_id
+        , firstpractice_date AS free_practice_1_date
+        , firstpractice_time AS free_practice_1_time
+        , secondpractice_date AS free_practice_2_date
+        , secondpractice_time AS free_practice_2_time
+        , thirdpractice_date AS free_practice_3_date
+        , thirdpractice_time AS free_practice_3_time
+        , qualifying_date AS qualifying_date
+        , qualifying_time AS qualifying_time
+        , sprint_date AS sprint_date
+        , sprint_time AS sprint_time
         , load_dts
     FROM {{ ref('ergast_races') }}
 
     {% if is_incremental() -%}
-    WHERE load_dts > (SELECT MAX(load_dts) FROM {{ this }})
+    WHERE load_dts > (SELECT max(load_dts) FROM {{ this }})
     {%- endif %}
 
 )

@@ -6,7 +6,8 @@
 }}
 
 WITH transformed AS (
-    SELECT season AS season_id
+    SELECT
+        season AS season_id
         , url AS season_url
         , load_dts
     FROM {{ ref('ergast_seasons') }}

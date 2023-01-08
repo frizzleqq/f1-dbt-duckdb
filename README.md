@@ -38,6 +38,8 @@ options:
 
 ## dbt
 
+Note that currently the database is assumed to be in the project-directory under '_data/f1.duckdb_'.
+
 Install dbt_utils:
 ```
 dbt deps --project-dir="./dbt" --profiles-dir="./dbt"
@@ -48,7 +50,18 @@ Run models:
 dbt run --project-dir="./dbt" --profiles-dir="./dbt"
 ```
 
-Note that currently the database is assumed to be in the project-directory under '_data/f1.duckdb_'.
+Run snapshots:
+```
+dbt snapshot --project-dir="./dbt" --profiles-dir="./dbt"
+```
+
+### sqlfluff
+
+Run SQL linter on dbt models:
+```
+sqlfluff lint ./dbt/models/
+```
+
 
 ## Airflow
 

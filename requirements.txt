@@ -3,3 +3,4 @@ requests==2.27.1
 duckdb~=0.5.1
 pandas==1.5.1
 dbt-duckdb==1.2.3
+sqlfluff-templater-dbt==1.4.5

@@ -1,6 +1,7 @@
 {{ config(materialized = 'view') }}
 
-SELECT constructorId
+SELECT
+    constructorid
     , url
     , name
     , nationality

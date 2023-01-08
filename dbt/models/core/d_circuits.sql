@@ -6,14 +6,15 @@
 }}
 
 WITH transformed AS (
-    SELECT circuitId AS circuit_id
-      , circuitName AS circuit_name
-      , location_country AS circuit_country
-      , location_locality AS circuit_locality
-      , url AS circuit_url
-      , location_lat AS circuit_latitude
-      , location_long AS circuit_longitude
-      , load_dts
+    SELECT
+        circuitid AS circuit_id
+        , circuitname AS circuit_name
+        , location_country AS circuit_country
+        , location_locality AS circuit_locality
+        , url AS circuit_url
+        , location_lat AS circuit_latitude
+        , location_long AS circuit_longitude
+        , load_dts
     FROM {{ ref('ergast_circuits') }}
 
     {% if is_incremental() -%}

@@ -1,23 +1,24 @@
 {{ config(materialized = 'view') }}
 
-SELECT "position"
-	, positionText
-	, points
-	, grid
-	, laps
-	, status
-	, Driver_driverId
-	, Constructor_constructorId
-	, Time_millis
-	, Time_time
-	, FastestLap_rank
-	, FastestLap_lap
-	, FastestLap_Time_time
-	, FastestLap_AverageSpeed_units
-	, FastestLap_AverageSpeed_speed
-	, season
-	, round
-	, "date"
-	, Circuit_circuitId
+SELECT
+    "position"
+    , positiontext
+    , points
+    , grid
+    , laps
+    , status
+    , driver_driverid
+    , constructor_constructorid
+    , time_millis
+    , time_time
+    , fastestlap_rank
+    , fastestlap_lap
+    , fastestlap_time_time
+    , fastestlap_averagespeed_units
+    , fastestlap_averagespeed_speed
+    , season
+    , round
+    , "date"
+    , circuit_circuitid
     , load_dts
 FROM {{ source('ergast', 'results') }}

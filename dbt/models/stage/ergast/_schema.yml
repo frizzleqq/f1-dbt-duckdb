@@ -3,19 +3,19 @@ version: 2
 models:
   - name: ergast_drivers
     columns:
-      - name: driverId
+      - name: driverid
         tests:
           - unique
           - not_null
   - name: ergast_circuits
     columns:
-      - name: circuitId
+      - name: circuitid
         tests:
           - unique
           - not_null
   - name: ergast_constructors
     columns:
-      - name: constructorId
+      - name: constructorid
         tests:
           - unique
           - not_null
@@ -45,10 +45,10 @@ models:
       - name: round
         tests:
           - not_null
-      - name: driverId
+      - name: driverid
         tests:
           - not_null
-      - name: Laps_number
+      - name: laps_number
         tests:
           - not_null
   - name: ergast_results
@@ -59,13 +59,13 @@ models:
       - name: round
         tests:
           - not_null
-      - name: Driver_driverId
+      - name: driver_driverid
         tests:
           - not_null
-      - name: Circuit_circuitId
+      - name: circuit_circuitid
         tests:
           - not_null
-      - name: Constructor_constructorId
+      - name: constructor_constructorid
         tests:
           - not_null
       - name: position
@@ -79,13 +79,13 @@ models:
       - name: round
         tests:
           - not_null
-      - name: Driver_driverId
+      - name: driver_driverid
         tests:
           - not_null
-      - name: Circuit_circuitId
+      - name: circuit_circuitid
         tests:
           - not_null
-      - name: Constructor_constructorId
+      - name: constructor_constructorid
         tests:
           - not_null
       - name: position
