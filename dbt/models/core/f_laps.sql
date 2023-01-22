@@ -7,12 +7,12 @@
 
 WITH transformed AS (
     SELECT
-        CAST("date" AS DATE) AS race_date
+        race_date
         , CONCAT(season, '-', round) AS race_id
         , driverid AS driver_id
         , laps_number AS lap_number
-        , "position" AS lap_position
-        , "time" AS lap_time
+        , lap_position
+        , lap_time
         , load_dts
     FROM {{ ref('ergast_laps') }}
 

@@ -35,7 +35,6 @@ class Table:
     response_path: Tuple
     record_path: str_or_list = None
     record_meta: list = None
-    column_mapping: dict = None
     always_full: bool = False
 
     def _extract_table_from_response(self, response) -> Iterator[dict]:
@@ -89,8 +88,6 @@ class Table:
             sep="_",
             errors="ignore",
         )
-        if self.column_mapping:
-            df = df.astype(self.column_mapping)
         return df
 
 
@@ -100,27 +97,18 @@ TABLES = {
         table_name="drivers",
         always_full=True,
         response_path=("DriverTable", "Drivers"),
-        column_mapping={
-            "dateOfBirth": "datetime64[ns]",
-            "permanentNumber": "Int16",
-        },
     ),
     "circuits": Table(
         schema_name="stage_ergast",
         table_name="circuits",
         always_full=True,
         response_path=("CircuitTable", "Circuits"),
-        column_mapping={
-            "Location_lat": float,
-            "Location_long": float,
-        },
     ),
     "seasons": Table(
         schema_name="stage_ergast",
         table_name="seasons",
         always_full=True,
         response_path=("SeasonTable", "Seasons"),
-        column_mapping={"season": "Int16"},
     ),
     "constructors": Table(
         schema_name="stage_ergast",
@@ -133,16 +121,6 @@ TABLES = {
         table_name="races",
         always_full=True,
         response_path=("RaceTable", "Races"),
-        column_mapping={
-            "season": "Int16",
-            "round": "Int16",
-            "date": "datetime64[ns]",
-            "FirstPractice_date": "datetime64[ns]",
-            "SecondPractice_date": "datetime64[ns]",
-            "ThirdPractice_date": "datetime64[ns]",
-            "Qualifying_date": "datetime64[ns]",
-            "Sprint_date": "datetime64[ns]",
-        },
     ),
     "qualifying": Table(
         schema_name="stage_ergast",
@@ -159,13 +137,6 @@ TABLES = {
             "url",
             ["Circuit", "circuitId"],
         ],
-        column_mapping={
-            "number": "Int16",
-            "position": "Int16",
-            "season": "Int16",
-            "round": "Int16",
-            "date": "datetime64[ns]",
-        },
     ),
     "results": Table(
         schema_name="stage_ergast",
@@ -182,20 +153,6 @@ TABLES = {
             "time",
             ["Circuit", "circuitId"],
         ],
-        column_mapping={
-            "number": "Int16",
-            "position": "Int16",
-            "points": float,
-            "grid": "Int16",
-            "laps": "Int16",
-            "Time_millis": "Int16",
-            "FastestLap_rank": "Int16",
-            "FastestLap_lap": "Int16",
-            "FastestLap_AverageSpeed_speed": float,
-            "season": "Int16",
-            "round": "Int16",
-            "date": "datetime64[ns]",
-        },
     ),
     "laps": Table(
         schema_name="stage_ergast",
@@ -211,12 +168,6 @@ TABLES = {
             "date",
             ["Laps", "number"],
         ],
-        column_mapping={
-            "position": "Int16",
-            "season": "Int16",
-            "round": "Int16",
-            "date": "datetime64[ns]",
-        },
     ),
 }
 

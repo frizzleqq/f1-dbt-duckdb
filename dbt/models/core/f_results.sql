@@ -7,12 +7,12 @@
 
 WITH transformed AS (
     SELECT
-        CAST("date" AS DATE) AS race_date
+        race_date
         , CONCAT(season, '-', round) AS race_id
         , circuit_circuitid AS circuit_id
         , driver_driverid AS driver_id
         , constructor_constructorid AS constructor_id
-        , position AS result_position
+        , result_position
         , positiontext AS result_position_text
         , points AS result_points
         , status AS result_status

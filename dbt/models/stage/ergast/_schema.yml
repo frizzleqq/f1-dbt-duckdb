@@ -33,7 +33,7 @@ models:
       - name: round
         tests:
           - not_null
-      - name: date
+      - name: race_date
         tests:
           - unique
           - not_null
@@ -68,7 +68,7 @@ models:
       - name: constructor_constructorid
         tests:
           - not_null
-      - name: position
+      - name: result_position
         tests:
           - not_null
   - name: ergast_qualifying
@@ -88,6 +88,6 @@ models:
       - name: constructor_constructorid
         tests:
           - not_null
-      - name: position
+      - name: qualifying_position
         tests:
           - not_null

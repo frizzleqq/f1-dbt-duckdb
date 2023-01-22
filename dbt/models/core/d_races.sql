@@ -12,8 +12,8 @@ WITH transformed AS (
         , round AS race_round
         , racename AS race_name
         , url AS race_url
-        , "date" AS race_date
-        , "time" AS race_time
+        , race_date
+        , race_time
         , circuit_circuitid AS circuit_id
         , firstpractice_date AS free_practice_1_date
         , firstpractice_time AS free_practice_1_time

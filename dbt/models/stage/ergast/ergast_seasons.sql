@@ -1,7 +1,7 @@
 {{ config(materialized = 'view') }}
 
 SELECT
-    season
+    CAST(season AS INT) AS season
     , url
     , load_dts
 FROM {{ source('ergast', 'seasons') }}

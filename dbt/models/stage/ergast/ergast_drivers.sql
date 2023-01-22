@@ -5,9 +5,9 @@ SELECT
     , url
     , givenname
     , familyname
-    , dateofbirth
+    , CAST(dateofbirth AS DATE) AS dateofbirth
     , nationality
-    , permanentnumber
+    , CAST(permanentnumber AS INT) AS permanentnumber
     , code
     , load_dts
 FROM {{ source('ergast', 'drivers') }}
