@@ -25,7 +25,8 @@ logging.basicConfig(
 
 def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Load data from WebService into DuckDB"
+        description="Load data from Ergast WebService into DuckDB, "
+        "by default only the last race is loaded."
     )
     parser.add_argument(
         "table_names",
@@ -33,12 +34,21 @@ def get_parser() -> argparse.ArgumentParser:
         default=[],
         help="List of table names to load, omit to load all tables",
     )
-    parser.add_argument(
+
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
+        "-s",
+        "--season",
+        default=None,
+        type=int,
+        help=f"Read provided season (=year) fully for fact tables.",
+    )
+    group.add_argument(
         "-r",
         "--read-full",
         default=None,
         action="store_true",
-        help=f"Read past years (beginning with {ergast.MIN_SEASON}) for fact tables.",
+        help=f"Read past seasons (beginning with {ergast.MIN_SEASON}) for fact tables.",
     )
     return parser
 
@@ -121,6 +131,7 @@ def stage_table_from_dataframe(
 
 def main(
     table_names: list = None,
+    season: int = None,
     read_full: bool = None,
 ) -> None:
     conn = duckdb_connect()
@@ -141,7 +152,7 @@ def main(
             connection=conn,
             schema_name=table.schema_name,
             table_name=table.table_name,
-            df=table.get_dataframe(read_full=read_full),
+            df=table.get_dataframe(season=season, read_full=read_full),
         )
 
 
@@ -151,5 +162,6 @@ if __name__ == "__main__":
 
     main(
         table_names=args.table_names,
+        season=args.season,
         read_full=args.read_full,
     )

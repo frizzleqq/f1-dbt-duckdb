@@ -6,6 +6,7 @@ authors = ["frizzleqq"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+# keep requests fixed for airflow compatibility
 requests = "2.27.1"
 duckdb = "^0.5.0"
 pandas = "^1.5.1"

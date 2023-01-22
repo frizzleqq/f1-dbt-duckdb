@@ -8,37 +8,40 @@ poetry install
 ```
 
 ## Staging:
-```
-python ./dags/staging/staging.py
-```
 
 Staging is done by
 1. Read Ergast API via requests (see [staging/ergast.py](staging/ergast.py))
 2. Load response into Pandas DataFrame
 3. Create table in DuckDB via CTAS
 
+> **_NOTE:_** When running _staging.py_ locally the database will be in project-root under
+> '_data/f1.duckdb_' (unless environment variable _DUCKDB_DATABASE_ is defined).
+
 ### staging.py
 
-Using option _--read-full_ for initial load queries seasons/races since 2000 from Ergast API.
-By default, for Fact tables only the latest race is read. Dimensions are always read full. 
+By default, only the last race is loaded.
+* Option _--season_ allows reading an entire season.
+* Option _--read-full_ reads all seasons/races since 2000 from Ergast API. (may take a while)
+
+dbt models use merge, so reloading data will not result in duplicate data. 
 
 Usage:
 ```
-usage: staging.py [-h] [-r] [table_names ...]
+usage: staging.py [-h] [-s SEASON | -r] [table_names ...]
 
-Load data from WebService into DuckDB
+Load data from Ergast WebService into DuckDB, by default only the last race is loaded.
 
 positional arguments:
-  table_names      List of table names to load, omit to load all tables
+  table_names           List of table names to load, omit to load all tables
 
 options:
-  -h, --help       show this help message and exit
-  -r, --read-full  Read past years (beginning with 2000) for fact tables.
+  -h, --help            show this help message and exit
+  -s SEASON, --season SEASON
+                        Read provided season (=year) fully for fact tables.
+  -r, --read-full       Read past seasons (beginning with 2000) for fact tables.
 ```
 
 ## dbt
-
-Note that currently the database is assumed to be in the project-directory under '_data/f1.duckdb_'.
 
 Install dbt_utils:
 ```
@@ -53,6 +56,11 @@ dbt run --project-dir="./dbt" --profiles-dir="./dbt"
 Run snapshots:
 ```
 dbt snapshot --project-dir="./dbt" --profiles-dir="./dbt"
+```
+
+Run tests:
+```
+dbt test --project-dir="./dbt" --profiles-dir="./dbt"
 ```
 
 ### sqlfluff

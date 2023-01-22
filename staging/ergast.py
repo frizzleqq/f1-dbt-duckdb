@@ -25,7 +25,7 @@ list(ergast.Ergast.read_table_last_race("drivers"))
 str_or_int = Union[str, int]
 str_or_list = Union[str, list]
 
-MIN_SEASON = "2000"
+MIN_SEASON = 2000
 
 
 @dataclass
@@ -42,19 +42,32 @@ class Table:
         table_key, list_key = self.response_path
         return (row for row in response["MRData"][table_key][list_key])
 
-    def get_seasons_and_rounds(self):
+    def _get_seasons_and_rounds(self, season: int = None):
+        """
+        Data of some tables can only be read by specifying season & round.
+        So for older seasons we read each round of a season instead.
+
+        Error: "Bad Request: Lap time queries require a season and round to be specified"
+
+        :param season: if specified, only yield that season
+        :return: tuple with (season, row)
+        """
         response_generator = ErgastAPI.read_table("races")
         for response in response_generator:
             for row in self._extract_table_from_response(response):
-                if row["season"] >= MIN_SEASON:
+                row_season = int(row["season"])
+                if season:
+                    if row_season == season:
+                        yield row["season"], row["round"]
+                elif row_season >= MIN_SEASON:
                     yield row["season"], row["round"]
 
-    def get_dataframe(self, read_full: bool = None) -> pd.DataFrame:
+    def get_dataframe(self, season: int = None, read_full: bool = None) -> pd.DataFrame:
         if self.always_full:
             response_generator = ErgastAPI.read_table(self.table_name)
-        elif read_full:
+        elif season or read_full:
             generator_list = []
-            for season, race_round in self.get_seasons_and_rounds():
+            for season, race_round in self._get_seasons_and_rounds(season=season):
                 generator_list.append(
                     ErgastAPI.read_table(
                         self.table_name, season=season, race_round=race_round
@@ -63,10 +76,12 @@ class Table:
             response_generator = itertools.chain(*generator_list)
         else:
             response_generator = ErgastAPI.read_table_last_race(self.table_name)
+
         rows = []
         for response in response_generator:
             for row in self._extract_table_from_response(response):
                 rows.append(row)
+
         df = pd.json_normalize(
             rows,
             record_path=self.record_path,
