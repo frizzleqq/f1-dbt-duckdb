@@ -13,7 +13,7 @@ poetry install
 ## Staging:
 
 > **_NOTE:_** When running _staging.py_ the database will be in project-root under
-> '_data/f1.duckdb_' (unless environment variable _DUCKDB_DATABASE_ is defined).
+> '_data/f1.duckdb_' (unless environment variable _DUCKDB_DIR_ is defined).
 
 Staging is done by
 1. Read Ergast API via requests (see [staging/ergast.py](staging/ergast.py))
