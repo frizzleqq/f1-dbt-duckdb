@@ -29,7 +29,7 @@ WITH transformed AS (
 , increment AS (
     SELECT
         {{
-            dbt_utils.surrogate_key([
+            dbt_utils.generate_surrogate_key([
                 'race_id',
                 'driver_id',
             ])

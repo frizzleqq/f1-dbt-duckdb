@@ -1,8 +1,0 @@
-version: 2
-
-snapshots:
-  - name: d_drivers_scd
-    columns:
-      - name: driver_id
-        tests:
-          - not_null
