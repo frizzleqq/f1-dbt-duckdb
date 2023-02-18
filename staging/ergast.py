@@ -69,7 +69,10 @@ class Table:
             for season, race_round in self._get_seasons_and_rounds(season=season):
                 generator_list.append(
                     ErgastAPI.read_table(
-                        self.table_name, season=season, race_round=race_round
+                        self.table_name,
+                        season=season,
+                        race_round=race_round,
+                        paging_size=500,
                     ),
                 )
             response_generator = itertools.chain(*generator_list)
@@ -175,7 +178,6 @@ TABLES = {
 class ErgastAPI:
     base_url = "http://ergast.com/api/f1"
     response_format = "json"
-    paging = 100
 
     retry_strategy = Retry(
         total=3, status_forcelist=[429, 500, 502, 503, 504], allowed_methods=["GET"]
@@ -196,27 +198,28 @@ class ErgastAPI:
         return "/".join(url_parts)
 
     @staticmethod
-    def request_response(url: str, offset: int = 0) -> dict:
-        payload = {"limit": ErgastAPI.paging, "offset": offset}
+    def _request_response(url: str, paging_size: int, offset: int = 0) -> dict:
+        payload = {"limit": paging_size, "offset": offset}
         response = ErgastAPI.http.get(url, params=payload)
         response.raise_for_status()
         return response.json()
 
     @staticmethod
-    def _response_paging(url):
+    def _response_paging(url: str, paging_size: int):
         offset = 0
-        result_size = ErgastAPI.paging
+        result_size = paging_size
         while result_size > offset:
-            content = ErgastAPI.request_response(url, offset=offset)
+            content = ErgastAPI._request_response(url, paging_size, offset=offset)
             result_size = int(content["MRData"]["total"])
             yield content
-            offset = offset + ErgastAPI.paging
+            offset = offset + paging_size
 
     @staticmethod
     def read_table(
         table: str,
         season: str_or_int = None,
         race_round: str_or_int = None,
+        paging_size: int = 100,
     ) -> Iterator[dict]:
         if season is None and race_round is not None:
             raise ValueError("Cannot get race_round without specifying year.")
@@ -226,7 +229,7 @@ class ErgastAPI:
             race_round = str(race_round)
         url = ErgastAPI._build_url(table, season=season, race_round=race_round)
 
-        for response in ErgastAPI._response_paging(url):
+        for response in ErgastAPI._response_paging(url, paging_size):
             yield response
 
     @staticmethod
