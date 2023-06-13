@@ -5,7 +5,15 @@ SELECT
     , CAST(lap AS INT) AS lap
     , CAST("stop" AS INT) AS pitstop_number
     , CAST("time" AS TIME) AS pitstop_time
-    , CAST(duration AS DOUBLE) AS duration
+    -- due to red flags the stop can take minutes
+    , CASE
+        WHEN REGEXP_MATCHES(duration, '\d+:.*')
+            THEN (
+                CAST(REGEXP_EXTRACT(duration, '(\d+):.*', 1) AS DOUBLE) * 60
+                + CAST(REGEXP_EXTRACT(duration, '\d+:(.*)', 1) AS DOUBLE)
+            )
+        ELSE CAST(duration AS DOUBLE)
+    END AS duration
     , CAST(season AS INT) AS season
     , CAST(round AS INT) AS round
     , CAST("date" AS DATE) AS race_date

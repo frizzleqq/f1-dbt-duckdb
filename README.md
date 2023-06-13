@@ -91,3 +91,5 @@ Run SQL linter on dbt models:
 ```
 sqlfluff lint ./dbt/models/
 ```
+
+> **_NOTE:_** Due to using external tables, the stage models cannot be properly linted.
