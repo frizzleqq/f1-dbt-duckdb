@@ -10,15 +10,29 @@ Use https://pypi.org/project/poetry/ to setup project
 poetry install
 ```
 
-## Staging:
+## File Locations
 
-> **_NOTE:_** When running _staging.py_ the database will be in project-root under
-> '_data/f1.duckdb_' (unless environment variable _DUCKDB_DIR_ is defined).
+Ideally the environment variable _DUCKDB_DIR_ is set to a location where both the
+DuckDB database and the F1 data will be located (the fallback method uses a relative
+path).
+
+### Staging location
+
+When running _staging.py_ the files will be in project-root under '_data/raw_'
+(unless environment variable _DUCKDB_DIR_ is defined).
+
+### DuckDB location
+
+DuckDB file will be in project-root under '_data/f1.duckdb_'
+(unless environment variable _DUCKDB_DIR_ is defined).
+
+## Staging:
 
 Staging is done by
 1. Read Ergast API via requests (see [staging/ergast.py](staging/ergast.py))
 2. Load response into Pandas DataFrame
-3. Create table in DuckDB via CTAS
+3. Write to CSV files
+4. (dbt will create external tables using the CSV files)
 
 Stage races since 2000 (may take a while):
 ```

@@ -3,6 +3,8 @@ version: 2
 sources:
   - name: ergast
     schema: stage_ergast
+    meta:
+      external_location: "{{ env_var('DUCKDB_DIR', 'data') }}/raw/{name}.csv"
     tables:
       - name: circuits
       - name: constructors

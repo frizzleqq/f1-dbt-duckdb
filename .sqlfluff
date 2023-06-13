@@ -20,17 +20,14 @@ indent_unit = space
 [sqlfluff:layout:type:comma]
 line_position = leading
 
-[sqlfluff:rules:L010]
-# Keywords
+[sqlfluff:rules:capitalisation.keywords]
 capitalisation_policy = upper
 
-[sqlfluff:rules:L014]
-extended_capitalisation_policy = lower
+[sqlfluff:rules:capitalisation.identifiers]
+capitalisation_policy = lower
 
-[sqlfluff:rules:L030]
-# Function names
+[sqlfluff:rules:capitalisation.functions]
 capitalisation_policy = upper
 
-[sqlfluff:rules:L040]
-# Null & Boolean Literals
+[sqlfluff:rules:capitalisation.literals]
 capitalisation_policy = upper

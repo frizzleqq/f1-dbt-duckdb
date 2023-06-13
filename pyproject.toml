@@ -9,7 +9,7 @@ python = "^3.10"
 requests = "^2.27.1"
 duckdb = "^0.7.0"
 pandas = "^1.5.1"
-dbt-duckdb = "^1.4.0"
+dbt-duckdb = "^1.5.0"
 sqlfluff-templater-dbt = "^2.0.0a4"
 
 [tool.poetry.group.dev.dependencies]

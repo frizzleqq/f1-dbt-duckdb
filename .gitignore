@@ -3,5 +3,6 @@ data/
 dbt/dbt_packages/
 dbt/logs/
 dbt/target/
+target/
 .idea
 *.pyc

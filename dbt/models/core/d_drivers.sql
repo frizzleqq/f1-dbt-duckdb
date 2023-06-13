@@ -10,7 +10,7 @@ WITH drivers AS (
     FROM {{ ref('ergast_drivers') }}
 
     {% if is_incremental() -%}
-    WHERE load_dts > (SELECT MAX(load_dts) FROM {{ this }})
+        WHERE load_dts > (SELECT MAX(load_dts) FROM {{ this }})
     {%- endif %}
 )
 

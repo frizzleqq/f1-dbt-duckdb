@@ -7,19 +7,18 @@ import requests
 from requests.adapters import HTTPAdapter, Retry
 
 """
-import ergast
-
-# Dataframe
-list(ergast_table.get_dataframe())
-# Dataframe (always full history)
-list(ergast_table.get_dataframe(read_full=True))
+# TableReader
+list(table_reader.get_dataframe())
+list(table_reader.get_dataframe(season=2017))
+# TableReader (always full history)
+list(table_reader.get_dataframe(read_full=True))
 
 # JSON (API) full history
-list(ergast.Ergast.read_table("drivers")
+list(ErgastAPI.read_table("drivers")
 # JSON (API) specific event/year
-list(ergast.Ergast.read_table("drivers", year=2017, race_round=5))
-list(ergast.Ergast.read_table_current_year("drivers"))
-list(ergast.Ergast.read_table_last_race("drivers"))
+list(ErgastAPI.read_table("drivers", year=2017, race_round=5))
+list(ErgastAPI.read_table_current_year("drivers"))
+list(ErgastAPI.read_table_last_race("drivers"))
 """
 
 str_or_int = Union[str, int]
@@ -29,8 +28,7 @@ MIN_SEASON = 2000
 
 
 @dataclass
-class Table:
-    schema_name: str
+class TableReader:
     table_name: str
     response_path: Tuple
     record_path: str_or_list = None
@@ -61,7 +59,9 @@ class Table:
                 elif row_season >= MIN_SEASON:
                     yield row["season"], row["round"]
 
-    def get_dataframe(self, season: int = None, read_full: bool = None) -> pd.DataFrame:
+    def get_dataframe(
+        self, season: int = None, read_full: bool = False
+    ) -> pd.DataFrame:
         if self.always_full:
             response_generator = ErgastAPI.read_table(self.table_name)
         elif season or read_full:
@@ -95,38 +95,32 @@ class Table:
 
 
 TABLES = {
-    "drivers": Table(
-        schema_name="stage_ergast",
+    "drivers": TableReader(
         table_name="drivers",
         always_full=True,
         response_path=("DriverTable", "Drivers"),
     ),
-    "circuits": Table(
-        schema_name="stage_ergast",
+    "circuits": TableReader(
         table_name="circuits",
         always_full=True,
         response_path=("CircuitTable", "Circuits"),
     ),
-    "seasons": Table(
-        schema_name="stage_ergast",
+    "seasons": TableReader(
         table_name="seasons",
         always_full=True,
         response_path=("SeasonTable", "Seasons"),
     ),
-    "constructors": Table(
-        schema_name="stage_ergast",
+    "constructors": TableReader(
         table_name="constructors",
         always_full=True,
         response_path=("ConstructorTable", "Constructors"),
     ),
-    "races": Table(
-        schema_name="stage_ergast",
+    "races": TableReader(
         table_name="races",
         always_full=True,
         response_path=("RaceTable", "Races"),
     ),
-    "qualifying": Table(
-        schema_name="stage_ergast",
+    "qualifying": TableReader(
         table_name="qualifying",
         always_full=False,
         response_path=("RaceTable", "Races"),
@@ -141,8 +135,7 @@ TABLES = {
             ["Circuit", "circuitId"],
         ],
     ),
-    "results": Table(
-        schema_name="stage_ergast",
+    "results": TableReader(
         table_name="results",
         always_full=False,
         response_path=("RaceTable", "Races"),
@@ -157,8 +150,7 @@ TABLES = {
             ["Circuit", "circuitId"],
         ],
     ),
-    "laps": Table(
-        schema_name="stage_ergast",
+    "laps": TableReader(
         table_name="laps",
         always_full=False,
         response_path=("RaceTable", "Races"),
