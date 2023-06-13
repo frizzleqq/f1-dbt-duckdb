@@ -1,5 +1,6 @@
 airflow/
 data/
+dbt/.user.yml
 dbt/dbt_packages/
 dbt/logs/
 dbt/target/

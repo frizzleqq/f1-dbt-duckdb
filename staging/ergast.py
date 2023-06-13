@@ -120,6 +120,19 @@ TABLES = {
         always_full=True,
         response_path=("RaceTable", "Races"),
     ),
+    "pitstops": TableReader(
+        table_name="pitstops",
+        always_full=False,
+        response_path=("RaceTable", "Races"),
+        record_path="PitStops",
+        record_meta=[
+            "season",
+            "round",
+            "date",
+            "raceName",
+            ["Circuit", "circuitId"],
+        ],
+    ),
     "qualifying": TableReader(
         table_name="qualifying",
         always_full=False,

@@ -23,7 +23,10 @@ WITH transformed AS (
 )
 
 , races AS (
-    SELECT * FROM {{ ref('d_races') }}
+    SELECT
+        race_id
+        , circuit_id
+    FROM {{ ref('d_races') }}
 )
 
 , joined AS (

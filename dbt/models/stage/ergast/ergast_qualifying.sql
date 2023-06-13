@@ -12,7 +12,7 @@ SELECT
     , CAST(season AS INT) AS season
     , CAST(round AS INT) AS round
     , CAST("date" AS DATE) AS qualifying_date
-    , "time" AS qualifying_time
+    , CAST("time" AS TIME) AS qualifying_time
     , racename
     , url
     , load_dts

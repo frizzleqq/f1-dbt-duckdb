@@ -7,16 +7,16 @@ SELECT
     , racename
     , CAST("date" AS DATE) AS race_date
     , circuit_circuitid
-    , "time" AS race_time
+    , CAST("time" AS TIME) AS race_time
     , CAST(firstpractice_date AS DATE) AS firstpractice_date
-    , firstpractice_time
+    , CAST(firstpractice_time AS TIME) AS firstpractice_time
     , CAST(secondpractice_date AS DATE) AS secondpractice_date
-    , secondpractice_time
+    , CAST(secondpractice_time AS TIME) AS secondpractice_time
     , CAST(thirdpractice_date AS DATE) AS thirdpractice_date
-    , thirdpractice_time
+    , CAST(thirdpractice_time AS TIME) AS thirdpractice_time
     , CAST(qualifying_date AS DATE) AS qualifying_date
-    , qualifying_time
+    , CAST(qualifying_time AS TIME) AS qualifying_time
     , CAST(sprint_date AS DATE) AS sprint_date
-    , sprint_time
+    , CAST(sprint_time AS TIME) AS sprint_time
     , load_dts
 FROM {{ source('ergast', 'races') }}

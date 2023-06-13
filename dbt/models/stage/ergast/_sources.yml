@@ -10,6 +10,7 @@ sources:
       - name: constructors
       - name: drivers
       - name: laps
+      - name: pitstops
       - name: qualifying
       - name: races
       - name: results

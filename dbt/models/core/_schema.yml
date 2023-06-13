@@ -40,10 +40,31 @@ models:
       - name: race_id
         tests:
           - not_null
+      - name: circuit_id
+        tests:
+          - not_null
       - name: driver_id
         tests:
           - not_null
       - name: lap_number
+        tests:
+          - not_null
+  - name: f_pitstops
+    columns:
+      - name: pitstop_id
+        tests:
+          - unique
+          - not_null
+      - name: race_id
+        tests:
+          - not_null
+      - name: circuit_id
+        tests:
+          - not_null
+      - name: driver_id
+        tests:
+          - not_null
+      - name: pitstop_number
         tests:
           - not_null
   - name: f_qualifying
@@ -53,6 +74,9 @@ models:
           - unique
           - not_null
       - name: race_id
+        tests:
+          - not_null
+      - name: circuit_id
         tests:
           - not_null
       - name: driver_id
@@ -71,6 +95,9 @@ models:
           - unique
           - not_null
       - name: race_id
+        tests:
+          - not_null
+      - name: circuit_id
         tests:
           - not_null
       - name: driver_id

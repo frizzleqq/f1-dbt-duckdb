@@ -6,7 +6,7 @@ SELECT
     , CAST(points AS DOUBLE) AS points
     , CAST(grid AS INT) AS grid
     , CAST(laps AS INT) AS laps
-    , status
+    , "status" AS result_status
     , driver_driverid
     , constructor_constructorid
     , CAST(time_millis AS INT) AS time_millis

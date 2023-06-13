@@ -15,7 +15,7 @@ WITH transformed AS (
         , result_position
         , positiontext AS result_position_text
         , points AS result_points
-        , status AS result_status
+        , result_status
         , grid AS starting_position
         , laps AS laps_completed
         , time_time AS result_time
