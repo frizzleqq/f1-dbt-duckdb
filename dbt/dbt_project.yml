@@ -27,11 +27,10 @@ models:
       core:
         +schema: core
         +materialized: incremental
+      export:
+        +schema: export
+        +materialized: external
       stage:
         +materialized: view
         ergast:
           +schema: stage_ergast
-
-snapshots:
-  f1warehouse:
-    +target_schema: snapshots
