@@ -1,21 +1,2 @@
-[tool.poetry]
-name = "f1-dbt-duckdb"
-version = "0.1.0"
-description = "Some experimenting with dbt/DuckDB using Ergast API as main source."
-authors = ["frizzleqq"]
-
-[tool.poetry.dependencies]
-python = "^3.10"
-requests = "^2.27.1"
-duckdb = "^0.7.0"
-pandas = "^1.5.1"
-dbt-duckdb = "^1.5.0"
-sqlfluff-templater-dbt = "^2.0.0a4"
-
-[tool.poetry.group.dev.dependencies]
-black = "^22.10.0"
-isort = "^5.10.1"
-
-[build-system]
-requires = ["poetry-core>=1.2.0"]
-build-backend = "poetry.core.masonry.api"
+[tool.isort]
+profile = "black"

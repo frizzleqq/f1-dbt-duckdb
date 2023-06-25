@@ -1,9 +1,21 @@
-airflow/
-data/
+# build/ide
+.idea
+.venv
+*.pyc
+*.egg-info
+build/
+dist/
+
+# dbt directories
 dbt/.user.yml
 dbt/dbt_packages/
 dbt/logs/
 dbt/target/
+# some dbt directories where created in root
+dbt_packages/
+logs/
 target/
-.idea
-*.pyc
+
+# misc
+airflow/
+data/

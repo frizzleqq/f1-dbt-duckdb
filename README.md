@@ -2,13 +2,39 @@
 
 Some experimenting with dbt/DuckDB using [Ergast API](http://ergast.com/mrd/) as main source.
 
-## Getting Started
+## Development
 
-Use https://pypi.org/project/poetry/ to setup project
-(alternatively a requirements.txt file also exists).
-```
-poetry install
-```
+* Python >= 3.10 https://www.python.org/downloads/
+
+### Setup Virtual environment
+
+> **_NOTE:_** Using _[dev]_ also installs development tools.
+
+* Bash:
+    ```bash
+    python -m venv .venv
+    source .venv/Scripts/activate
+    pip install -e .[dev]
+    ```
+* PowerShell:
+    ```powershell
+    python -m venv .venv
+    .venv\Scripts\Activate.ps1
+    pip install -e .[dev]
+    ```
+* Windows CMD:
+    ```
+    python -m venv .venv
+    .venv\Scripts\activate.bat
+    pip install -e .[dev]
+    ```
+
+### Development Tools
+
+* Code formatting: `black`
+* Import sorting: `isort`
+* SQL linting/formatting: `sqlfluff`
+
 
 ## File Locations
 
@@ -18,12 +44,12 @@ path).
 
 ### Staging location
 
-When running _staging.py_ the files will be in project-root under '_data/raw_'
+When running `staging.py` the files will be in project-root under `data/raw`
 (unless environment variable _DUCKDB_DIR_ is defined).
 
 ### DuckDB location
 
-DuckDB file will be in project-root under '_data/f1.duckdb_'
+DuckDB file will be in project-root under `data/f1.duckdb`
 (unless environment variable _DUCKDB_DIR_ is defined).
 
 ## Staging:
