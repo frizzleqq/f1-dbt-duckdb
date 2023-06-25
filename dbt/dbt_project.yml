@@ -27,6 +27,7 @@ models:
       core:
         +schema: core
         +materialized: incremental
+        +on_schema_change: append_new_columns
       export:
         +schema: export
         +materialized: external

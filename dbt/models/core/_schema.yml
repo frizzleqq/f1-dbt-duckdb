@@ -1,6 +1,24 @@
 version: 2
 
 models:
+  - name: b_drivers_constructors
+    columns:
+      - name: result_id
+        tests:
+          - unique
+          - not_null
+      - name: race_date
+        tests:
+          - not_null
+      - name: race_id
+        tests:
+          - not_null
+      - name: constructor_id
+        tests:
+          - not_null
+      - name: driver_id
+        tests:
+          - not_null
   - name: d_drivers
     columns:
       - name: driver_id
@@ -31,11 +49,17 @@ models:
         tests:
           - unique
           - not_null
+      - name: race_date
+        tests:
+          - not_null
   - name: f_laps
     columns:
       - name: lap_id
         tests:
           - unique
+          - not_null
+      - name: race_date
+        tests:
           - not_null
       - name: race_id
         tests:
@@ -55,6 +79,9 @@ models:
         tests:
           - unique
           - not_null
+      - name: race_date
+        tests:
+          - not_null
       - name: race_id
         tests:
           - not_null
@@ -72,6 +99,9 @@ models:
       - name: qualifying_id
         tests:
           - unique
+          - not_null
+      - name: qualifying_date
+        tests:
           - not_null
       - name: race_id
         tests:
@@ -93,6 +123,9 @@ models:
       - name: result_id
         tests:
           - unique
+          - not_null
+      - name: race_date
+        tests:
           - not_null
       - name: race_id
         tests:
