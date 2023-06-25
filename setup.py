@@ -5,6 +5,15 @@ from setuptools import setup
 HERE = Path(__file__).parent.resolve()
 LONG_DESCRIPTION = (HERE / "README.md").read_text(encoding="utf-8")
 INSTALL_REQUIRES = (HERE / "requirements.txt").read_text("utf-8").splitlines()
+PACKAGE_DATA = {
+    "dbt": [
+        "*.yml",
+        "macros/*",
+        "models/core/*",
+        "models/export/*",
+        "models/stage/ergast/*",
+    ]
+}
 
 DEV_REQUIREMENTS = [
     # development & testing tools
@@ -17,9 +26,11 @@ DEV_REQUIREMENTS = [
 
 setup(
     name="f1dbtduckdb",
-    version="0.1.0",
-    packages=["foneload"],
+    version="0.2.0",
+    packages=["foneload", "dbt"],
     entry_points={"console_scripts": ["foneload = foneload.__main__:main"]},
+    package_data=PACKAGE_DATA,
+    include_package_data=True,
     python_requires=">=3.10",
     setup_requires=["setuptools", "wheel"],
     install_requires=INSTALL_REQUIRES,
