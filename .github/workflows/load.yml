@@ -1,0 +1,55 @@
+# This workflow will:
+#   - install Python dependencies
+#   - lint Python code
+#   - extract some data from ergast
+#   - run dbt
+#   - run dbt test
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Ergast data load
+
+env:
+  DUCKDB_DIR: /tmp/data
+  SEASON: 2023
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10"]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install .[dev]
+    - name: Lint Python code
+      run: |
+        ruff staging
+        mypy staging
+        isort staging --check
+        black staging --check
+    - name: Stage ergast data
+      run: |
+        python ./staging/staging.py --season $SEASON
+    - name: dbt run
+      run: |
+        dbt deps --project-dir="./dbt" --profiles-dir="./dbt"
+        dbt run --project-dir="./dbt" --profiles-dir="./dbt"
+    - name: dbt test
+      run: |
+        dbt test --project-dir="./dbt" --profiles-dir="./dbt"
