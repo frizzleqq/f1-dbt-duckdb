@@ -5,6 +5,7 @@ from setuptools import setup
 HERE = Path(__file__).parent.resolve()
 LONG_DESCRIPTION = (HERE / "README.md").read_text(encoding="utf-8")
 INSTALL_REQUIRES = (HERE / "requirements.txt").read_text("utf-8").splitlines()
+# include dbt code in python package
 PACKAGE_DATA = {
     "dbt": [
         "*.yml",

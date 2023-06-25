@@ -16,7 +16,7 @@ The `--editable` makes the CLI script available.
 * Bash:
     ```bash
     python -m venv .venv
-    source .venv/Scripts/activate
+    source .venv/bin/activate
     pip install --editable .[dev]
     ```
 * PowerShell:
