@@ -6,8 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Optional
 
-import ergast
-from ergast import TableReader
+from foneload import ergast
 
 # defaults to <project-root>/data
 DUCKDB_DIR = Path(
@@ -60,7 +59,7 @@ def get_parser() -> argparse.ArgumentParser:
 
 
 def stage_table(
-    table_reader: TableReader,
+    table_reader: ergast.TableReader,
     season: Optional[int] = None,
     read_full: bool = False,
 ) -> StageResult:
@@ -73,7 +72,7 @@ def stage_table(
     return StageResult(file_path, len(df.index))
 
 
-def main(
+def run(
     table_names: list,
     season: Optional[int] = None,
     read_full: bool = False,
@@ -100,12 +99,16 @@ def main(
         )
 
 
-if __name__ == "__main__":
+def main():
     arg_parser = get_parser()
     args = arg_parser.parse_args()
 
-    main(
+    run(
         table_names=args.table_names,
         season=args.season,
         read_full=args.read_full,
     )
+
+
+if __name__ == "__main__":
+    main()

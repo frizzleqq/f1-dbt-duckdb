@@ -18,7 +18,8 @@ DEV_REQUIREMENTS = [
 setup(
     name="f1dbtduckdb",
     version="0.1.0",
-    packages=["staging"],
+    packages=["foneload"],
+    entry_points={"console_scripts": ["foneload = foneload.__main__:main"]},
     python_requires=">=3.10",
     setup_requires=["setuptools", "wheel"],
     install_requires=INSTALL_REQUIRES,

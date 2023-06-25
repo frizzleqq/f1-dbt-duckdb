@@ -5,6 +5,8 @@
 *.egg-info
 build/
 dist/
+.ruff_cache/
+.mypy_cache/
 
 # dbt directories
 dbt/.user.yml

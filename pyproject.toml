@@ -2,7 +2,7 @@
 profile = "black"
 
 [[tool.mypy.overrides]]
-module = "ergast,pandas,requests,requests.adapters"
+module = "ergast,staging,pandas,requests,requests.adapters"
 ignore_missing_imports = true
 
 [tool.ruff]

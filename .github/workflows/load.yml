@@ -39,13 +39,13 @@ jobs:
         python -m pip install .[dev]
     - name: Lint Python code
       run: |
-        ruff staging
-        mypy staging
-        isort staging --check
-        black staging --check
+        ruff foneload
+        mypy foneload
+        isort foneload --check
+        black foneload --check
     - name: Stage ergast data
       run: |
-        python ./staging/staging.py --season $SEASON
+        foneload --season $SEASON
     - name: dbt run
       run: |
         dbt deps --project-dir="./dbt" --profiles-dir="./dbt"
