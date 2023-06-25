@@ -47,7 +47,7 @@ def get_parser() -> argparse.ArgumentParser:
         "--season",
         default=None,
         type=int,
-        help=f"Read provided season (=year) fully for fact tables.",
+        help="Read provided season (=year) fully for fact tables.",
     )
     group.add_argument(
         "-r",

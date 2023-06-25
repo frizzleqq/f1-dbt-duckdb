@@ -31,8 +31,10 @@ Some experimenting with dbt/DuckDB using [Ergast API](http://ergast.com/mrd/) as
 
 ### Development Tools
 
+* Code linting: `ruff`
 * Code formatting: `black`
 * Import sorting: `isort`
+* type checking: `mypy`
 * SQL linting/formatting: `sqlfluff`
 
 

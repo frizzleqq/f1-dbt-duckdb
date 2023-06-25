@@ -10,6 +10,8 @@ DEV_REQUIREMENTS = [
     # development & testing tools
     "black>=23.0.0, <24.0.0",
     "isort>=5.0.0, <6.0.0",
+    "mypy>=1.0.0, <2.0.0",
+    "ruff",
     "sqlfluff-templater-dbt>=2.0.0, <3.0.0",
 ]
 

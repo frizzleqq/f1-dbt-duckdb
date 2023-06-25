@@ -1,6 +1,6 @@
 import itertools
 from dataclasses import dataclass
-from typing import Iterator, Tuple, Union
+from typing import Iterator, Tuple
 
 import pandas as pd
 import requests
@@ -8,9 +8,13 @@ from requests.adapters import HTTPAdapter, Retry
 
 """
 # TableReader
+table_reader = TableReader(
+        table_name="drivers",
+        always_full=True,
+        response_path=("DriverTable", "Drivers"),
+    )
 list(table_reader.get_dataframe())
 list(table_reader.get_dataframe(season=2017))
-# TableReader (always full history)
 list(table_reader.get_dataframe(read_full=True))
 
 # JSON (API) full history
@@ -21,9 +25,6 @@ list(ErgastAPI.read_table_current_year("drivers"))
 list(ErgastAPI.read_table_last_race("drivers"))
 """
 
-str_or_int = Union[str, int]
-str_or_list = Union[str, list]
-
 MIN_SEASON = 2000
 
 
@@ -31,20 +32,20 @@ MIN_SEASON = 2000
 class TableReader:
     table_name: str
     response_path: Tuple
-    record_path: str_or_list = None
-    record_meta: list = None
+    record_path: str | list[str] | None = None
+    record_meta: list | None = None
     always_full: bool = False
 
     def _extract_table_from_response(self, response) -> Iterator[dict]:
         table_key, list_key = self.response_path
         return (row for row in response["MRData"][table_key][list_key])
 
-    def _get_seasons_and_rounds(self, season: int = None):
+    def _get_seasons_and_rounds(self, season: int | None = None):
         """
         Data of some tables can only be read by specifying season & round.
         So for older seasons we read each round of a season instead.
 
-        Error: "Bad Request: Lap time queries require a season and round to be specified"
+        Error: Bad Request: Lap time queries require a season and round to be specified
 
         :param season: if specified, only yield that season
         :return: tuple with (season, row)
@@ -60,7 +61,7 @@ class TableReader:
                     yield row["season"], row["round"]
 
     def get_dataframe(
-        self, season: int = None, read_full: bool = False
+        self, season: int | None = None, read_full: bool = False
     ) -> pd.DataFrame:
         if self.always_full:
             response_generator = ErgastAPI.read_table(self.table_name)
@@ -193,7 +194,9 @@ class ErgastAPI:
     http.mount("http://", adapter)
 
     @staticmethod
-    def _build_url(table: str, season: str = None, race_round: str = None) -> str:
+    def _build_url(
+        table: str, season: str | None = None, race_round: str | None = None
+    ) -> str:
         url_parts = [ErgastAPI.base_url]
         if season:
             url_parts.append(season)
@@ -222,8 +225,8 @@ class ErgastAPI:
     @staticmethod
     def read_table(
         table: str,
-        season: str_or_int = None,
-        race_round: str_or_int = None,
+        season: str | int | None = None,
+        race_round: str | int | None = None,
         paging_size: int = 100,
     ) -> Iterator[dict]:
         if season is None and race_round is not None:
