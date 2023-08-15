@@ -1,3 +1,53 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "f1dbtduckdb"
+version = "0.2.0"
+description = "Experimenting with dbt/DuckDB using Ergast API as main source"
+readme = "README.md"
+requires-python = ">= 3.10"
+urls.homepage = "https://github.com/frizzleqq/f1-dbt-duckdb"
+classifiers = [
+  "Natural Language :: English",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+]
+
+dependencies = [
+  "dbt-duckdb>=1.6.0",
+  "duckdb==0.7.1",
+  "pandas>=1.5.3",
+  "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  # development & testing tools
+  "black>=23.0.0, <24.0.0",
+  "isort>=5.0.0, <6.0.0",
+  "mypy>=1.0.0, <2.0.0",
+  "ruff",
+  "sqlfluff-templater-dbt>=2.0.0, <3.0.0",
+]
+
+[project.scripts]
+foneload = "foneload.__main__:main"
+
+[tool.setuptools]
+packages = ["foneload", "dbt"]
+
+[tool.setuptools.package-data]
+dbt = [
+  "*.yml",
+  "macros/*",
+  "models/core/*",
+  "models/export/*",
+  "models/stage/ergast/*",
+]
+
 [tool.isort]
 profile = "black"
 

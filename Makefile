@@ -1,12 +1,15 @@
-.PHONY: dbt dbt-test format install lint load test
+.PHONY: build dbt-test format install lint load test
 
 
 PACKAGE := foneload
 
+build:
+	pip install build
+	python -m build
 
 dbt:
 	dbt deps --project-dir="./dbt" --profiles-dir="./dbt"
-	dbt run --project-dir="./dbt" --profiles-dir="./dbt"
+	dbt build --project-dir="./dbt" --profiles-dir="./dbt"
 
 dbt-test:
 	dbt test --project-dir="./dbt" --profiles-dir="./dbt"
@@ -17,6 +20,7 @@ format:
 	black $(PACKAGE)
 
 install:
+	python -m pip install --upgrade pip
 	pip install --editable .[dev]
 
 lint:
