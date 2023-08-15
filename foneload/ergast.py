@@ -7,8 +7,8 @@ import requests
 from requests.adapters import HTTPAdapter, Retry
 
 """
-# TableReader
-table_reader = TableReader(
+# ErgastTableReader
+table_reader = ErgastTableReader(
         table_name="drivers",
         always_full=True,
         response_path=("DriverTable", "Drivers"),
@@ -29,7 +29,7 @@ MIN_SEASON = 2000
 
 
 @dataclass
-class TableReader:
+class ErgastTableReader:
     table_name: str
     response_path: Tuple
     record_path: str | list[str] | None = None
@@ -96,32 +96,32 @@ class TableReader:
 
 
 TABLES = {
-    "drivers": TableReader(
+    "drivers": ErgastTableReader(
         table_name="drivers",
         always_full=True,
         response_path=("DriverTable", "Drivers"),
     ),
-    "circuits": TableReader(
+    "circuits": ErgastTableReader(
         table_name="circuits",
         always_full=True,
         response_path=("CircuitTable", "Circuits"),
     ),
-    "seasons": TableReader(
+    "seasons": ErgastTableReader(
         table_name="seasons",
         always_full=True,
         response_path=("SeasonTable", "Seasons"),
     ),
-    "constructors": TableReader(
+    "constructors": ErgastTableReader(
         table_name="constructors",
         always_full=True,
         response_path=("ConstructorTable", "Constructors"),
     ),
-    "races": TableReader(
+    "races": ErgastTableReader(
         table_name="races",
         always_full=True,
         response_path=("RaceTable", "Races"),
     ),
-    "pitstops": TableReader(
+    "pitstops": ErgastTableReader(
         table_name="pitstops",
         always_full=False,
         response_path=("RaceTable", "Races"),
@@ -134,7 +134,7 @@ TABLES = {
             ["Circuit", "circuitId"],
         ],
     ),
-    "qualifying": TableReader(
+    "qualifying": ErgastTableReader(
         table_name="qualifying",
         always_full=False,
         response_path=("RaceTable", "Races"),
@@ -149,7 +149,7 @@ TABLES = {
             ["Circuit", "circuitId"],
         ],
     ),
-    "results": TableReader(
+    "results": ErgastTableReader(
         table_name="results",
         always_full=False,
         response_path=("RaceTable", "Races"),
@@ -164,7 +164,7 @@ TABLES = {
             ["Circuit", "circuitId"],
         ],
     ),
-    "laps": TableReader(
+    "laps": ErgastTableReader(
         table_name="laps",
         always_full=False,
         response_path=("RaceTable", "Races"),

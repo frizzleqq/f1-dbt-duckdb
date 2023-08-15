@@ -19,6 +19,7 @@ DUCKDB_DIR = Path(
 
 @dataclass
 class StageResult:
+    table_name: str
     file_path: Path
     row_count: int
 
@@ -59,7 +60,7 @@ def get_parser() -> argparse.ArgumentParser:
 
 
 def stage_table(
-    table_reader: ergast.TableReader,
+    table_reader: ergast.ErgastTableReader,
     season: Optional[int] = None,
     read_full: bool = False,
 ) -> StageResult:
@@ -69,7 +70,7 @@ def stage_table(
     df = table_reader.get_dataframe(season=season, read_full=read_full)
     df["load_dts"] = dt.datetime.now()
     df.to_csv(file_path, index=False, mode="w")
-    return StageResult(file_path, len(df.index))
+    return StageResult(table_reader.table_name, file_path, len(df.index))
 
 
 def run(
@@ -94,7 +95,7 @@ def run(
             read_full=read_full,
         )
         logging.info(
-            f"Staged {table_reader.table_name} ({stage_result.row_count} rows)"
+            f"Staged {stage_result.table_name} ({stage_result.row_count} rows)"
             f" into '{stage_result.file_path}'."
         )
 
