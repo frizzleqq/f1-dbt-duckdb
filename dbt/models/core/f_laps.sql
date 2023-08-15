@@ -9,6 +9,7 @@ WITH transformed AS (
     SELECT
         race_date
         , CONCAT(season, '-', round) AS race_id
+        , circuitid AS circuit_id
         , driverid AS driver_id
         , laps_number AS lap_number
         , lap_position
@@ -22,21 +23,6 @@ WITH transformed AS (
 
 )
 
-, races AS (
-    SELECT
-        race_id
-        , circuit_id
-    FROM {{ ref('d_races') }}
-)
-
-, joined AS (
-    SELECT
-        transformed.*
-        , races.circuit_id
-    FROM transformed
-    LEFT JOIN races ON races.race_id = transformed.race_id
-)
-
 , increment AS (
     SELECT
         {{
@@ -46,15 +32,8 @@ WITH transformed AS (
                 'lap_number',
             ])
         }} AS lap_id
-        , race_date
-        , circuit_id
-        , race_id
-        , driver_id
-        , lap_number
-        , lap_position
-        , lap_time
-        , load_dts
-    FROM joined
+        , *
+    FROM transformed
 )
 
 SELECT *

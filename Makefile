@@ -1,4 +1,4 @@
-.PHONY: build dbt-test format install lint load test
+.PHONY: build dbt dbt-test format install lint load load-full test
 
 
 PACKAGE := foneload
@@ -31,6 +31,10 @@ lint:
 
 load:
 	$(PACKAGE)
+	make dbt
+
+load-full:
+	$(PACKAGE) --read-full
 	make dbt
 
 test:

@@ -25,19 +25,27 @@ list(ErgastAPI.read_table_current_year("drivers"))
 list(ErgastAPI.read_table_last_race("drivers"))
 """
 
+# minimum season to read
 MIN_SEASON = 2000
+# default paging size
+PAGING_SIZE = 100
+# paging size when reading full season or history
+PAGING_SIZE_BIG = 500
 
 
 @dataclass
 class ErgastTableReader:
     table_name: str
-    response_path: Tuple
+    response_path: Tuple[str, str]
     record_path: str | list[str] | None = None
     record_meta: list | None = None
     always_full: bool = False
 
-    def _extract_table_from_response(self, response) -> Iterator[dict]:
-        table_key, list_key = self.response_path
+    @staticmethod
+    def _extract_table_from_response(
+        response: dict, response_path: Tuple[str, str]
+    ) -> Iterator[dict]:
+        table_key, list_key = response_path
         return (row for row in response["MRData"][table_key][list_key])
 
     def _get_seasons_and_rounds(self, season: int | None = None):
@@ -51,8 +59,9 @@ class ErgastTableReader:
         :return: tuple with (season, row)
         """
         response_generator = ErgastAPI.read_table("races")
+        response_path = ("RaceTable", "Races")
         for response in response_generator:
-            for row in self._extract_table_from_response(response):
+            for row in self._extract_table_from_response(response, response_path):
                 row_season = int(row["season"])
                 if season:
                     if row_season == season:
@@ -73,7 +82,7 @@ class ErgastTableReader:
                         self.table_name,
                         season=season,
                         race_round=race_round,
-                        paging_size=500,
+                        paging_size=PAGING_SIZE_BIG,
                     ),
                 )
             response_generator = itertools.chain(*generator_list)
@@ -82,7 +91,7 @@ class ErgastTableReader:
 
         rows = []
         for response in response_generator:
-            for row in self._extract_table_from_response(response):
+            for row in self._extract_table_from_response(response, self.response_path):
                 rows.append(row)
 
         df = pd.json_normalize(
@@ -175,7 +184,28 @@ TABLES = {
             "url",
             "raceName",
             "date",
+            "Circuit",
             ["Laps", "number"],
+        ],
+    ),
+    "driverstandings": ErgastTableReader(
+        table_name="driverStandings",
+        always_full=False,
+        response_path=("StandingsTable", "StandingsLists"),
+        record_path="DriverStandings",
+        record_meta=[
+            "season",
+            "round",
+        ],
+    ),
+    "constructorstandings": ErgastTableReader(
+        table_name="constructorStandings",
+        always_full=False,
+        response_path=("StandingsTable", "StandingsLists"),
+        record_path="ConstructorStandings",
+        record_meta=[
+            "season",
+            "round",
         ],
     ),
 }
@@ -227,7 +257,7 @@ class ErgastAPI:
         table: str,
         season: str | int | None = None,
         race_round: str | int | None = None,
-        paging_size: int = 100,
+        paging_size: int = PAGING_SIZE,
     ) -> Iterator[dict]:
         if season is None and race_round is not None:
             raise ValueError("Cannot get race_round without specifying year.")

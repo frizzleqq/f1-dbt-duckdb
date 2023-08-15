@@ -52,6 +52,39 @@ models:
       - name: race_date
         tests:
           - not_null
+  - name: f_constructor_standings
+    columns:
+      - name: constructor_standing_id
+        tests:
+          - unique
+          - not_null
+      - name: race_date
+        tests:
+          - not_null
+      - name: race_id
+        tests:
+          - not_null
+      - name: constructor_id
+        tests:
+          - not_null
+  - name: f_driver_standings
+    columns:
+      - name: driver_standing_id
+        tests:
+          - unique
+          - not_null
+      - name: race_date
+        tests:
+          - not_null
+      - name: race_id
+        tests:
+          - not_null
+      - name: constructor_id
+        tests:
+          - not_null
+      - name: driver_id
+        tests:
+          - not_null
   - name: f_laps
     columns:
       - name: lap_id

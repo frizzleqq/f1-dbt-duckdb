@@ -8,7 +8,9 @@ sources:
     tables:
       - name: circuits
       - name: constructors
+      - name: constructorStandings
       - name: drivers
+      - name: driverStandings
       - name: laps
       - name: pitstops
       - name: qualifying
