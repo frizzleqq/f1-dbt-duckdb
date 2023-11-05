@@ -14,6 +14,10 @@ dbt:
 dbt-test:
 	dbt test --project-dir="./dbt" --profiles-dir="./dbt"
 
+doc:
+	dbt docs generate --project-dir="./dbt" --profiles-dir="./dbt"
+	dbt docs serve --project-dir="./dbt" --profiles-dir="./dbt"
+
 format:
 	ruff $(PACKAGE) --fix
 	isort $(PACKAGE)

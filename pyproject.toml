@@ -18,8 +18,8 @@ classifiers = [
 
 dependencies = [
   "dbt-duckdb>=1.6.0",
-  "duckdb==0.7.1",
-  "pandas>=1.5.3",
+  "duckdb>=0.7.0",
+  "pandas>=2.0.0",
   "requests>=2.31.0",
 ]
 

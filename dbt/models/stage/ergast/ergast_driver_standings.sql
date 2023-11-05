@@ -15,6 +15,6 @@ SELECT
     , driver_nationality
     , CAST(season AS INT) AS season
     , CAST(round AS INT) AS round
-    , JSON(REPLACE(constructors, '''', '"'))->>0->>'$.constructorId' AS constructorid
+    , JSON(REPLACE(constructors, '''', '"')) ->> 0 ->> '$.constructorId' AS constructorid
     , load_dts
 FROM {{ source('ergast', 'driverStandings') }}

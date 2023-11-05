@@ -16,9 +16,15 @@ models:
       - name: constructor_id
         tests:
           - not_null
+          - relationships:
+              to: ref('d_constructors')
+              field: constructor_id
       - name: driver_id
         tests:
           - not_null
+          - relationships:
+              to: ref('d_drivers')
+              field: driver_id
   - name: d_drivers
     columns:
       - name: driver_id
@@ -166,12 +172,21 @@ models:
       - name: circuit_id
         tests:
           - not_null
+          - relationships:
+              to: ref('d_circuits')
+              field: circuit_id
       - name: driver_id
         tests:
           - not_null
+          - relationships:
+              to: ref('d_drivers')
+              field: driver_id
       - name: constructor_id
         tests:
           - not_null
+          - relationships:
+              to: ref('d_constructors')
+              field: constructor_id
       - name: result_position
         tests:
           - not_null

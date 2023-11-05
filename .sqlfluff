@@ -31,3 +31,6 @@ capitalisation_policy = upper
 
 [sqlfluff:rules:capitalisation.literals]
 capitalisation_policy = upper
+
+[sqlfluff:rules:structure.join_condition_order]
+preferred_first_table_in_join_clause = later

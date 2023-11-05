@@ -15,7 +15,7 @@ WITH transformed AS (
     FROM {{ ref('ergast_results') }}
 
     {% if is_incremental() -%}
-        WHERE load_dts > (SELECT max(load_dts) FROM {{ this }})
+        WHERE load_dts > (SELECT MAX(load_dts) FROM {{ this }})
     {%- endif %}
 
 )
