@@ -33,9 +33,9 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
-      run: make install
+      run: make requirements
     - name: Lint Python code
-      run: make lint
+      run: make test
     - name: Stage ergast data
       run: foneload --season $SEASON
     - name: dbt run

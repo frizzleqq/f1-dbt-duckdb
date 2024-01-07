@@ -1,45 +1,65 @@
-.PHONY: build dbt dbt-test format install lint load load-full test
-
-
 PACKAGE := foneload
 
+SHELL=/bin/bash
+VENV=.venv
+
+ifeq ($(OS),Windows_NT)
+	VENV_BIN=$(VENV)/Scripts
+else
+	VENV_BIN=$(VENV)/bin
+endif
+
+.venv:  ## Set up Python virtual environment and install requirements
+	python -m venv $(VENV)
+	$(MAKE) requirements
+
+.PHONY: requirements
+requirements: .venv  ## Install/refresh Python project requirements
+	$(VENV_BIN)/python -m pip install --upgrade pip
+	$(VENV_BIN)/python -m pip install --editable .[dev]
+
+.PHONY: build
 build:
-	pip install build
-	python -m build
+	$(VENV_BIN)/python -m pip install build
+	$(VENV_BIN)/python -m build
 
+.PHONY: dbt
 dbt:
-	dbt deps --project-dir="./dbt" --profiles-dir="./dbt"
-	dbt build --project-dir="./dbt" --profiles-dir="./dbt"
+	"$(VENV_BIN)/dbt" deps --project-dir="./dbt" --profiles-dir="./dbt"
+	"$(VENV_BIN)/dbt" build --project-dir="./dbt" --profiles-dir="./dbt"
 
+.PHONY: dbt-test
 dbt-test:
-	dbt test --project-dir="./dbt" --profiles-dir="./dbt"
+	"$(VENV_BIN)/dbt" test --project-dir="./dbt" --profiles-dir="./dbt"
 
+.PHONY: doc
 doc:
-	dbt docs generate --project-dir="./dbt" --profiles-dir="./dbt"
-	dbt docs serve --project-dir="./dbt" --profiles-dir="./dbt"
+	"$(VENV_BIN)/dbt" docs generate --project-dir="./dbt" --profiles-dir="./dbt"
+	"$(VENV_BIN)/dbt" docs serve --project-dir="./dbt" --profiles-dir="./dbt"
 
+.PHONY: format
 format:
-	ruff $(PACKAGE) --fix
-	isort $(PACKAGE)
-	black $(PACKAGE)
+	$(VENV_BIN)/ruff $(PACKAGE) --fix
+	$(VENV_BIN)/isort $(PACKAGE)
+	$(VENV_BIN)/black $(PACKAGE)
 
-install:
-	python -m pip install --upgrade pip
-	pip install --editable .[dev]
-
+.PHONY: lint
 lint:
-	ruff $(PACKAGE)
-	isort $(PACKAGE) --check
-	black $(PACKAGE) --check
-	mypy $(PACKAGE)
+	$(VENV_BIN)/ruff $(PACKAGE)
+	$(VENV_BIN)/isort $(PACKAGE) --check
+	$(VENV_BIN)/black $(PACKAGE) --check
+	$(VENV_BIN)/mypy $(PACKAGE)
 
+.PHONY: load
 load:
-	$(PACKAGE)
-	make dbt
+	$(VENV_BIN)/$(PACKAGE)
+	$(MAKE) dbt
 
+.PHONY: load-full
 load-full:
 	$(PACKAGE) --read-full
-	make dbt
+	$(MAKE) dbt
 
+.PHONY: test
 test:
-	make lint
+	$(MAKE) lint

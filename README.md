@@ -20,9 +20,8 @@ The `--editable` makes the CLI script available.
 
 * Bash:
     ```bash
-    python -m venv .venv
+    make requirements
     source .venv/bin/activate
-    make install
     ```
 * PowerShell:
     ```powershell
@@ -150,7 +149,8 @@ dbt test --project-dir="./dbt" --profiles-dir="./dbt"
 
 Run SQL linter on dbt models:
 ```
-sqlfluff lint ./dbt/models/
+# requires env variable `DUCKDB_DIR` to be set
+sqlfluff lint ./dbt/models/core
 ```
 
 > **_NOTE:_** Due to using external tables, the stage models cannot be properly linted.
