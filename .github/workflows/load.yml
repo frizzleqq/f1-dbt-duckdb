@@ -9,7 +9,6 @@ name: Ergast data load
 
 env:
   DUCKDB_DIR: /tmp/data
-  SEASON: 2023
 
 on:
   push:
@@ -37,6 +36,6 @@ jobs:
     - name: Lint Python code
       run: make test
     - name: Stage ergast data
-      run: foneload --season $SEASON
+      run: make load
     - name: dbt run
       run: make dbt
