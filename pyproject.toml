@@ -17,6 +17,8 @@ classifiers = [
 ]
 
 dependencies = [
+  "dagster-dbt>=0.22.0",
+  "dagster-webserver>=1.6.0",
   "dbt-duckdb>=1.6.0",
   "duckdb>=0.7.0",
   "pandas>=2.0.0",
@@ -35,6 +37,10 @@ dev = [
 
 [project.scripts]
 foneload = "foneload.__main__:main"
+
+[tool.dagster]
+module_name = "foneplatform"
+code_location_name = "foneplatform"
 
 [tool.setuptools]
 packages = ["foneload", "dbt"]
