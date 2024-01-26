@@ -5,14 +5,13 @@ from dagster_dbt import DbtCliResource
 
 from .ergast_resource import ErgastResource
 
-
 dbt_project_dir = Path(__file__).parent.parent.parent.joinpath("dbt").resolve()
 DBT_MANIFEST_PATH = dbt_project_dir.joinpath("target", "manifest.json")
 
 
 dbt_resource = DbtCliResource(
-        project_dir=os.fspath(dbt_project_dir),
-        profiles_dir=os.fspath(dbt_project_dir),
+    project_dir=os.fspath(dbt_project_dir),
+    profiles_dir=os.fspath(dbt_project_dir),
 )
 
 # If DAGSTER_DBT_PARSE_PROJECT_ON_LOAD is set, a manifest will be created at run time.

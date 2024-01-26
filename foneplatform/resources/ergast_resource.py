@@ -1,12 +1,11 @@
 import itertools
 from typing import Iterator, Tuple
 
-from dagster import ConfigurableResource
 import pandas as pd
 import requests
-from requests.adapters import HTTPAdapter, Retry
+from dagster import ConfigurableResource
 from pydantic import Field
-
+from requests.adapters import HTTPAdapter, Retry
 
 # TABLES = {
 #     "drivers": ErgastTableReader(
