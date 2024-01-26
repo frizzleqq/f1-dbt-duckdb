@@ -1,13 +1,14 @@
 from dagster import Definitions
 
-from .assets import f1warehouse_dbt_assets
-from .resources import dbt_resource
+from .assets import foneplatform_dbt_assets
+from .resources import dbt_resource, ergast_resource
 from .schedules import schedules
 
 defs = Definitions(
-    assets=[f1warehouse_dbt_assets],
+    assets=[foneplatform_dbt_assets],
     schedules=schedules,
     resources={
         "dbt": dbt_resource,
+        "ergast": ergast_resource,
     },
 )
