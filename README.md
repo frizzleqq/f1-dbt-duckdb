@@ -1,11 +1,8 @@
 # F1 warehouse with DuckDB
 
-Some experimenting with `dagster`, `dbt` and `DuckDB` using
+Some experimenting with [dagster](https://docs.dagster.io/),
+[dbt](https://docs.getdbt.com/) and [DuckDB](https://duckdb.org/) using
 [Ergast API](http://ergast.com/mrd/) as main source.
-
-* `dagster` - https://docs.dagster.io/
-* `dbt` - https://docs.getdbt.com/
-* `DuckDB` - https://duckdb.org/
 
 ## Development
 
@@ -42,6 +39,18 @@ The `--editable` makes the CLI script available.
     pip install --editable .[dev]
     ```
 
+### Dagster
+
+Start local dagster server
+```bash
+dagster dev
+```
+
+Launch dagster job without
+```bash
+dagster job execute -m foneplatform -j ergast_job
+```
+
 ### Development Tools
 
 * Code linting: `ruff`
@@ -61,7 +70,7 @@ The data directory will look like this:
 ```
 data
 ├── f1.duckdb
-└── raw
+└── ergast
     ├── circuits.csv
     ├── constructors.csv
     ├── drivers.csv
@@ -73,64 +82,13 @@ data
     └── seasons.csv
 ```
 
-### Staging location
-
-When running `foneload` the files will be in project-root under `data/raw`
-(unless environment variable `DATA_DIR` is defined).
-
-### DuckDB location
-
-DuckDB file will be in project-root under `data/f1.duckdb`
-(unless environment variable `DATA_DIR` is defined).
-
-
-## Staging:
+### Staging:
 
 Staging is done by
-1. Read Ergast API via requests (see [foneload/ergast.py](foneload/ergast.py))
+1. Read Ergast API via requests
 1. Load response into Pandas DataFrame
 1. Write to CSV files
 1. (dbt will create external tables using the CSV files)
-
-Stage races since 2000 (may take a while):
-```
-foneload --read-full
-```
-
-Stage last race only:
-```
-foneload
-```
-
-If not in editable mode it can also be run from root:
-```
-python ./foneload
-```
-
-### CLI
-
-By default, only the last race is loaded.
-* Option _--season_ allows reading an entire season.
-* Option _--read-full_ reads all seasons/races since 2000 from Ergast API. (may take a while)
-
-dbt models use merge, so reloading data will not result in duplicate rows. 
-
-Usage:
-```
-usage: foneload [-h] [-s SEASON | -r] [table_names ...]
-
-Load data from Ergast WebService into DuckDB, by default only the last race is loaded.
-
-positional arguments:
-  table_names           List of table names to load, omit to load all tables
-
-options:
-  -h, --help            show this help message and exit
-  -s SEASON, --season SEASON
-                        Read provided season (=year) fully for fact tables.
-  -r, --read-full       Read past seasons (beginning with 2000) for fact tables.
-```
-
 
 ## dbt
 
