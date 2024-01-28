@@ -25,7 +25,7 @@ def get_request_session(request_max_retries: int = 3) -> requests.Session:
     return http
 
 
-class ErgastResource(dagster.ConfigurableResource):
+class ErgastResource(dagster.ConfigurableResource):  # type: ignore
     """
     # Get pandas dataframe
     ergast_resource = ErgastResource(
@@ -45,10 +45,17 @@ class ErgastResource(dagster.ConfigurableResource):
     list(ErgastAPI.read_table_last_race("drivers"))
     """
 
-    base_url: str = Field(description="TODO", default="http://ergast.com/api/f1")
-    min_season: int = Field(description="TODO", default=2000)
-    paging_size: int = Field(description="TODO", default=200)
-    paging_size_big: int = Field(description="TODO", default=500)
+    base_url: str = Field(
+        description="Base url to Ergast API", default="http://ergast.com/api/f1"
+    )
+    min_season: int = Field(
+        description="Oldest season to read from (to prevent inconsistencies in schema)",
+        default=2000,
+    )
+    paging_size: int = Field(description="API paging size", default=200)
+    paging_size_big: int = Field(
+        description="API paging size when readong entire seasons", default=500
+    )
 
     def _build_url(
         self, table: str, season: str | None = None, race_round: str | None = None

@@ -2,16 +2,12 @@ import os
 import textwrap
 
 import pandas as pd
-from dagster import (  # TableSchemaMetadataValue,
-    AssetKey,
-    ConfigurableIOManager,
-    MemoizableIOManager,
-)
+from dagster import AssetKey, ConfigurableIOManager  # TableSchemaMetadataValue,
 from dagster._core.definitions.metadata import MetadataValue
 from pydantic import Field
 
 
-class LocalCsvIOManager(ConfigurableIOManager, MemoizableIOManager):
+class LocalCsvIOManager(ConfigurableIOManager):  # type: ignore
     """Translates between Pandas DataFrames and CSVs on the local filesystem."""
 
     base_path: str = Field(default=os.path.join("data"))
@@ -26,8 +22,6 @@ class LocalCsvIOManager(ConfigurableIOManager, MemoizableIOManager):
         fpath = self._get_fs_path(asset_key=context.asset_key)
         os.makedirs(os.path.dirname(fpath), exist_ok=True)
         df.to_csv(fpath, encoding="utf8", index=False)
-        with open(fpath + ".version", "w", encoding="utf8") as f:
-            f.write(context.version if context.version else "None")
 
         context.add_output_metadata(
             {
@@ -55,16 +49,6 @@ class LocalCsvIOManager(ConfigurableIOManager, MemoizableIOManager):
             if table_col.type == "datetime64[ns]"
         ]
         return pd.read_csv(fpath, parse_dates=date_col_names)
-
-    def has_output(self, context) -> bool:
-        fpath = self._get_fs_path(asset_key=context.asset_key)
-        version_fpath = fpath + ".version"
-        if not os.path.exists(version_fpath):
-            return False
-        with open(version_fpath, "r", encoding="utf8") as f:
-            version = f.read()
-
-        return version == context.version
 
 
 def pandas_columns_to_markdown(dataframe: pd.DataFrame) -> str:
