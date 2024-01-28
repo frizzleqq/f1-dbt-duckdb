@@ -1,14 +1,15 @@
 from dagster import Definitions
 
-from .assets import foneplatform_dbt_assets
-from .resources import dbt_resource, ergast_resource
-from .schedules import schedules
+from .assets import all_assets
+from . import resources
+# from .schedules import schedules
 
 defs = Definitions(
-    assets=[foneplatform_dbt_assets],
-    schedules=schedules,
+    assets=all_assets,
+    # schedules=schedules,
     resources={
-        "dbt": dbt_resource,
-        "ergast": ergast_resource,
+        "io_manager": resources.LocalCsvIOManager(base_dir="data"),
+        "dbt": resources.dbt_resource,
+        "ergast": resources.ErgastResource(),
     },
 )

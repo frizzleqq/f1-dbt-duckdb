@@ -4,6 +4,7 @@ from pathlib import Path
 from dagster_dbt import DbtCliResource
 
 from .ergast_resource import ErgastResource
+from .io_manager import LocalCsvIOManager
 
 dbt_project_dir = Path(__file__).parent.parent.parent.joinpath("dbt").resolve()
 DBT_MANIFEST_PATH = dbt_project_dir.joinpath("target", "manifest.json")
@@ -25,5 +26,3 @@ if os.getenv("DAGSTER_DBT_PARSE_PROJECT_ON_LOAD"):
         .wait()
         .target_path.joinpath("manifest.json")
     )
-
-ergast_resource = ErgastResource()
