@@ -1,13 +1,11 @@
 import os
 import textwrap
-from typing import Optional
 
 import pandas as pd
-from dagster import (
+from dagster import (  # TableSchemaMetadataValue,
     AssetKey,
     ConfigurableIOManager,
     MemoizableIOManager,
-    # TableSchemaMetadataValue,
 )
 from dagster._core.definitions.metadata import MetadataValue
 from pydantic import Field
@@ -16,8 +14,8 @@ from pydantic import Field
 class LocalCsvIOManager(ConfigurableIOManager, MemoizableIOManager):
     """Translates between Pandas DataFrames and CSVs on the local filesystem."""
 
-    base_path: Optional[str] = Field(default=os.path.join("data"))
-    extension: Optional[str] = Field(default="csv")
+    base_path: str = Field(default=os.path.join("data"))
+    extension: str = Field(default="csv")
 
     def _get_fs_path(self, asset_key: AssetKey) -> str:
         rpath = f"{os.path.join(self.base_path, *asset_key.path)}.{self.extension}"

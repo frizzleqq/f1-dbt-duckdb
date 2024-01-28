@@ -1,9 +1,9 @@
 from dagster import AssetExecutionContext
 from dagster_dbt import (
-    DbtCliResource,
-    dbt_assets,
     DagsterDbtTranslator,
     DagsterDbtTranslatorSettings,
+    DbtCliResource,
+    dbt_assets,
 )
 
 from ..resources import DBT_MANIFEST_PATH

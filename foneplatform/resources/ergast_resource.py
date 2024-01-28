@@ -1,13 +1,13 @@
+import datetime as dt
 import itertools
-from typing import Iterator, Tuple
 import logging
 from dataclasses import dataclass
-import datetime as dt
+from typing import Iterator, Tuple
 
-from dagster._utils.cached_method import cached_method
+import dagster
 import pandas as pd
 import requests
-import dagster
+from dagster._utils.cached_method import cached_method
 from pydantic import Field
 from requests.adapters import HTTPAdapter, Retry
 
@@ -153,7 +153,7 @@ class ErgastResource(dagster.ConfigurableResource):
                         race_round=race_round,
                     ),
                 )
-            response_generator: Iterator[dict] = itertools.chain(*generator_list)
+            response_generator = itertools.chain(*generator_list)
         else:
             response_generator = self.request_table_last_race(table_name)
 

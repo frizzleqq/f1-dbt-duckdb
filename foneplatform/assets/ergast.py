@@ -1,6 +1,5 @@
 from ..resources.ergast_resource import ErgastTable, build_ergast_asset
 
-
 TABLES = {
     "drivers": ErgastTable(
         table_name="drivers",

@@ -1,4 +1,4 @@
-PACKAGE := foneload
+PACKAGE := foneplatform
 
 SHELL=/bin/bash
 VENV=.venv
@@ -22,6 +22,12 @@ requirements: .venv  ## Install/refresh Python project requirements
 build:
 	$(VENV_BIN)/python -m pip install build
 	$(VENV_BIN)/python -m build
+
+.PHONY: dagster
+dagster:
+	"$(VENV_BIN)/dbt" deps --project-dir="./dbt" --profiles-dir="./dbt"
+	"$(VENV_BIN)/dbt" parse --project-dir="./dbt" --profiles-dir="./dbt"
+	"$(VENV_BIN)/dagster" dev
 
 .PHONY: dbt
 dbt:
@@ -49,16 +55,6 @@ lint:
 	$(VENV_BIN)/isort $(PACKAGE) --check
 	$(VENV_BIN)/black $(PACKAGE) --check
 	$(VENV_BIN)/mypy $(PACKAGE)
-
-.PHONY: load
-load:
-	$(VENV_BIN)/$(PACKAGE)
-	$(MAKE) dbt
-
-.PHONY: load-full
-load-full:
-	$(PACKAGE) --read-full
-	$(MAKE) dbt
 
 .PHONY: test
 test:
