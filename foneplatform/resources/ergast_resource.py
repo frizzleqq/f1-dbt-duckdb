@@ -1,6 +1,8 @@
 import itertools
 from typing import Iterator, Tuple
 import logging
+from dataclasses import dataclass
+import datetime as dt
 
 from dagster._utils.cached_method import cached_method
 import pandas as pd
@@ -45,8 +47,8 @@ class ErgastResource(dagster.ConfigurableResource):
 
     base_url: str = Field(description="TODO", default="http://ergast.com/api/f1")
     min_season: int = Field(description="TODO", default=2000)
-    paging_size: int = Field(description="TODO", default=300)
-    paging_size_big: int = Field(description="TODO", default=700)
+    paging_size: int = Field(description="TODO", default=200)
+    paging_size_big: int = Field(description="TODO", default=500)
 
     def _build_url(
         self, table: str, season: str | None = None, race_round: str | None = None
@@ -136,10 +138,10 @@ class ErgastResource(dagster.ConfigurableResource):
         record_path: str | list[str] | None = None,
         record_meta: list | None = None,
         season: int | None = None,
-        read_full: bool = False,
+        read_full_table: bool = False,
         read_all_seasons: bool = False,
     ) -> pd.DataFrame:
-        if read_full:
+        if read_full_table:
             response_generator = self.request_table(table_name)
         if season or read_all_seasons:
             generator_list = []
@@ -168,3 +170,31 @@ class ErgastResource(dagster.ConfigurableResource):
             errors="ignore",
         )
         return df
+
+
+@dataclass
+class ErgastTable:
+    table_name: str
+    response_path: Tuple[str, str]
+    record_path: str | list[str] | None = None
+    record_meta: list | None = None
+    always_full: bool = False
+
+
+def build_ergast_asset(
+    asset_name: str, table: ErgastTable, read_all_seasons: bool = False
+):
+    @dagster.asset(name=asset_name)
+    def asset_fn(ergast: ErgastResource) -> pd.DataFrame:
+        df = ergast.get_dataframe(
+            table.table_name,
+            response_path=table.response_path,
+            record_path=table.record_path,
+            record_meta=table.record_meta,
+            read_full_table=table.always_full,
+            read_all_seasons=read_all_seasons,
+        )
+        df["load_dts"] = dt.datetime.now()
+        return df
+
+    return asset_fn

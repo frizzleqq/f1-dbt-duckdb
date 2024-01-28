@@ -4,3 +4,6 @@
 storage:
   sqlite:
     base_dir: data/dagster
+
+telemetry:
+  enabled: false

@@ -9,9 +9,9 @@ from typing import Optional
 from foneload import ergast
 
 # defaults to <project-root>/data
-DUCKDB_DIR = Path(
+DATA_DIR = Path(
     os.environ.get(
-        "DUCKDB_DIR",
+        "DATA_DIR",
         Path(__file__).parent.parent.joinpath("data"),
     )
 )
@@ -64,7 +64,7 @@ def stage_table(
     season: Optional[int] = None,
     read_full: bool = False,
 ) -> StageResult:
-    raw_dir = DUCKDB_DIR.joinpath("raw")
+    raw_dir = DATA_DIR.joinpath("ergast")
     raw_dir.mkdir(parents=True, exist_ok=True)
     file_path = raw_dir.joinpath(f"{table_reader.table_name}.csv")
     df = table_reader.get_dataframe(season=season, read_full=read_full)

@@ -49,7 +49,7 @@ The `--editable` makes the CLI script available.
 
 ## File Locations
 
-Ideally the environment variable `DUCKDB_DIR` is set to a location where both the
+Ideally the environment variable `DATA_DIR` is set to a location where both the
 DuckDB database and the F1 data will be located (the fallback method uses a relative
 path).
 
@@ -72,12 +72,12 @@ data
 ### Staging location
 
 When running `foneload` the files will be in project-root under `data/raw`
-(unless environment variable `DUCKDB_DIR` is defined).
+(unless environment variable `DATA_DIR` is defined).
 
 ### DuckDB location
 
 DuckDB file will be in project-root under `data/f1.duckdb`
-(unless environment variable `DUCKDB_DIR` is defined).
+(unless environment variable `DATA_DIR` is defined).
 
 
 ## Staging:
@@ -149,7 +149,7 @@ dbt test --project-dir="./dbt" --profiles-dir="./dbt"
 
 Run SQL linter on dbt models:
 ```
-# requires env variable `DUCKDB_DIR` to be set
+# requires env variable `DATA_DIR` to be set
 sqlfluff lint ./dbt/models/core
 ```
 

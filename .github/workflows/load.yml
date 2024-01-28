@@ -8,7 +8,7 @@
 name: Ergast data load
 
 env:
-  DUCKDB_DIR: /tmp/data
+  DATA_DIR: /tmp/data
 
 on:
   push:

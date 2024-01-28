@@ -4,7 +4,7 @@ sources:
   - name: ergast
     schema: stage_ergast
     meta:
-      external_location: "{{ env_var('DUCKDB_DIR', 'data') }}/raw/{name}.csv"
+      external_location: "{{ env_var('DATA_DIR', '../data') }}/ergast/{name}.csv"
     tables:
       - name: circuits
       - name: constructors

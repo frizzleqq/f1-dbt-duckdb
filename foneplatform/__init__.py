@@ -8,7 +8,7 @@ defs = Definitions(
     assets=all_assets,
     # schedules=schedules,
     resources={
-        "io_manager": resources.LocalCsvIOManager(base_dir="data"),
+        "io_manager": resources.LocalCsvIOManager(),
         "dbt": resources.dbt_resource,
         "ergast": resources.ErgastResource(),
     },
