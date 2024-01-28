@@ -1,7 +1,11 @@
-# F1 dbt warehouse with DuckDB
+# F1 warehouse with DuckDB
 
-Some experimenting with dbt/DuckDB using [Ergast API](http://ergast.com/mrd/) as
-main source.
+Some experimenting with `dagster`, `dbt` and `DuckDB` using
+[Ergast API](http://ergast.com/mrd/) as main source.
+
+* `dagster` - https://docs.dagster.io/
+* `dbt` - https://docs.getdbt.com/
+* `DuckDB` - https://duckdb.org/
 
 ## Development
 
