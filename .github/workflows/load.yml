@@ -35,7 +35,5 @@ jobs:
       run: make requirements
     - name: Lint Python code
       run: make test
-    - name: Stage ergast data
+    - name: Run ergast job
       run: make load
-    - name: dbt run
-      run: make dbt

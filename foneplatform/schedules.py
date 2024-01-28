@@ -1,15 +1,13 @@
-"""
-To add a daily schedule that materializes your dbt assets, uncomment the following lines.
-"""
-# from dagster_dbt import build_schedule_from_dbt_selection
+from dagster import AssetSelection, ScheduleDefinition, define_asset_job
 
-# from .assets import foneplatform_dbt_assets
+ergast_job = define_asset_job(
+    name="ergast_job", selection=AssetSelection.groups("ergast").downstream()
+)
 
-# schedules = [
-#         build_schedule_from_dbt_selection(
-#             [f1warehouse_dbt_assets],
-#             job_name="materialize_dbt_models",
-#             cron_schedule="0 0 * * *",
-#             dbt_select="fqn:*",
-#         ),
-# ]
+ergast_schedule = ScheduleDefinition(
+    job=ergast_job,
+    cron_schedule="0 2 * * *",  # every day at 2am
+)
+
+scheduled_jobs = [ergast_job]
+schedules = [ergast_schedule]

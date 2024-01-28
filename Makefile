@@ -56,6 +56,12 @@ lint:
 	$(VENV_BIN)/black $(PACKAGE) --check
 	$(VENV_BIN)/mypy $(PACKAGE)
 
+.PHONY: load
+load:
+	"$(VENV_BIN)/dbt" deps --project-dir="./dbt" --profiles-dir="./dbt"
+	"$(VENV_BIN)/dbt" parse --project-dir="./dbt" --profiles-dir="./dbt"
+	"$(VENV_BIN)/dagster" job execute -m "foneplatform" -j "ergast_job"
+
 .PHONY: test
 test:
 	$(MAKE) lint

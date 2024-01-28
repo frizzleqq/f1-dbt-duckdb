@@ -15,5 +15,5 @@ from ..resources import DBT_MANIFEST_PATH
         settings=DagsterDbtTranslatorSettings(enable_asset_checks=True)
     ),
 )
-def foneplatform_dbt_assets(context: AssetExecutionContext, dbt: DbtCliResource):
+def f1warehouse_dbt_assets(context: AssetExecutionContext, dbt: DbtCliResource):
     yield from dbt.cli(["build"], context=context).stream()

@@ -84,7 +84,7 @@ TABLES = {
             ["Laps", "number"],
         ],
     ),
-    "driverstandings": ErgastTable(
+    "driverStandings": ErgastTable(
         table_name="driverStandings",
         always_full=False,
         response_path=("StandingsTable", "StandingsLists"),
@@ -94,7 +94,7 @@ TABLES = {
             "round",
         ],
     ),
-    "constructorstandings": ErgastTable(
+    "constructorStandings": ErgastTable(
         table_name="constructorStandings",
         always_full=False,
         response_path=("StandingsTable", "StandingsLists"),
