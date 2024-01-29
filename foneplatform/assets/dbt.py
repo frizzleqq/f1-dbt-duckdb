@@ -9,7 +9,7 @@ from dagster_dbt import (
 from ..resources.dbt_resource import DBT_MANIFEST_PATH
 
 
-class DbtConfig(Config): # type: ignore
+class DbtConfig(Config):  # type: ignore
     full_refresh: bool = False
 
 
