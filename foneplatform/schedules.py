@@ -9,5 +9,5 @@ ergast_schedule = ScheduleDefinition(
     cron_schedule="0 2 * * *",  # every day at 2am
 )
 
-scheduled_jobs = [ergast_job]
-schedules = [ergast_schedule]
+all_jobs = [ergast_job]
+all_schedules = [ergast_schedule]
