@@ -7,7 +7,6 @@ from typing import Iterator, Tuple
 import dagster
 import pandas as pd
 import requests
-from dagster._utils.cached_method import cached_method
 from pydantic import Field
 from requests.adapters import HTTPAdapter, Retry
 
@@ -76,7 +75,6 @@ class ErgastResource(dagster.ConfigurableResource):  # type: ignore
         return (row for row in response["MRData"][table_key][list_key])
 
     @property
-    @cached_method
     def _log(self) -> logging.Logger:
         return dagster.get_dagster_logger()
 

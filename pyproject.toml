@@ -28,10 +28,8 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
   # development & testing tools
-  "black>=23.0.0, <24.0.0",
-  "isort>=5.0.0, <6.0.0",
   "mypy>=1.0.0, <2.0.0",
-  "ruff",
+  "ruff>=0.1.2",
   "sqlfluff-templater-dbt>=2.0.0, <3.0.0",
 ]
 
@@ -51,12 +49,12 @@ dbt = [
   "models/stage/ergast/*",
 ]
 
-[tool.isort]
-profile = "black"
-
 [[tool.mypy.overrides]]
 module = "ergast,staging,pandas,requests,requests.adapters"
 ignore_missing_imports = true
 
 [tool.ruff]
 line-length = 88
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"

@@ -45,15 +45,15 @@ doc:
 
 .PHONY: format
 format:
-	$(VENV_BIN)/ruff $(PACKAGE) --fix
-	$(VENV_BIN)/isort $(PACKAGE)
-	$(VENV_BIN)/black $(PACKAGE)
+	$(VENV_BIN)/ruff check $(PACKAGE) --fix
+	$(VENV_BIN)/ruff check --select I $(PACKAGE) --fix
+	$(VENV_BIN)/ruff format $(PACKAGE)
 
 .PHONY: lint
 lint:
-	$(VENV_BIN)/ruff $(PACKAGE)
-	$(VENV_BIN)/isort $(PACKAGE) --check
-	$(VENV_BIN)/black $(PACKAGE) --check
+	$(VENV_BIN)/ruff check $(PACKAGE)
+	$(VENV_BIN)/ruff check --select I $(PACKAGE)
+	$(VENV_BIN)/ruff format $(PACKAGE) --check
 	$(VENV_BIN)/mypy $(PACKAGE)
 
 .PHONY: load
