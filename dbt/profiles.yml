@@ -5,5 +5,5 @@ f1warehouse_duckdb:
       type: duckdb
       schema: public
       threads: 4
-      path: "{{ env_var('DUCKDB_DIR', 'data') }}/f1.duckdb"
-      external_root: "{{ env_var('DUCKDB_DIR', 'data') }}/"
+      path: "{{ env_var('DATA_DIR', 'data') }}/f1.duckdb"
+      external_root: "{{ env_var('DATA_DIR', 'data') }}/"

@@ -1,4 +1,4 @@
-PACKAGE := foneload
+PACKAGE := foneplatform
 
 SHELL=/bin/bash
 VENV=.venv
@@ -23,6 +23,12 @@ build:
 	$(VENV_BIN)/python -m pip install build
 	$(VENV_BIN)/python -m build
 
+.PHONY: dagster
+dagster:
+	"$(VENV_BIN)/dbt" deps --project-dir="./dbt" --profiles-dir="./dbt"
+	"$(VENV_BIN)/dbt" parse --project-dir="./dbt" --profiles-dir="./dbt"
+	"$(VENV_BIN)/dagster" dev
+
 .PHONY: dbt
 dbt:
 	"$(VENV_BIN)/dbt" deps --project-dir="./dbt" --profiles-dir="./dbt"
@@ -39,26 +45,20 @@ doc:
 
 .PHONY: format
 format:
-	$(VENV_BIN)/ruff $(PACKAGE) --fix
-	$(VENV_BIN)/isort $(PACKAGE)
-	$(VENV_BIN)/black $(PACKAGE)
+	$(VENV_BIN)/ruff check $(PACKAGE) --fix
+	$(VENV_BIN)/ruff format $(PACKAGE)
 
 .PHONY: lint
 lint:
-	$(VENV_BIN)/ruff $(PACKAGE)
-	$(VENV_BIN)/isort $(PACKAGE) --check
-	$(VENV_BIN)/black $(PACKAGE) --check
+	$(VENV_BIN)/ruff check $(PACKAGE)
+	$(VENV_BIN)/ruff format $(PACKAGE) --check
 	$(VENV_BIN)/mypy $(PACKAGE)
 
 .PHONY: load
 load:
-	$(VENV_BIN)/$(PACKAGE)
-	$(MAKE) dbt
-
-.PHONY: load-full
-load-full:
-	$(PACKAGE) --read-full
-	$(MAKE) dbt
+	"$(VENV_BIN)/dbt" deps --project-dir="./dbt" --profiles-dir="./dbt"
+	"$(VENV_BIN)/dbt" parse --project-dir="./dbt" --profiles-dir="./dbt"
+	"$(VENV_BIN)/dagster" job execute -m "foneplatform" -j "ergast_job"
 
 .PHONY: test
 test:

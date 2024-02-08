@@ -1,0 +1,10 @@
+# there are two ways to set storage to SqliteStorage
+
+# this config sets the directory (`base_dir`) for Sqlite to store data in:
+storage:
+  sqlite:
+    base_dir:
+      env: DATA_DIR
+
+telemetry:
+  enabled: false

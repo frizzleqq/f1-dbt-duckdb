@@ -7,7 +7,6 @@ build/
 dist/
 .ruff_cache/
 .mypy_cache/
-.vscode/
 
 # dbt directories
 dbt/.user.yml
@@ -22,3 +21,4 @@ target/
 # misc
 airflow/
 data/
+tmp*/

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "f1dbtduckdb"
-version = "0.2.0"
+version = "0.3.0"
 description = "Experimenting with dbt/DuckDB using Ergast API as main source"
 readme = "README.md"
 requires-python = ">= 3.10"
@@ -17,6 +17,8 @@ classifiers = [
 ]
 
 dependencies = [
+  "dagster-dbt>=0.22.0",
+  "dagster-webserver>=1.6.0",
   "dbt-duckdb>=1.6.0",
   "duckdb>=0.7.0",
   "pandas>=2.0.0",
@@ -26,18 +28,17 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
   # development & testing tools
-  "black>=23.0.0, <24.0.0",
-  "isort>=5.0.0, <6.0.0",
   "mypy>=1.0.0, <2.0.0",
-  "ruff",
+  "ruff>=0.1.2",
   "sqlfluff-templater-dbt>=2.0.0, <3.0.0",
 ]
 
-[project.scripts]
-foneload = "foneload.__main__:main"
+[tool.dagster]
+module_name = "foneplatform"
+code_location_name = "foneplatform"
 
 [tool.setuptools]
-packages = ["foneload", "dbt"]
+packages = ["foneplatform", "dbt"]
 
 [tool.setuptools.package-data]
 dbt = [
@@ -48,12 +49,20 @@ dbt = [
   "models/stage/ergast/*",
 ]
 
-[tool.isort]
-profile = "black"
-
 [[tool.mypy.overrides]]
 module = "ergast,staging,pandas,requests,requests.adapters"
 ignore_missing_imports = true
 
 [tool.ruff]
 line-length = 88
+
+[tool.ruff.lint]
+select = [
+  "E", # pycodestyle
+  "W", # pycodestyle
+  "F", # Pyflakes
+  "I", # isort
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
