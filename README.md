@@ -41,6 +41,8 @@ The `--editable` makes the CLI script available.
 
 ### Dagster
 
+Dagster uses environment variables located in [.env](.env).
+
 Start local dagster server
 ```bash
 dagster dev
@@ -61,8 +63,7 @@ dagster job execute -m foneplatform -j ergast_job
 ## File Locations
 
 Ideally the environment variable `DATA_DIR` is set to a location where both the
-DuckDB database and the F1 data will be located (the fallback method uses a relative
-path).
+DuckDB database and the F1 data will be located. Dagster uses `.env` to set the path.
 
 The data directory will look like this:
 ```

@@ -12,8 +12,8 @@ from pydantic import Field
 class LocalCsvIOManager(ConfigurableIOManager):  # type: ignore
     """Translates between Pandas DataFrames and CSVs on the local filesystem."""
 
-    base_path: str = Field(default="data")
-    extension: str = Field(default="csv")
+    base_path: str = Field(description="The base path for the CSVs.")
+    extension: str = Field(description="The file extension for the CSVs.", default="csv")
 
     @property
     def _log(self) -> logging.Logger:
