@@ -177,6 +177,11 @@ class ErgastResource(dagster.ConfigurableResource):  # type: ignore
         return df
 
 
+class ErgastConfig(dagster.Config):  # type: ignore
+    read_all_seasons: bool = False
+    season: int = 0
+
+
 @dataclass
 class ErgastTable:
     table_name: str
@@ -186,20 +191,35 @@ class ErgastTable:
     always_full: bool = False
 
 
-def build_ergast_asset(
-    asset_name: str, table: ErgastTable, read_all_seasons: bool = False
-):
-    @dagster.asset(name=asset_name)
-    def asset_fn(ergast: ErgastResource) -> pd.DataFrame:
-        df = ergast.get_dataframe(
-            table.table_name,
-            response_path=table.response_path,
-            record_path=table.record_path,
-            record_meta=table.record_meta,
-            read_full_table=table.always_full,
-            read_all_seasons=read_all_seasons,
-        )
-        df["load_dts"] = dt.datetime.now()
-        return df
+def build_ergast_asset(asset_name: str, table: ErgastTable):
+    if table.always_full:
+        # no config necessary
+        @dagster.asset(name=asset_name)
+        def asset_fn(ergast: ErgastResource) -> pd.DataFrame:
+            df = ergast.get_dataframe(
+                table.table_name,
+                response_path=table.response_path,
+                record_path=table.record_path,
+                record_meta=table.record_meta,
+                read_full_table=table.always_full,
+            )
+            df["load_dts"] = dt.datetime.now()
+            return df
+
+    else:
+
+        @dagster.asset(name=asset_name)
+        def asset_fn(ergast: ErgastResource, config: ErgastConfig) -> pd.DataFrame:
+            df = ergast.get_dataframe(
+                table.table_name,
+                response_path=table.response_path,
+                record_path=table.record_path,
+                record_meta=table.record_meta,
+                read_full_table=table.always_full,
+                season=config.season,
+                read_all_seasons=config.read_all_seasons,
+            )
+            df["load_dts"] = dt.datetime.now()
+            return df
 
     return asset_fn
