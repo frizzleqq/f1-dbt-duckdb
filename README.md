@@ -53,9 +53,7 @@ dagster job execute -m foneplatform -j ergast_job
 
 ### Development Tools
 
-* Code linting: `ruff`
-* Code formatting: `black`
-* Import sorting: `isort`
+* Code linting/formatting: `ruff`
 * type checking: `mypy`
 * SQL linting/formatting: `sqlfluff`
 

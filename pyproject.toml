@@ -56,5 +56,13 @@ ignore_missing_imports = true
 [tool.ruff]
 line-length = 88
 
+[tool.ruff.lint]
+select = [
+  "E", # pycodestyle
+  "W", # pycodestyle
+  "F", # Pyflakes
+  "I", # isort
+]
+
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
