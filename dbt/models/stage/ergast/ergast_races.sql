@@ -16,7 +16,7 @@ SELECT
     , CAST(thirdpractice_time AS TIME) AS thirdpractice_time
     , CAST(qualifying_date AS DATE) AS qualifying_date
     , CAST(qualifying_time AS TIME) AS qualifying_time
-    -- , CAST(sprint_date AS DATE) AS sprint_date
-    -- , CAST(sprint_time AS TIME) AS sprint_time
+    , CAST(sprint_date AS DATE) AS sprint_date
+    , CAST(sprint_time AS TIME) AS sprint_time
     , load_dts
 FROM {{ source('ergast', 'races') }}

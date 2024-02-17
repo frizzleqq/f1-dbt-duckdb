@@ -7,10 +7,10 @@ SELECT
     , CAST("time" AS TIME) AS pitstop_time
     -- due to red flags the stop can take minutes
     , CASE
-        WHEN REGEXP_MATCHES(duration, '\d+:.*')
+        WHEN REGEXP_MATCHES(CAST(duration AS TEXT), '\d+:.*')
             THEN (
-                CAST(REGEXP_EXTRACT(duration, '(\d+):.*', 1) AS DOUBLE) * 60
-                + CAST(REGEXP_EXTRACT(duration, '\d+:(.*)', 1) AS DOUBLE)
+                CAST(REGEXP_EXTRACT(CAST(duration AS TEXT), '(\d+):.*', 1) AS DOUBLE) * 60
+                + CAST(REGEXP_EXTRACT(CAST(duration AS TEXT), '\d+:(.*)', 1) AS DOUBLE)
             )
         ELSE CAST(duration AS DOUBLE)
     END AS duration

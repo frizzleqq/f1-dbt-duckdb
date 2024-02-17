@@ -51,10 +51,7 @@ class ErgastResource(dagster.ConfigurableResource):  # type: ignore
         description="Oldest season to read from (to prevent inconsistencies in schema)",
         default=2000,
     )
-    paging_size: int = Field(description="API paging size", default=200)
-    paging_size_big: int = Field(
-        description="API paging size when readong entire seasons", default=500
-    )
+    paging_size: int = Field(description="API paging size", default=400)
 
     def _build_url(
         self, table: str, season: str | None = None, race_round: str | None = None
@@ -148,7 +145,7 @@ class ErgastResource(dagster.ConfigurableResource):  # type: ignore
     ) -> pd.DataFrame:
         if read_full_table:
             response_generator = self.request_table(table_name)
-        if season or read_all_seasons:
+        elif season or read_all_seasons:
             generator_list = []
             for season, race_round in self.get_seasons_and_rounds(season=season):
                 generator_list.append(
@@ -194,7 +191,7 @@ class ErgastTable:
 def build_ergast_asset(asset_name: str, table: ErgastTable):
     if table.always_full:
         # no config necessary
-        @dagster.asset(name=asset_name)
+        @dagster.asset(name=asset_name, compute_kind="python")
         def asset_fn(ergast: ErgastResource) -> pd.DataFrame:
             df = ergast.get_dataframe(
                 table.table_name,
@@ -208,7 +205,7 @@ def build_ergast_asset(asset_name: str, table: ErgastTable):
 
     else:
 
-        @dagster.asset(name=asset_name)
+        @dagster.asset(name=asset_name, compute_kind="python")
         def asset_fn(ergast: ErgastResource, config: ErgastConfig) -> pd.DataFrame:
             df = ergast.get_dataframe(
                 table.table_name,
