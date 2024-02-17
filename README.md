@@ -48,6 +48,18 @@ Start local dagster server
 dagster dev
 ```
 
+#### Dagster Launchpad
+
+The _launchpad_ can be used to materialize assets with specified configurations.
+Such as staging a specific season or all seasons since a specified season.
+
+Using the dropdown menue next to the Materialize button it is possible to start overrule
+the configuration. See also here: https://docs.dagster.io/concepts/webserver/ui#job-details
+
+![alt text](docs/dagster_launchpad.png "Title")
+
+#### Dagster CLI
+
 Launch dagster job without
 ```bash
 dagster job execute -m foneplatform -j ergast_job
@@ -84,7 +96,7 @@ data
 ### Staging:
 
 Staging is done by
-1. Read Ergast API via requests
+1. Read Ergast API via requests (by default only last race)
 1. Load response into Pandas DataFrame
 1. Write to CSV files
 1. (dbt will create external tables using the CSV files)

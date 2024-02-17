@@ -47,6 +47,12 @@ class ErgastResource(dagster.ConfigurableResource):  # type: ignore
     base_url: str = Field(
         description="Base url to Ergast API", default="http://ergast.com/api/f1"
     )
+    season: int = Field(
+        description="Season to read fromm defaults to most recent", default=0
+    )
+    read_all_seasons: bool = Field(
+        description="Read all seasons from <min_season> to current", default=False
+    )
     min_season: int = Field(
         description="Oldest season to read from (to prevent inconsistencies in schema)",
         default=2000,
@@ -94,15 +100,11 @@ class ErgastResource(dagster.ConfigurableResource):  # type: ignore
     def request_table(
         self,
         table: str,
-        season: str | int | None = None,
-        race_round: str | int | None = None,
+        season: str | None = None,
+        race_round: str | None = None,
     ) -> Iterator[dict]:
         if season is None and race_round is not None:
             raise ValueError("Cannot get race_round without specifying year.")
-        if season is not None:
-            season = str(season)
-        if race_round is not None:
-            race_round = str(race_round)
         url = self._build_url(table, season=season, race_round=race_round)
 
         for response in self._make_pagination(url):
@@ -112,7 +114,7 @@ class ErgastResource(dagster.ConfigurableResource):  # type: ignore
         for row in self.request_table(table, season="current", race_round="last"):
             yield row
 
-    def get_seasons_and_rounds(self, season: int | None = None):
+    def get_seasons_and_rounds(self):
         """
         Data of some tables can only be read by specifying season & round.
         So for older seasons we read each round of a season instead.
@@ -127,8 +129,8 @@ class ErgastResource(dagster.ConfigurableResource):  # type: ignore
         for response in response_generator:
             for row in self._extract_table_from_response(response, response_path):
                 row_season = int(row["season"])
-                if season:
-                    if row_season == season:
+                if self.season:
+                    if row_season == self.season:
                         yield row["season"], row["round"]
                 elif row_season >= self.min_season:
                     yield row["season"], row["round"]
@@ -139,20 +141,18 @@ class ErgastResource(dagster.ConfigurableResource):  # type: ignore
         response_path: Tuple[str, str],
         record_path: str | list[str] | None = None,
         record_meta: list | None = None,
-        season: int | None = None,
         read_full_table: bool = False,
-        read_all_seasons: bool = False,
     ) -> pd.DataFrame:
         if read_full_table:
             response_generator = self.request_table(table_name)
-        elif season or read_all_seasons:
+        elif self.season or self.read_all_seasons:
             generator_list = []
-            for season, race_round in self.get_seasons_and_rounds(season=season):
+            for season, race_round in self.get_seasons_and_rounds():
                 generator_list.append(
                     self.request_table(
                         table_name,
-                        season=season,
-                        race_round=race_round,
+                        season=str(season),
+                        race_round=str(race_round),
                     ),
                 )
             response_generator = itertools.chain(*generator_list)
@@ -174,9 +174,10 @@ class ErgastResource(dagster.ConfigurableResource):  # type: ignore
         return df
 
 
-class ErgastConfig(dagster.Config):  # type: ignore
-    read_all_seasons: bool = False
-    season: int = 0
+# was intended for per asset configuration, but in UI this requires too much config.
+# class ErgastConfig(dagster.Config):  # type: ignore
+#     read_all_seasons: bool = False
+#     season: int = 0
 
 
 @dataclass
@@ -189,34 +190,16 @@ class ErgastTable:
 
 
 def build_ergast_asset(asset_name: str, table: ErgastTable):
-    if table.always_full:
-        # no config necessary
-        @dagster.asset(name=asset_name, compute_kind="python")
-        def asset_fn(ergast: ErgastResource) -> pd.DataFrame:
-            df = ergast.get_dataframe(
-                table.table_name,
-                response_path=table.response_path,
-                record_path=table.record_path,
-                record_meta=table.record_meta,
-                read_full_table=table.always_full,
-            )
-            df["load_dts"] = dt.datetime.now()
-            return df
-
-    else:
-
-        @dagster.asset(name=asset_name, compute_kind="python")
-        def asset_fn(ergast: ErgastResource, config: ErgastConfig) -> pd.DataFrame:
-            df = ergast.get_dataframe(
-                table.table_name,
-                response_path=table.response_path,
-                record_path=table.record_path,
-                record_meta=table.record_meta,
-                read_full_table=table.always_full,
-                season=config.season,
-                read_all_seasons=config.read_all_seasons,
-            )
-            df["load_dts"] = dt.datetime.now()
-            return df
+    @dagster.asset(name=asset_name, compute_kind="python")
+    def asset_fn(ergast: ErgastResource) -> pd.DataFrame:
+        df = ergast.get_dataframe(
+            table.table_name,
+            response_path=table.response_path,
+            record_path=table.record_path,
+            record_meta=table.record_meta,
+            read_full_table=table.always_full,
+        )
+        df["load_dts"] = dt.datetime.now()
+        return df
 
     return asset_fn
