@@ -51,7 +51,7 @@ class ErgastResource(dagster.ConfigurableResource):  # type: ignore
         description="Oldest season to read from (to prevent inconsistencies in schema)",
         default=2000,
     )
-    paging_size: int = Field(description="API paging size", default=400)
+    paging_size: int = Field(description="API paging size", default=500)
 
     def _build_url(
         self, table: str, season: str | None = None, race_round: str | None = None
