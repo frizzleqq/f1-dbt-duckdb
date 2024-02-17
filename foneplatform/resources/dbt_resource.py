@@ -10,11 +10,14 @@ DBT_MANIFEST_PATH = dbt_project_dir.joinpath("target", "manifest.json")
 
 def get_dbt_executable() -> str:
     """
-    Returns the path to the dbt executable.
     If we're in a virtualenv, we want to use the dbt executable in the virtualenv.
+    Returns the path to the dbt executable.
     """
     if sys.prefix != sys.base_prefix:
-        return os.path.join(sys.prefix, "bin", "dbt")
+        if os.name == "nt":
+            return os.path.join(sys.prefix, "Scripts", "dbt")
+        else:
+            return os.path.join(sys.prefix, "bin", "dbt")
     else:
         return "dbt"
 
