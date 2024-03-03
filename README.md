@@ -82,15 +82,15 @@ The data directory will look like this:
 data
 ├── f1.duckdb
 └── ergast
-    ├── circuits.csv
-    ├── constructors.csv
-    ├── drivers.csv
-    ├── laps.csv
-    ├── pitstops.csv
-    ├── qualifying.csv
-    ├── races.csv
-    ├── results.csv
-    └── seasons.csv
+    ├── circuits.parquet
+    ├── constructors.parquet
+    ├── drivers.parquet
+    ├── laps.parquet
+    ├── pitstops.parquet
+    ├── qualifying.parquet
+    ├── races.parquet
+    ├── results.parquet
+    └── seasons.parquet
 ```
 
 ### Staging:
@@ -98,8 +98,8 @@ data
 Staging is done by
 1. Read Ergast API via requests (by default only last race)
 1. Load response into Pandas DataFrame
-1. Write to CSV files
-1. (dbt will create external tables using the CSV files)
+1. Write to Parquet files
+1. (dbt will create external tables using the Parquet files)
 
 ## dbt
 
