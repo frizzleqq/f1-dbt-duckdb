@@ -17,19 +17,19 @@ classifiers = [
 ]
 
 dependencies = [
-  "dagster-dbt>=0.22.0",
-  "dagster-webserver>=1.6.0",
-  "dbt-duckdb>=1.6.0",
+  "dagster-dbt>=0.22.0, <0.23.0",
+  "dagster-webserver>=1.6.0, <1.7.0",
+  "dbt-duckdb>=1.6.0, <2.0.0",
   "duckdb>=0.7.0",
-  "pandas>=2.0.0",
-  "requests>=2.31.0",
+  "pandas>=2.0.0, <3.0.0",
+  "requests>=2.31.0, <3.0.0",
 ]
 
 [project.optional-dependencies]
 dev = [
   # development & testing tools
   "mypy>=1.0.0, <2.0.0",
-  "ruff>=0.1.2",
+  "ruff>=0.3.0, <0.4.0",
   "sqlfluff-templater-dbt>=2.0.0, <3.0.0",
 ]
 
