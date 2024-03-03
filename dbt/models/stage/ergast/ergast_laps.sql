@@ -8,6 +8,6 @@ SELECT
     , CAST(round AS INT) AS round
     , CAST("date" AS DATE) AS race_date
     , laps_number
-    , JSON(REPLACE(circuit, '''', '"')) ->> '$.circuitId' AS circuitid
+    , circuit
     , load_dts
 FROM {{ source('ergast', 'laps') }}
