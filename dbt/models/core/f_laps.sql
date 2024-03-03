@@ -9,7 +9,7 @@ WITH transformed AS (
     SELECT
         race_date
         , CONCAT(season, '-', round) AS race_id
-        , circuitid AS circuit_id
+        , circuit.circuitid AS circuit_id
         , driverid AS driver_id
         , laps_number AS lap_number
         , lap_position
