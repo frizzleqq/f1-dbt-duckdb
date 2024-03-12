@@ -81,21 +81,26 @@ class ErgastResource(dagster.ConfigurableResource):  # type: ignore
     def _log(self) -> logging.Logger:
         return dagster.get_dagster_logger()
 
-    def _make_request(self, url: str, paging_size: int, offset: int = 0) -> dict:
+    def _make_request(
+        self, session: requests.Session, url: str, paging_size: int, offset: int = 0
+    ) -> dict:
         payload = {"limit": paging_size, "offset": offset}
         self._log.info(f"Requesting '{url}' with '{payload}'")
-        response = get_request_session().get(url, params=payload, timeout=30)
+        response = session.get(url, params=payload, timeout=30)
         response.raise_for_status()
         return response.json()
 
     def _make_pagination(self, url: str):
         offset = 0
         result_size = self.paging_size
-        while result_size > offset:
-            content = self._make_request(url, self.paging_size, offset=offset)
-            result_size = int(content["MRData"]["total"])
-            yield content
-            offset = offset + self.paging_size
+        with get_request_session() as session:
+            while result_size > offset:
+                content = self._make_request(
+                    session, url, self.paging_size, offset=offset
+                )
+                result_size = int(content["MRData"]["total"])
+                yield content
+                offset = offset + self.paging_size
 
     def request_table(
         self,
