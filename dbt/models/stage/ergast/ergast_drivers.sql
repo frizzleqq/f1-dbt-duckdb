@@ -5,7 +5,7 @@ SELECT
     , url
     , givenname
     , familyname
-    , CAST(dateofbirth AS DATE) AS dateofbirth
+    , CAST(NULLIF(dateofbirth, '') AS DATE) AS dateofbirth
     , nationality
     , CAST(permanentnumber AS INT) AS permanentnumber
     , code
