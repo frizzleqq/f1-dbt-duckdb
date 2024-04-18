@@ -21,7 +21,7 @@ WITH transformed AS (
         , secondpractice_date + secondpractice_time AS free_practice_2_timestamp
         , thirdpractice_date AS free_practice_3_date
         , thirdpractice_date + thirdpractice_time AS free_practice_3_timestamp
-        , qualifying_date AS qualifying_date
+        , qualifying_date
         , qualifying_date + qualifying_time AS qualifying_timestamp
         , sprint_date
         , sprint_date + sprint_time AS sprint_timestamp

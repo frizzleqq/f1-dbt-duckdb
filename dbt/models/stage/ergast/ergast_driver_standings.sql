@@ -1,7 +1,7 @@
 {{ config(materialized = 'view') }}
 
 SELECT
-    CAST("position" AS INT) AS driver_position
+    CAST(position AS INT) AS driver_position
     , CAST(positiontext AS TEXT) AS positiontext
     , CAST(points AS DOUBLE) AS points
     , CAST(wins AS INT) AS wins

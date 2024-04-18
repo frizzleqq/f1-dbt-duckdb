@@ -9,7 +9,7 @@ WITH transformed AS (
     SELECT
         CONCAT(season, '-', round) AS race_id
         , driver_driverid AS driver_id
-        , constructors[1].constructorId AS constructor_id
+        , constructors[1].constructorid AS constructor_id
         , driver_position
         , positiontext AS driver_position_text
         , points AS driver_points

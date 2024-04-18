@@ -2,11 +2,11 @@
 
 SELECT
     driverid
-    , CAST("position" AS INT) AS lap_position
-    , "time" AS lap_time
+    , CAST(position AS INT) AS lap_position
+    , time AS lap_time
     , CAST(season AS INT) AS season
     , CAST(round AS INT) AS round
-    , CAST("date" AS DATE) AS race_date
+    , CAST(date AS DATE) AS race_date
     , laps_number
     , circuit
     , load_dts

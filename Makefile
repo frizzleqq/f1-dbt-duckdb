@@ -47,12 +47,14 @@ doc:
 format:
 	$(VENV_BIN)/ruff check $(PACKAGE) --fix
 	$(VENV_BIN)/ruff format $(PACKAGE)
+	$(VENV_BIN)/sqlfluff fix dbt\models
 
 .PHONY: lint
 lint:
 	$(VENV_BIN)/ruff check $(PACKAGE)
 	$(VENV_BIN)/ruff format $(PACKAGE) --check
 	$(VENV_BIN)/mypy $(PACKAGE)
+	$(VENV_BIN)/sqlfluff lint dbt\models
 
 .PHONY: load
 load:

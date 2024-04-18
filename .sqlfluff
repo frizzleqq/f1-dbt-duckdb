@@ -1,8 +1,8 @@
 [sqlfluff]
 templater = dbt
-dialect = postgres
+dialect = duckdb
 exclude_rules = L034
-max_line_length = 88
+max_line_length = 100
 
 [sqlfluff:templater:dbt]
 project_dir = dbt/

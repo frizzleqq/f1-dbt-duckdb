@@ -5,9 +5,9 @@ SELECT
     , CAST(round AS INT) AS round
     , url
     , racename
-    , CAST("date" AS DATE) AS race_date
+    , CAST(date AS DATE) AS race_date
     , circuit_circuitid
-    , CAST("time" AS TIME) AS race_time
+    , CAST(time AS TIME) AS race_time
     , CAST(firstpractice_date AS DATE) AS firstpractice_date
     , CAST(firstpractice_time AS TIME) AS firstpractice_time
     , CAST(secondpractice_date AS DATE) AS secondpractice_date
