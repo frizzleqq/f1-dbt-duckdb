@@ -57,6 +57,7 @@ lint:
 
 .PHONY: lint-sql
 lint-sql:
+	$(VENV_BIN)/dbt deps --project-dir="./dbt" --profiles-dir="./dbt"
 	$(VENV_BIN)/sqlfluff lint dbt/models
 
 .PHONY: load
