@@ -47,7 +47,7 @@ doc:
 format:
 	$(VENV_BIN)/ruff check $(PACKAGE) --fix
 	$(VENV_BIN)/ruff format $(PACKAGE)
-	$(VENV_BIN)/sqlfluff fix dbt\models
+	$(VENV_BIN)/sqlfluff fix dbt/models
 
 .PHONY: lint
 lint:
@@ -57,7 +57,7 @@ lint:
 
 .PHONY: lint-sql
 lint-sql:
-	$(VENV_BIN)/sqlfluff lint dbt\models
+	$(VENV_BIN)/sqlfluff lint dbt/models
 
 .PHONY: load
 load:
