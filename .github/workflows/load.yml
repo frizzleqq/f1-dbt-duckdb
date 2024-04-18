@@ -35,7 +35,9 @@ jobs:
       run: make requirements
     - name: Lint Python code
       run: make test
+    - name: Lint SQL code
+      run: |
+        mkdir -p $DATA_DIR
+        make lint-sql
     - name: Run ergast job
       run: make load
-    - name: Lint SQL code
-      run: make lint-sql
