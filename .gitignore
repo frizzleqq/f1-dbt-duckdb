@@ -1,6 +1,7 @@
 # build/ide
 .idea
 .venv
+.vscode/
 *.pyc
 *.egg-info
 build/

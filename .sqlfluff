@@ -10,6 +10,10 @@ profiles_dir = dbt/
 profile = f1warehouse_duckdb
 target = dev
 
+[sqlfluff:templater:jinja]
+apply_dbt_builtins = True
+load_macros_from_path = "./dbt/macros"
+
 [sqlfluff:rules]
 unquoted_identifiers_policy = all
 

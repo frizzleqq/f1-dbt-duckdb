@@ -54,6 +54,9 @@ lint:
 	$(VENV_BIN)/ruff check $(PACKAGE)
 	$(VENV_BIN)/ruff format $(PACKAGE) --check
 	$(VENV_BIN)/mypy $(PACKAGE)
+
+.PHONY: lint-sql
+lint-sql:
 	$(VENV_BIN)/sqlfluff lint dbt\models
 
 .PHONY: load
