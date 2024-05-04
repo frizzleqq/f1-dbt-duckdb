@@ -8,3 +8,6 @@ storage:
 
 telemetry:
   enabled: false
+
+run_queue:
+  max_concurrent_runs: 4

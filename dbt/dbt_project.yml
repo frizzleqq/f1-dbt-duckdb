@@ -25,7 +25,6 @@ models:
   +post-hook:
     - "{{ dagster.log_column_level_metadata() }}"
   f1warehouse:
-      +materialized: table
       core:
         +schema: core
         +materialized: incremental

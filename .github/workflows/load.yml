@@ -1,8 +1,8 @@
 # This workflow will:
 #   - install Python dependencies
 #   - lint Python code
-#   - extract some data from ergast
-#   - run dbt build
+#   - lint dbt SQL models
+#   - start dagster job (extract data and run dbt build)
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
 
 name: Ergast data load

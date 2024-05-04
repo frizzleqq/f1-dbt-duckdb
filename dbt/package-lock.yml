@@ -2,6 +2,6 @@ packages:
 - package: dbt-labs/dbt_utils
   version: 1.1.1
 - git: https://github.com/dagster-io/dagster.git
-  revision: c04f3f226922e433f4639461d80319847f1e4fcf
+  revision: fbe9818b8c0f1abdfe35b39f1b6e42bdc43c0871
   subdirectory: python_modules/libraries/dagster-dbt/dbt_packages/dagster
-sha1_hash: 0c5ee8f837718c4c69b2c0f21b8f0451fffad841
+sha1_hash: 99cd3cd079f22b1c48fbe715883617b32b05e0ec

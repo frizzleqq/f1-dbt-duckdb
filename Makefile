@@ -34,10 +34,6 @@ dbt:
 	"$(VENV_BIN)/dbt" deps --project-dir="./dbt" --profiles-dir="./dbt"
 	"$(VENV_BIN)/dbt" build --project-dir="./dbt" --profiles-dir="./dbt"
 
-.PHONY: dbt-test
-dbt-test:
-	"$(VENV_BIN)/dbt" test --project-dir="./dbt" --profiles-dir="./dbt"
-
 .PHONY: doc
 doc:
 	"$(VENV_BIN)/dbt" docs generate --project-dir="./dbt" --profiles-dir="./dbt"
