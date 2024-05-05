@@ -1,8 +1,13 @@
 # F1 warehouse with DuckDB
 
-Some experimenting with [dagster](https://docs.dagster.io/),
-[dbt](https://docs.getdbt.com/) and [DuckDB](https://duckdb.org/) using
-[Ergast API](http://ergast.com/mrd/) as main source.
+Project with
+* Orchestration: [dagster](https://docs.dagster.io/)
+* Transformation & Testing: [dbt](https://docs.getdbt.com/)
+* Processing Engine & Database: [DuckDB](https://duckdb.org/)
+* Data Source: [Ergast API](http://ergast.com/mrd/)
+
+Cutout of the dagster lineage graph:
+![alt text](docs/dagster_lineage.png "Title")
 
 ## Development
 
