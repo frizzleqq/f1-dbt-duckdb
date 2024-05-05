@@ -121,7 +121,7 @@ dbt test --project-dir="./dbt" --profiles-dir="./dbt"
 ### sqlfluff
 
 Run SQL linter on dbt models:
-> **_NOTE:_** This requires setting the `DATA_DIR` environment variable to be set to the `data` directory containing the duckdb database.
+> **_NOTE:_** This may require setting the `DATA_DIR` environment variable to be set to the `data` directory containing the duckdb database.
 ```
 sqlfluff lint ./dbt/models/core
 ```

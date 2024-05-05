@@ -25,14 +25,18 @@ build:
 
 .PHONY: dagster
 dagster:
-	"$(VENV_BIN)/dbt" deps --project-dir="./dbt" --profiles-dir="./dbt"
-	"$(VENV_BIN)/dbt" parse --project-dir="./dbt" --profiles-dir="./dbt"
+	$(MAKE) dbt-parse
 	"$(VENV_BIN)/dagster" dev
 
 .PHONY: dbt
 dbt:
 	"$(VENV_BIN)/dbt" deps --project-dir="./dbt" --profiles-dir="./dbt"
 	"$(VENV_BIN)/dbt" build --project-dir="./dbt" --profiles-dir="./dbt"
+
+.PHONY: dbt-parse
+dbt-parse:
+	"$(VENV_BIN)/dbt" deps --project-dir="./dbt" --profiles-dir="./dbt"
+	"$(VENV_BIN)/dbt" parse --project-dir="./dbt" --profiles-dir="./dbt"
 
 .PHONY: doc
 doc:
@@ -53,15 +57,16 @@ lint:
 
 .PHONY: lint-sql
 lint-sql:
+	mkdir -p data
 	$(VENV_BIN)/dbt deps --project-dir="./dbt" --profiles-dir="./dbt"
 	$(VENV_BIN)/sqlfluff lint dbt/models
 
 .PHONY: load
 load:
-	"$(VENV_BIN)/dbt" deps --project-dir="./dbt" --profiles-dir="./dbt"
-	"$(VENV_BIN)/dbt" parse --project-dir="./dbt" --profiles-dir="./dbt"
+	$(MAKE) dbt-parse
 	"$(VENV_BIN)/dagster" job execute -m "foneplatform" -j "ergast_job"
 
 .PHONY: test
 test:
 	$(MAKE) lint
+	$(MAKE) lint-sql
