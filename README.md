@@ -1,8 +1,13 @@
 # F1 warehouse with DuckDB
 
-Some experimenting with [dagster](https://docs.dagster.io/),
-[dbt](https://docs.getdbt.com/) and [DuckDB](https://duckdb.org/) using
-[Ergast API](http://ergast.com/mrd/) as main source.
+Project with
+* Orchestration: [dagster](https://docs.dagster.io/)
+* Transformation & Testing: [dbt](https://docs.getdbt.com/)
+* Processing Engine & Database: [DuckDB](https://duckdb.org/)
+* Data Source: [Ergast API](http://ergast.com/mrd/)
+
+Cutout of the dagster lineage graph:
+![alt text](docs/dagster_lineage.png "Title")
 
 ## Development
 
@@ -121,7 +126,7 @@ dbt test --project-dir="./dbt" --profiles-dir="./dbt"
 ### sqlfluff
 
 Run SQL linter on dbt models:
-> **_NOTE:_** This requires setting the `DATA_DIR` environment variable to be set to the `data` directory containing the duckdb database.
+> **_NOTE:_** This may require setting the `DATA_DIR` environment variable to be set to the `data` directory containing the duckdb database.
 ```
 sqlfluff lint ./dbt/models/core
 ```

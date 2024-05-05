@@ -1,9 +1,8 @@
 # This workflow will:
 #   - install Python dependencies
 #   - lint Python code
-#   - extract some data from ergast
-#   - run dbt build
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+#   - lint dbt SQL models
+#   - start dagster job (extract data and run dbt build)
 
 name: Ergast data load
 
@@ -33,11 +32,9 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: make requirements
-    - name: Lint Python code
-      run: make test
-    - name: Lint SQL code
+    - name: Lint Python and SQL code
       run: |
         mkdir -p $DATA_DIR
-        make lint-sql
+        make test
     - name: Run ergast job
       run: make load
