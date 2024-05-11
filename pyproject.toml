@@ -64,6 +64,9 @@ select = [
   "F", # Pyflakes
   "I", # isort
 ]
+ignore = [
+  "E501", # Line length is regulated by formatter
+]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
