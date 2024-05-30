@@ -2,11 +2,12 @@
 
 SELECT
     circuitid
+    , circuitref
+    , name AS circuit_name
+    , location
+    , country
+    , CAST(lat AS DOUBLE) AS lat
+    , CAST(long AS DOUBLE) AS long
     , url
-    , circuitname
-    , CAST(location_lat AS DOUBLE) AS location_lat
-    , CAST(location_long AS DOUBLE) AS location_long
-    , location_locality
-    , location_country
     , load_dts
 FROM {{ source('ergast', 'circuits') }}

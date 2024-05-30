@@ -1,10 +1,8 @@
 import logging
 import os
-import textwrap
 
 import dagster
 import duckdb
-import pandas as pd
 from dagster import AssetKey, ConfigurableIOManager
 from dagster._core.definitions.metadata import MetadataValue
 from pydantic import Field
@@ -26,18 +24,18 @@ class LocalCsvIOManager(ConfigurableIOManager):  # type: ignore
         rpath = f"{os.path.join(self.base_path, *asset_key.path)}.{self.extension}"
         return os.path.abspath(rpath)
 
-    def handle_output(self, context, df: pd.DataFrame):
+    def handle_output(self, context, df: duckdb.DuckDBPyRelation):
         """This saves the dataframe as a CSV."""
         fpath = self._get_fs_path(asset_key=context.asset_key)
         os.makedirs(os.path.dirname(fpath), exist_ok=True)
         self._log.info(f"Saving dataframe to '{fpath}'")
-        df.to_csv(fpath, encoding="utf8", index=False)
+        df.to_csv(fpath, header=True, sep=",", encoding="utf-8", quotechar='"')
 
         context.add_output_metadata(
             {
-                "Rows": MetadataValue.int(df.shape[0]),
+                "Rows": MetadataValue.int(df.count("*").fetchone()[0]),
                 "Path": MetadataValue.path(fpath),
-                "Sample": MetadataValue.md(df.head(5).to_markdown()),
+                # "Sample": MetadataValue.md(df.head(5).to_markdown()),
                 "Resolved version": MetadataValue.text(context.version),
                 # "Schema": MetadataValue.table_schema(
                 #     self.get_schema(context.dagster_type)
@@ -45,10 +43,17 @@ class LocalCsvIOManager(ConfigurableIOManager):  # type: ignore
             }
         )
 
-    def load_input(self, context) -> pd.DataFrame:
+    def load_input(self, context) -> duckdb.DuckDBPyRelation:
         """This reads a dataframe from a CSV."""
         fpath = self._get_fs_path(asset_key=context.asset_key)
-        return pd.read_csv(fpath)
+        return duckdb.read_csv(
+            fpath,
+            header=True,
+            delimiter=",",
+            encoding="utf-8",
+            quotechar='"',
+            connection=duckdb.connect(":default:"),
+        )
 
 
 class LocalParquetIOManager(ConfigurableIOManager):  # type: ignore
@@ -67,18 +72,18 @@ class LocalParquetIOManager(ConfigurableIOManager):  # type: ignore
         rpath = f"{os.path.join(self.base_path, *asset_key.path)}.{self.extension}"
         return os.path.abspath(rpath)
 
-    def handle_output(self, context, df: pd.DataFrame):
+    def handle_output(self, context, df: duckdb.DuckDBPyRelation):
         """This saves the dataframe as a parquet."""
         fpath = self._get_fs_path(asset_key=context.asset_key)
         os.makedirs(os.path.dirname(fpath), exist_ok=True)
         self._log.info(f"Saving dataframe to '{fpath}'")
-        duckdb.sql(f"COPY df TO '{fpath}' (FORMAT PARQUET);")
+        df.to_parquet(fpath)
 
         context.add_output_metadata(
             {
-                "Rows": MetadataValue.int(df.shape[0]),
+                "Rows": MetadataValue.int(df.count("*").fetchone()[0]),
                 "Path": MetadataValue.path(fpath),
-                "Sample": MetadataValue.md(df.head(5).to_markdown()),
+                # "Sample": MetadataValue.md(df.display().to_markdown()),
                 "Resolved version": MetadataValue.text(context.version),
                 # "Schema": MetadataValue.table_schema(
                 #     self.get_schema(context.dagster_type)
@@ -86,16 +91,7 @@ class LocalParquetIOManager(ConfigurableIOManager):  # type: ignore
             }
         )
 
-    def load_input(self, context) -> pd.DataFrame:
+    def load_input(self, context) -> duckdb.DuckDBPyRelation:
         """This reads a dataframe from a parquet."""
         fpath = self._get_fs_path(asset_key=context.asset_key)
-        return duckdb.read_parquet(fpath).df()
-
-
-def pandas_columns_to_markdown(dataframe: pd.DataFrame) -> str:
-    return textwrap.dedent(
-        """
-        | Name | Type |
-        | ---- | ---- |
-    """
-    ) + "\n".join([f"| {name} | {dtype} |" for name, dtype in dataframe.dtypes.items()])
+        return duckdb.read_parquet(fpath, connection=duckdb.connect(":default:"))

@@ -1,20 +1,11 @@
 {{ config(materialized = 'view') }}
 
 SELECT
-    CAST(position AS INT) AS driver_position
-    , CAST(positiontext AS TEXT) AS positiontext
+     driverStandingsId
+    , raceId
+    , driverId
     , CAST(points AS DOUBLE) AS points
+    , CAST(position AS INT) AS driver_position
+    , CAST(positiontext AS TEXT) AS positiontext
     , CAST(wins AS INT) AS wins
-    , driver_driverid
-    , CAST(driver_permanentnumber AS INT) AS driver_permanentnumber
-    , driver_code
-    , driver_url
-    , driver_givenname
-    , driver_familyname
-    , CAST(driver_dateofbirth AS DATE) AS driver_dateofbirth
-    , driver_nationality
-    , CAST(season AS INT) AS season
-    , CAST(round AS INT) AS round
-    , constructors
-    , load_dts
-FROM {{ source('ergast', 'driverStandings') }}
+FROM {{ source('ergast', 'driver_standings') }}

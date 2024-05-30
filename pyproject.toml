@@ -22,8 +22,6 @@ dependencies = [
   "dbt-core<1.7.14",
   "dbt-duckdb>=1.7.0, <1.8.0",
   "duckdb>=0.7.0",
-  "pandas>=2.0.0, <3.0.0",
-  "requests>=2.31.0, <3.0.0",
 ]
 
 [project.optional-dependencies]
@@ -51,7 +49,7 @@ dbt = [
 ]
 
 [[tool.mypy.overrides]]
-module = "ergast,staging,pandas,requests,requests.adapters"
+module = "ergast,staging,requests.adapters"
 ignore_missing_imports = true
 
 [tool.ruff]

@@ -2,12 +2,13 @@
 
 SELECT
     driverid
-    , url
-    , givenname
-    , familyname
-    , CAST(NULLIF(dateofbirth, '') AS DATE) AS dateofbirth
-    , nationality
-    , CAST(permanentnumber AS INT) AS permanentnumber
+    , driverref
+    , CAST(number AS INT) AS driver_number
     , code
+    , forename
+    , surname
+    , CAST(dob AS DATE) AS dob
+    , nationality
+    , url
     , load_dts
 FROM {{ source('ergast', 'drivers') }}

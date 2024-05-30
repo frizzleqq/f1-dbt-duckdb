@@ -1,15 +1,11 @@
 {{ config(materialized = 'view') }}
 
 SELECT
-    CAST(position AS INT) AS constructor_position
-    , CAST(positiontext AS TEXT) AS positiontext
+    constructorstandingsid
+    , raceId
+    , constructorId
     , CAST(points AS DOUBLE) AS points
+    , CAST(position AS INT) AS constructor_position
+    , CAST(positiontext AS TEXT) AS positiontext
     , CAST(wins AS INT) AS wins
-    , constructor_constructorid
-    , constructor_url
-    , constructor_name
-    , constructor_nationality
-    , CAST(season AS INT) AS season
-    , CAST(round AS INT) AS round
-    , load_dts
-FROM {{ source('ergast', 'constructorStandings') }}
+FROM {{ source('ergast', 'constructor_standings') }}
