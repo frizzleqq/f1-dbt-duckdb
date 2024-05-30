@@ -8,7 +8,7 @@ sources:
     tables:
       - name: circuits
       - name: constructor_results
-      - name: constructor_tandings
+      - name: constructor_standings
       - name: constructors
       - name: drivers
       - name: driver_standings

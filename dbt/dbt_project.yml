@@ -26,9 +26,8 @@ models:
     - "{{ dagster.log_column_level_metadata() }}"
   f1warehouse:
       core:
+        +materialized: table
         +schema: core
-        +materialized: incremental
-        +on_schema_change: append_new_columns
       stage:
         +materialized: view
         ergast:
