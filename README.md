@@ -53,16 +53,6 @@ Start local dagster server
 dagster dev
 ```
 
-#### Dagster Launchpad
-
-The _launchpad_ can be used to materialize assets with specified configurations.
-Such as staging a specific season or all seasons since a specified season.
-
-Using the dropdown menue next to the Materialize button it is possible to start overrule
-the configuration. See also here: https://docs.dagster.io/concepts/webserver/ui#job-details
-
-![alt text](docs/dagster_launchpad.png "Title")
-
 #### Dagster CLI
 
 Launch dagster job without
@@ -90,20 +80,14 @@ data
     ├── circuits.parquet
     ├── constructors.parquet
     ├── drivers.parquet
-    ├── laps.parquet
-    ├── pitstops.parquet
-    ├── qualifying.parquet
-    ├── races.parquet
-    ├── results.parquet
-    └── seasons.parquet
+    ...
 ```
 
 ### Staging:
 
 Staging is done by
-1. Read Ergast API via requests (by default only last race)
-1. Load response into Pandas DataFrame
-1. Write to Parquet files
+1. Downloading ZIP of CSV files (http://ergast.com/downloads/f1db_csv.zip)
+1. In Dagster asset: Read CSV using DuckDB and store the asset-result as Parquet using the `LocalParquetIOManager`
 1. (dbt will create external tables using the Parquet files)
 
 ## dbt
