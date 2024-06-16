@@ -2,7 +2,7 @@
 
 SELECT
     circuitid AS circuit_id
-    , circuitref AS circuit_key
+    , circuitref AS circuit_ref
     , circuit_name
     , location AS circuit_location
     , country AS circuit_country

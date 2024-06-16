@@ -17,9 +17,9 @@ WITH lap_times AS (
 
 , joined AS (
     SELECT
-        d_race.race_key
+        d_race.race_ref
         , d_race.race_date
-        , d_driver.driver_key
+        , d_driver.driver_ref
         , lap_times.lap
         , lap_times.race_position
         , lap_times.lap_time
@@ -34,10 +34,10 @@ WITH lap_times AS (
 SELECT
     {{
         dbt_utils.generate_surrogate_key([
-            'race_key',
-            'driver_key',
+            'race_ref',
+            'driver_ref',
             'lap',
         ])
-    }} AS lap_key
+    }} AS lap_ref
     , *
 FROM joined

@@ -12,10 +12,10 @@ WITH circuits AS (
 
 SELECT
     races.raceid AS race_id
-    , concat(races.season, '-', races.round) AS race_key
+    , concat(races.season, '-', races.round) AS race_ref
     , races.season AS race_season
     , races.round AS race_round
-    , circuits.circuitref AS circuit_key
+    , circuits.circuitref AS circuit_ref
     , races.race_name
     , races.url AS race_url
     , races.race_date

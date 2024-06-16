@@ -3,19 +3,19 @@ version: 2
 models:
   - name: d_driver
     columns:
-      - name: driver_key
+      - name: driver_ref
         tests:
           - unique
           - not_null
   - name: d_circuit
     columns:
-      - name: circuit_key
+      - name: circuit_ref
         tests:
           - unique
           - not_null
   - name: d_constructor
     columns:
-      - name: constructor_key
+      - name: constructor_ref
         tests:
           - unique
           - not_null
@@ -27,7 +27,7 @@ models:
           - not_null
   - name: d_race
     columns:
-      - name: race_key
+      - name: race_ref
         tests:
           - unique
           - not_null
@@ -36,20 +36,20 @@ models:
           - not_null
   - name: f_lap
     columns:
-      - name: lap_key
+      - name: lap_ref
         tests:
           - unique
           - not_null
       - name: race_date
         tests:
           - not_null
-      - name: race_key
+      - name: race_ref
         tests:
           - not_null
-      - name: circuit_key
+      - name: circuit_ref
         tests:
           - not_null
-      - name: driver_key
+      - name: driver_ref
         tests:
           - not_null
       - name: lap_number
@@ -57,20 +57,20 @@ models:
           - not_null
   - name: f_pitstop
     columns:
-      - name: pitstop_key
+      - name: pitstop_ref
         tests:
           - unique
           - not_null
       - name: race_date
         tests:
           - not_null
-      - name: race_key
+      - name: race_ref
         tests:
           - not_null
-      - name: circuit_key
+      - name: circuit_ref
         tests:
           - not_null
-      - name: driver_key
+      - name: driver_ref
         tests:
           - not_null
       - name: pitstop_number
@@ -78,7 +78,7 @@ models:
           - not_null
   - name: f_result
     columns:
-      - name: result_key
+      - name: result_ref
         tests:
           - unique
           - not_null

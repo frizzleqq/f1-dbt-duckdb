@@ -30,7 +30,7 @@ WITH drivers AS (
 
 SELECT
     drivers.driverid AS driver_id
-    , drivers.driverref AS driver_key
+    , drivers.driverref AS driver_ref
     , drivers.surname AS driver_second_name
     , drivers.forename AS driver_first_name
     , CONCAT(drivers.forename, ' ', drivers.surname) AS driver_full_name

@@ -49,8 +49,8 @@ WITH results AS (
 , joined AS (
     SELECT
         d_race.race_date
-        , d_race.race_key
-        , d_driver.driver_key
+        , d_race.race_ref
+        , d_driver.driver_ref
         -- , circuit_circuitid AS circuit_id
         -- , driver_driverid AS driver_id
         -- , constructor_constructorid AS constructor_id
@@ -94,7 +94,7 @@ WITH results AS (
     LEFT JOIN d_race
         ON d_race.race_id = results.raceid
     LEFT JOIN d_circuit
-        ON d_circuit.circuit_key = d_race.circuit_key
+        ON d_circuit.circuit_ref = d_race.circuit_ref
     LEFT JOIN d_constructor
         ON d_constructor.constructor_id = results.constructorid
     LEFT JOIN d_driver
@@ -105,9 +105,9 @@ WITH results AS (
 SELECT
     {{
         dbt_utils.generate_surrogate_key([
-            'race_key',
-            'driver_key',
+            'race_ref',
+            'driver_ref',
         ])
-    }} AS result_key
+    }} AS result_ref
     , *
 FROM joined

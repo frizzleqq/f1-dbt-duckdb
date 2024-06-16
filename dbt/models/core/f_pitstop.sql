@@ -17,9 +17,9 @@ WITH pitstops AS (
 
 , joined AS (
     SELECT
-        d_race.race_key
+        d_race.race_ref
         , d_race.race_date
-        , d_driver.driver_key
+        , d_driver.driver_ref
         , pitstops.pitstop_number
         , pitstops.lap AS lap_number
         , d_race.race_date + pitstops.pitstop_time AS pitstop_timestamp
@@ -35,10 +35,10 @@ WITH pitstops AS (
 SELECT
     {{
         dbt_utils.generate_surrogate_key([
-            'race_key',
-            'driver_key',
+            'race_ref',
+            'driver_ref',
             'pitstop_number',
         ])
-    }} AS pitstop_key
+    }} AS pitstop_ref
     , *
 FROM joined
