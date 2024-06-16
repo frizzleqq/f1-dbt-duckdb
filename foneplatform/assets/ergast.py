@@ -26,22 +26,21 @@ ergast_tables = {
 
 @dagster.multi_asset(outs=ergast_tables, can_subset=True, compute_kind="Python")
 def download_ergast_image(context: dagster.AssetExecutionContext):
+    db_con = duckdb.connect(":memory:")
     with tempfile.TemporaryDirectory() as tmpdirname:
         tmp_path = Path(tmpdirname)
         zip_path = tmp_path / "f1db_csv.zip"
         urllib.request.urlretrieve("http://ergast.com/downloads/f1db_csv.zip", zip_path)
-        # unzip the file
         with zipfile.ZipFile(zip_path, "r") as zip:
-            zip.extractall(tmpdirname)
-        for table in context.op_execution_context.selected_output_names:
-            df = duckdb.read_csv(
-                str(tmp_path / f"{table}.csv"),
-                header=True,
-                delimiter=",",
-                encoding="utf-8",
-                quotechar='"',
-                na_values=r"\N",
-                connection=duckdb.connect(":memory:"),
-            )
-            yield dagster.Output(df, output_name=table)
-            df.close()
+            for table in context.op_execution_context.selected_output_names:
+                with zip.open(f"{table}.csv", "r") as f:
+                    df = db_con.read_csv(
+                        f,
+                        header=True,
+                        delimiter=",",
+                        encoding="utf-8",
+                        quotechar='"',
+                        na_values=r"\N",
+                    )
+                    yield dagster.Output(df, output_name=table)
+    db_con.close()

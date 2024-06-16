@@ -13,7 +13,7 @@ sources:
       - name: drivers
       - name: driver_standings
       - name: lap_times
-      - name: pitstops
+      - name: pit_stops
       - name: qualifying
       - name: races
       - name: results

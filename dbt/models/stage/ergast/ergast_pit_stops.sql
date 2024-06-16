@@ -8,4 +8,4 @@ SELECT
     , CAST(time AS TIME) AS pitstop_time
     , duration
     , CAST(milliseconds AS BIGINT) AS milliseconds
-FROM {{ source('ergast', 'pitstops') }}
+FROM {{ source('ergast', 'pit_stops') }}

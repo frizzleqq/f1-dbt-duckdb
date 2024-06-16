@@ -1,7 +1,7 @@
 {{ config(materialized = 'view') }}
 
 SELECT
-    , qualifyId
+    qualifyId
     , raceid
     , driverid
     , constructorid

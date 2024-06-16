@@ -10,5 +10,4 @@ SELECT
     , CAST(dob AS DATE) AS dob
     , nationality
     , url
-    , load_dts
 FROM {{ source('ergast', 'drivers') }}

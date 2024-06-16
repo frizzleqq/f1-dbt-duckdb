@@ -92,19 +92,19 @@ models:
         tests:
           - not_null
           - relationships:
-              to: ref('d_circuits')
+              to: ref('d_circuit')
               field: circuit_id
       - name: driver_id
         tests:
           - not_null
           - relationships:
-              to: ref('d_drivers')
+              to: ref('d_driver')
               field: driver_id
       - name: constructor_id
         tests:
           - not_null
           - relationships:
-              to: ref('d_constructors')
+              to: ref('d_constructor')
               field: constructor_id
       - name: result_position
         tests:

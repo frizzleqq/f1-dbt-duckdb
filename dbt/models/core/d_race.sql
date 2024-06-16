@@ -1,14 +1,15 @@
+{{ config(materialized='external', format='parquet') }}
+
 WITH circuits AS (
-    SELECT
-        *
+    SELECT *
     FROM {{ ref('ergast_circuits') }}
 )
+
 , races AS (
-    SELECT
-        *
+    SELECT *
     FROM {{ ref('ergast_races') }}
 )
- 
+
 SELECT
     races.raceid AS race_id
     , concat(races.season, '-', races.round) AS race_key
@@ -30,4 +31,4 @@ SELECT
     , races.sprint_date
     , races.sprint_date + sprint_time AS sprint_timestamp
 FROM races
-LEFT JOIN circuits ON races.circuitid = circuits.circuitid
+LEFT JOIN circuits ON circuits.circuitid = races.circuitid

@@ -7,6 +7,6 @@ SELECT
     , location
     , country
     , CAST(lat AS DOUBLE) AS lat
-    , CAST(long AS DOUBLE) AS long
+    , CAST(lng AS DOUBLE) AS lng
     , url
 FROM {{ source('ergast', 'circuits') }}
