@@ -76,15 +76,15 @@ WITH results AS (
         , fastestlap_averagespeed_units AS fastest_lap_avg_speed_unit
         , constructor_constructorid AS constructor_id
 
-        -- qualifying
+        -- TODO: qualifying
         , qualifying.qualifying_position
         , qualifying.q1 AS qualifying1_lap_time
         , qualifying.q2 AS qualifying2_lap_time
         , qualifying.q3 AS qualifying3_lap_time
         , qualifying.qualifying_date + qualifying.qualifying_time AS qualifying_timestamp
-        -- constructor results
-        -- constructor standings
-        -- driver standings
+        -- TODO: constructor results
+        -- TODO: constructor standings
+        -- TODO: driver standings
     FROM results
     LEFT JOIN qualifying
         ON results.raceid = qualifying.raceid AND results.driverid = qualifying.driverid
