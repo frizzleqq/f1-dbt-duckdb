@@ -89,9 +89,9 @@ data
 
 ### Staging:
 
-Staging is done by
+Staging is done by a Dagster Multi-Asset ([./foneplatform/assets/ergast.py](./foneplatform/assets/ergast.py)):
 1. Downloading ZIP of CSV files (http://ergast.com/downloads/f1db_csv.zip)
-1. In Dagster asset: Read CSV using DuckDB and store the asset-result as Parquet using the `LocalParquetIOManager`
+1. Read CSV using DuckDB and store the asset-result as Parquet using the `LocalParquetIOManager`
 1. (dbt will create in-memory external tables using the Parquet files)
 
 ## dbt
