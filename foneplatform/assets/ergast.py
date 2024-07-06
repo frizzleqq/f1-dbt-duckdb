@@ -1,111 +1,47 @@
-from ..resources.ergast_resource import ErgastTable, build_ergast_asset
+import io
+import tempfile
+import urllib.request
+import zipfile
+from pathlib import Path
 
-TABLES = {
-    "drivers": ErgastTable(
-        table_name="drivers",
-        always_full=True,
-        response_path=("DriverTable", "Drivers"),
-    ),
-    "circuits": ErgastTable(
-        table_name="circuits",
-        always_full=True,
-        response_path=("CircuitTable", "Circuits"),
-    ),
-    "seasons": ErgastTable(
-        table_name="seasons",
-        always_full=True,
-        response_path=("SeasonTable", "Seasons"),
-    ),
-    "constructors": ErgastTable(
-        table_name="constructors",
-        always_full=True,
-        response_path=("ConstructorTable", "Constructors"),
-    ),
-    "races": ErgastTable(
-        table_name="races",
-        always_full=True,
-        response_path=("RaceTable", "Races"),
-    ),
-    "pitstops": ErgastTable(
-        table_name="pitstops",
-        always_full=False,
-        response_path=("RaceTable", "Races"),
-        record_path="PitStops",
-        record_meta=[
-            "season",
-            "round",
-            "date",
-            "raceName",
-            ["Circuit", "circuitId"],
-        ],
-    ),
-    "qualifying": ErgastTable(
-        table_name="qualifying",
-        always_full=False,
-        response_path=("RaceTable", "Races"),
-        record_path="QualifyingResults",
-        record_meta=[
-            "season",
-            "round",
-            "date",
-            "time",
-            "raceName",
-            "url",
-            ["Circuit", "circuitId"],
-        ],
-    ),
-    "results": ErgastTable(
-        table_name="results",
-        always_full=False,
-        response_path=("RaceTable", "Races"),
-        record_path="Results",
-        record_meta=[
-            "season",
-            "round",
-            "url",
-            "raceName",
-            "date",
-            "time",
-            ["Circuit", "circuitId"],
-        ],
-    ),
-    "laps": ErgastTable(
-        table_name="laps",
-        always_full=False,
-        response_path=("RaceTable", "Races"),
-        record_path=["Laps", "Timings"],
-        record_meta=[
-            "season",
-            "round",
-            "url",
-            "raceName",
-            "date",
-            "Circuit",
-            ["Laps", "number"],
-        ],
-    ),
-    "driverStandings": ErgastTable(
-        table_name="driverStandings",
-        always_full=False,
-        response_path=("StandingsTable", "StandingsLists"),
-        record_path="DriverStandings",
-        record_meta=[
-            "season",
-            "round",
-        ],
-    ),
-    "constructorStandings": ErgastTable(
-        table_name="constructorStandings",
-        always_full=False,
-        response_path=("StandingsTable", "StandingsLists"),
-        record_path="ConstructorStandings",
-        record_meta=[
-            "season",
-            "round",
-        ],
-    ),
+import dagster
+import duckdb
+
+ergast_tables = {
+    "circuits": dagster.AssetOut(is_required=False),
+    "constructor_results": dagster.AssetOut(is_required=False),
+    "constructor_standings": dagster.AssetOut(is_required=False),
+    "constructors": dagster.AssetOut(is_required=False),
+    "driver_standings": dagster.AssetOut(is_required=False),
+    "drivers": dagster.AssetOut(is_required=False),
+    "lap_times": dagster.AssetOut(is_required=False),
+    "pit_stops": dagster.AssetOut(is_required=False),
+    "qualifying": dagster.AssetOut(is_required=False),
+    "races": dagster.AssetOut(is_required=False),
+    "results": dagster.AssetOut(is_required=False),
+    "seasons": dagster.AssetOut(is_required=False),
+    "sprint_results": dagster.AssetOut(is_required=False),
+    "status": dagster.AssetOut(is_required=False),
 }
 
-ergast_assets = [
-    build_ergast_asset(table_name, table) for table_name, table in TABLES.items()
-]
+
+@dagster.multi_asset(outs=ergast_tables, can_subset=True, compute_kind="Python")
+def download_ergast_image(context: dagster.AssetExecutionContext):
+    db_con = duckdb.connect(":memory:")
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        tmp_path = Path(tmpdirname)
+        zip_path = tmp_path / "f1db_csv.zip"
+        urllib.request.urlretrieve("http://ergast.com/downloads/f1db_csv.zip", zip_path)
+        with zipfile.ZipFile(zip_path, "r") as zip:
+            for table in context.op_execution_context.selected_output_names:
+                with zip.open(f"{table}.csv", "r") as f:
+                    df = db_con.read_csv(
+                        io.TextIOWrapper(f),
+                        header=True,
+                        delimiter=",",
+                        encoding="utf-8",
+                        quotechar='"',
+                        na_values=r"\N",
+                    )
+                    yield dagster.Output(df, output_name=table)
+    db_con.close()

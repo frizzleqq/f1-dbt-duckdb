@@ -1,192 +1,102 @@
 version: 2
 
 models:
-  - name: b_drivers_constructors
+  - name: d_driver
     columns:
-      - name: result_id
+      - name: driver_ref
+        tests:
+          - unique
+          - not_null
+  - name: d_circuit
+    columns:
+      - name: circuit_ref
+        tests:
+          - unique
+          - not_null
+  - name: d_constructor
+    columns:
+      - name: constructor_ref
+        tests:
+          - unique
+          - not_null
+  - name: d_season
+    columns:
+      - name: season
+        tests:
+          - unique
+          - not_null
+  - name: d_race
+    columns:
+      - name: race_ref
         tests:
           - unique
           - not_null
       - name: race_date
         tests:
           - not_null
-      - name: race_id
-        tests:
-          - not_null
-      - name: constructor_id
-        tests:
-          - not_null
-          - relationships:
-              to: ref('d_constructors')
-              field: constructor_id
-      - name: driver_id
-        tests:
-          - not_null
-          - relationships:
-              to: ref('d_drivers')
-              field: driver_id
-  - name: d_drivers
+  - name: f_lap
     columns:
-      - name: driver_id
-        tests:
-          - unique
-          - not_null
-  - name: d_circuits
-    columns:
-      - name: circuit_id
-        tests:
-          - unique
-          - not_null
-  - name: d_constructors
-    columns:
-      - name: constructor_id
-        tests:
-          - unique
-          - not_null
-  - name: d_seasons
-    columns:
-      - name: season_id
-        tests:
-          - unique
-          - not_null
-  - name: d_races
-    columns:
-      - name: race_id
+      - name: lap_ref
         tests:
           - unique
           - not_null
       - name: race_date
         tests:
           - not_null
-  - name: f_constructor_standings
-    columns:
-      - name: constructor_standing_id
-        tests:
-          - unique
-          - not_null
-      - name: race_date
+      - name: race_ref
         tests:
           - not_null
-      - name: race_id
-        tests:
-          - not_null
-      - name: constructor_id
-        tests:
-          - not_null
-  - name: f_driver_standings
-    columns:
-      - name: driver_standing_id
-        tests:
-          - unique
-          - not_null
-      - name: race_date
-        tests:
-          - not_null
-      - name: race_id
-        tests:
-          - not_null
-      - name: constructor_id
-        tests:
-          - not_null
-      - name: driver_id
-        tests:
-          - not_null
-  - name: f_laps
-    columns:
-      - name: lap_id
-        tests:
-          - unique
-          - not_null
-      - name: race_date
-        tests:
-          - not_null
-      - name: race_id
-        tests:
-          - not_null
-      - name: circuit_id
-        tests:
-          - not_null
-      - name: driver_id
+      - name: driver_ref
         tests:
           - not_null
       - name: lap_number
         tests:
           - not_null
-  - name: f_pitstops
+  - name: f_pitstop
     columns:
-      - name: pitstop_id
+      - name: pitstop_ref
         tests:
           - unique
           - not_null
       - name: race_date
         tests:
           - not_null
-      - name: race_id
+      - name: race_ref
         tests:
           - not_null
-      - name: circuit_id
-        tests:
-          - not_null
-      - name: driver_id
+      - name: driver_ref
         tests:
           - not_null
       - name: pitstop_number
         tests:
           - not_null
-  - name: f_qualifying
+  - name: f_result
     columns:
-      - name: qualifying_id
-        tests:
-          - unique
-          - not_null
-      - name: qualifying_date
-        tests:
-          - not_null
-      - name: race_id
-        tests:
-          - not_null
-      - name: circuit_id
-        tests:
-          - not_null
-      - name: driver_id
-        tests:
-          - not_null
-      - name: constructor_id
-        tests:
-          - not_null
-      - name: qualifying_position
-        tests:
-          - not_null
-  - name: f_results
-    columns:
-      - name: result_id
+      - name: result_ref
         tests:
           - unique
           - not_null
       - name: race_date
         tests:
           - not_null
-      - name: race_id
+      - name: race_ref
         tests:
           - not_null
-      - name: circuit_id
-        tests:
-          - not_null
-          - relationships:
-              to: ref('d_circuits')
-              field: circuit_id
-      - name: driver_id
+      - name: circuit_ref
         tests:
           - not_null
           - relationships:
-              to: ref('d_drivers')
-              field: driver_id
-      - name: constructor_id
+              to: ref('d_circuit')
+              field: circuit_ref
+      - name: driver_ref
         tests:
           - not_null
           - relationships:
-              to: ref('d_constructors')
-              field: constructor_id
-      - name: result_position
+              to: ref('d_driver')
+              field: driver_ref
+      - name: constructor_ref
         tests:
           - not_null
+          - relationships:
+              to: ref('d_constructor')
+              field: constructor_ref

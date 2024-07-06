@@ -53,16 +53,6 @@ Start local dagster server
 dagster dev
 ```
 
-#### Dagster Launchpad
-
-The _launchpad_ can be used to materialize assets with specified configurations.
-Such as staging a specific season or all seasons since a specified season.
-
-Using the dropdown menue next to the Materialize button it is possible to start overrule
-the configuration. See also here: https://docs.dagster.io/concepts/webserver/ui#job-details
-
-![alt text](docs/dagster_launchpad.png "Title")
-
 #### Dagster CLI
 
 Launch dagster job without
@@ -79,32 +69,30 @@ dagster job execute -m foneplatform -j ergast_job
 
 ## File Locations
 
-Ideally the environment variable `DATA_DIR` is set to a location where both the
-DuckDB database and the F1 data will be located. Dagster uses `.env` to set the path.
+Ideally the environment variable `DATA_DIR` is set to a location where the processed
+F1 data will be located. Dagster uses `.env` to set the path.
+Note that DuckDB is only in-memory.
 
 The data directory will look like this:
 ```
 data
-├── f1.duckdb
+├── d_circuit.parquet
+├── d_constructor.parquet
+├── f_result.parquet
+├── ...
 └── ergast
     ├── circuits.parquet
     ├── constructors.parquet
     ├── drivers.parquet
-    ├── laps.parquet
-    ├── pitstops.parquet
-    ├── qualifying.parquet
-    ├── races.parquet
-    ├── results.parquet
-    └── seasons.parquet
+    ...
 ```
 
 ### Staging:
 
-Staging is done by
-1. Read Ergast API via requests (by default only last race)
-1. Load response into Pandas DataFrame
-1. Write to Parquet files
-1. (dbt will create external tables using the Parquet files)
+Staging is done by a Dagster Multi-Asset ([./foneplatform/assets/ergast.py](./foneplatform/assets/ergast.py)):
+1. Downloading ZIP of CSV files (http://ergast.com/downloads/f1db_csv.zip)
+1. Read CSV using DuckDB and store the asset-result as Parquet using the `LocalParquetIOManager`
+1. (dbt will create in-memory external tables using the Parquet files)
 
 ## dbt
 

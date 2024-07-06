@@ -1,22 +1,22 @@
 {{ config(materialized = 'view') }}
 
 SELECT
-    CAST(season AS INT) AS season
+    raceid
+    , CAST(year AS INT) AS season
     , CAST(round AS INT) AS round
-    , url
-    , racename
+    , circuitid
+    , name AS race_name
     , CAST(date AS DATE) AS race_date
-    , circuit_circuitid
     , CAST(time AS TIME) AS race_time
-    , CAST(firstpractice_date AS DATE) AS firstpractice_date
-    , CAST(firstpractice_time AS TIME) AS firstpractice_time
-    , CAST(secondpractice_date AS DATE) AS secondpractice_date
-    , CAST(secondpractice_time AS TIME) AS secondpractice_time
-    , CAST(thirdpractice_date AS DATE) AS thirdpractice_date
-    , CAST(thirdpractice_time AS TIME) AS thirdpractice_time
-    , CAST(qualifying_date AS DATE) AS qualifying_date
-    , CAST(qualifying_time AS TIME) AS qualifying_time
+    , url
+    , CAST(fp1_date AS DATE) AS fp1_date
+    , CAST(fp1_time AS TIME) AS fp1_time
+    , CAST(fp2_date AS DATE) AS fp2_date
+    , CAST(fp2_time AS TIME) AS fp2_time
+    , CAST(fp3_date AS DATE) AS fp3_date
+    , CAST(fp3_time AS TIME) AS fp3_time
+    , CAST(quali_date AS DATE) AS quali_date
+    , CAST(quali_time AS TIME) AS quali_time
     , CAST(sprint_date AS DATE) AS sprint_date
     , CAST(sprint_time AS TIME) AS sprint_time
-    , load_dts
 FROM {{ source('ergast', 'races') }}

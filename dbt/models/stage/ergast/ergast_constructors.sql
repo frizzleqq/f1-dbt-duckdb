@@ -2,8 +2,8 @@
 
 SELECT
     constructorid
-    , url
-    , name
+    , constructorref
+    , name AS constructor_name
     , nationality
-    , load_dts
+    , url
 FROM {{ source('ergast', 'constructors') }}

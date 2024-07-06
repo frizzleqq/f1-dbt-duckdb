@@ -7,13 +7,15 @@ sources:
       external_location: "{{ env_var('DATA_DIR', 'data') }}/ergast/{name}.parquet"
     tables:
       - name: circuits
+      - name: constructor_results
+      - name: constructor_standings
       - name: constructors
-      - name: constructorStandings
       - name: drivers
-      - name: driverStandings
-      - name: laps
-      - name: pitstops
+      - name: driver_standings
+      - name: lap_times
+      - name: pit_stops
       - name: qualifying
       - name: races
       - name: results
       - name: seasons
+      - name: status
