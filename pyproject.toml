@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "f1dbtduckdb"
-version = "0.4.0"
+version = "0.5.0"
 description = "Experimenting with dbt/DuckDB using Ergast API as main source"
 readme = "README.md"
 requires-python = ">= 3.10"
@@ -19,8 +19,7 @@ classifiers = [
 dependencies = [
   "dagster-dbt>=0.23.0, <0.24.0",
   "dagster-webserver>=1.7.0, <1.8.0",
-  "dbt-core<1.7.14",
-  "dbt-duckdb>=1.7.0, <1.8.0",
+  "dbt-duckdb>=1.8.0, <1.9.0",
   "duckdb>=0.7.0",
 ]
 

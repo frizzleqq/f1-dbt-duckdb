@@ -36,7 +36,7 @@ def download_ergast_image(context: dagster.AssetExecutionContext):
             for table in context.op_execution_context.selected_output_names:
                 with zip.open(f"{table}.csv", "r") as f:
                     df = db_con.read_csv(
-                        io.TextIOWrapper(f),
+                        io.TextIOWrapper(f, encoding="utf-8"),
                         header=True,
                         delimiter=",",
                         encoding="utf-8",
