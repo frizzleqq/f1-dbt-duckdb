@@ -69,13 +69,17 @@ dagster job execute -m foneplatform -j ergast_job
 
 ## File Locations
 
-Ideally the environment variable `DATA_DIR` is set to a location where both the
-DuckDB database and the F1 data will be located. Dagster uses `.env` to set the path.
+Ideally the environment variable `DATA_DIR` is set to a location where the processed
+F1 data will be located. Dagster uses `.env` to set the path.
+Note that DuckDB is only in-memory.
 
 The data directory will look like this:
 ```
 data
-├── f1.duckdb
+├── d_circuit.parquet
+├── d_constructor.parquet
+├── f_result.parquet
+├── ...
 └── ergast
     ├── circuits.parquet
     ├── constructors.parquet
@@ -88,7 +92,7 @@ data
 Staging is done by
 1. Downloading ZIP of CSV files (http://ergast.com/downloads/f1db_csv.zip)
 1. In Dagster asset: Read CSV using DuckDB and store the asset-result as Parquet using the `LocalParquetIOManager`
-1. (dbt will create external tables using the Parquet files)
+1. (dbt will create in-memory external tables using the Parquet files)
 
 ## dbt
 
