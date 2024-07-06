@@ -1,5 +1,6 @@
+import io
 import tempfile
-import urllib
+import urllib.request
 import zipfile
 from pathlib import Path
 
@@ -35,7 +36,7 @@ def download_ergast_image(context: dagster.AssetExecutionContext):
             for table in context.op_execution_context.selected_output_names:
                 with zip.open(f"{table}.csv", "r") as f:
                     df = db_con.read_csv(
-                        f,
+                        io.TextIOWrapper(f),
                         header=True,
                         delimiter=",",
                         encoding="utf-8",

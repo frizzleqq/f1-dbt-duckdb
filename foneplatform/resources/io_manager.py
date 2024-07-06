@@ -33,7 +33,7 @@ class LocalCsvIOManager(ConfigurableIOManager):  # type: ignore
 
         context.add_output_metadata(
             {
-                "Rows": MetadataValue.int(df.count("*").fetchone()[0]),
+                "Rows": MetadataValue.int(df.count("*").fetchall()[0]),
                 "Path": MetadataValue.path(fpath),
                 # "Sample": MetadataValue.md(df.head(5).to_markdown()),
                 "Resolved version": MetadataValue.text(context.version),
@@ -81,7 +81,7 @@ class LocalParquetIOManager(ConfigurableIOManager):  # type: ignore
 
         context.add_output_metadata(
             {
-                "Rows": MetadataValue.int(df.count("*").fetchone()[0]),
+                "Rows": MetadataValue.int(df.count("*").fetchall()[0]),
                 "Path": MetadataValue.path(fpath),
                 # "Sample": MetadataValue.md(df.display().to_markdown()),
                 "Resolved version": MetadataValue.text(context.version),
