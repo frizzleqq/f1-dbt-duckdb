@@ -103,6 +103,7 @@ SELECT
         dbt_utils.generate_surrogate_key([
             'race_ref',
             'driver_ref',
+            'driver_number',
         ])
     }} AS result_ref
     , *

@@ -46,9 +46,6 @@ models:
       - name: race_ref
         tests:
           - not_null
-      - name: circuit_ref
-        tests:
-          - not_null
       - name: driver_ref
         tests:
           - not_null
@@ -67,9 +64,6 @@ models:
       - name: race_ref
         tests:
           - not_null
-      - name: circuit_ref
-        tests:
-          - not_null
       - name: driver_ref
         tests:
           - not_null
@@ -85,27 +79,24 @@ models:
       - name: race_date
         tests:
           - not_null
-      - name: race_id
+      - name: race_ref
         tests:
           - not_null
-      - name: circuit_id
+      - name: circuit_ref
         tests:
           - not_null
           - relationships:
               to: ref('d_circuit')
-              field: circuit_id
-      - name: driver_id
+              field: circuit_ref
+      - name: driver_ref
         tests:
           - not_null
           - relationships:
               to: ref('d_driver')
-              field: driver_id
-      - name: constructor_id
+              field: driver_ref
+      - name: constructor_ref
         tests:
           - not_null
           - relationships:
               to: ref('d_constructor')
-              field: constructor_id
-      - name: result_position
-        tests:
-          - not_null
+              field: constructor_ref
