@@ -1,9 +1,9 @@
 {{ config(materialized = 'view') }}
 
 SELECT
-     driverStandingsId
-    , raceId
-    , driverId
+    driverstandingsid
+    , raceid
+    , driverid
     , CAST(points AS DOUBLE) AS points
     , CAST(position AS INT) AS driver_position
     , CAST(positiontext AS TEXT) AS positiontext

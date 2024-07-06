@@ -2,8 +2,8 @@
 
 SELECT
     constructorstandingsid
-    , raceId
-    , constructorId
+    , raceid
+    , constructorid
     , CAST(points AS DOUBLE) AS points
     , CAST(position AS INT) AS constructor_position
     , CAST(positiontext AS TEXT) AS positiontext

@@ -1,22 +1,22 @@
 {{ config(materialized = 'view') }}
 
 SELECT
-    resultId
-    ,raceId
-    ,driverId
-    ,constructorId
+    resultid
+    , raceid
+    , driverid
+    , constructorid
     , CAST(number AS INT) AS driver_number
     , CAST(grid AS INT) AS grid
     , CAST(position AS INT) AS result_position
-    ,positionText
-    , CAST(positionOrder AS INT) AS positionorder
+    , positiontext
+    , CAST(positionorder AS INT) AS positionorder
     , CAST(points AS DOUBLE) AS points
     , CAST(laps AS INT) AS laps
-    ,time
+    , time
     , CAST(milliseconds AS BIGINT) AS milliseconds
-    ,fastestLap
+    , fastestlap
     , CAST(rank AS INT) AS fastestlap_rank
-    ,fastestLapTime
-    ,CAST(fastestLapSpeed AS DOUBLE) AS fastestLapSpeed
-    ,statusId
+    , fastestlaptime
+    , CAST(fastestlapspeed AS DOUBLE) AS fastestlapspeed
+    , statusid
 FROM {{ source('ergast', 'results') }}

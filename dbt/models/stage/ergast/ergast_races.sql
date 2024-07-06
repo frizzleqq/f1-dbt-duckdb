@@ -2,7 +2,7 @@
 
 SELECT
     raceid
-    ,CAST(year AS INT) AS season
+    , CAST(year AS INT) AS season
     , CAST(round AS INT) AS round
     , circuitid
     , name AS race_name
