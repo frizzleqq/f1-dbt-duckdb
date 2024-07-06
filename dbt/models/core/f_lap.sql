@@ -20,7 +20,7 @@ WITH lap_times AS (
         d_race.race_ref
         , d_race.race_date
         , d_driver.driver_ref
-        , lap_times.lap
+        , lap_times.lap AS lap_number
         , lap_times.race_position
         , lap_times.lap_time
         , lap_times.lap_milliseconds
@@ -36,7 +36,7 @@ SELECT
         dbt_utils.generate_surrogate_key([
             'race_ref',
             'driver_ref',
-            'lap',
+            'lap_number',
         ])
     }} AS lap_ref
     , *

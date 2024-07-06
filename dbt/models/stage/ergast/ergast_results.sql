@@ -9,8 +9,7 @@ SELECT
     , CAST(grid AS INT) AS grid
     , CAST(position AS INT) AS result_position
     ,positionText
-    , CAST(positionOrder AS INT) AS position_order
-    ,positionOrder
+    , CAST(positionOrder AS INT) AS positionorder
     , CAST(points AS DOUBLE) AS points
     , CAST(laps AS INT) AS laps
     ,time

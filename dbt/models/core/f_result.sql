@@ -45,32 +45,28 @@ WITH results AS (
     FROM {{ ref('d_race') }}
 )
 
-
 , joined AS (
     SELECT
         d_race.race_date
         , d_race.race_ref
+        , d_circuit.circuit_ref
+        , d_constructor.constructor_ref
         , d_driver.driver_ref
-        -- , circuit_circuitid AS circuit_id
-        -- , driver_driverid AS driver_id
-        -- , constructor_constructorid AS constructor_id
-        -- , result_position
+        , results.driver_number
+        , results.grid AS starting_position
+        , results.result_position
         , results.positiontext AS result_position_text
-        -- , points AS result_points
-        -- , result_status
-        -- , grid AS starting_position
-        -- , laps AS laps_completed
-        -- , time_time AS result_time
-        -- , time_millis AS result_milliseconds
-        -- , COALESCE(fastestlap_rank = 1, FALSE) AS fastest_lap
-        -- , fastestlap_rank AS fastest_lap_position
-        -- , fastestlap_lap AS fastest_lap_number
-        -- , fastestlap_time_time AS fastest_lap_time
-        -- , fastestlap_averagespeed_speed AS fastest_lap_avg_speed
-        -- , fastestlap_averagespeed_units AS fastest_lap_avg_speed_unit
-        -- , constructor_constructorid AS constructor_id
-
-        -- TODO: qualifying
+        , results.positionorder AS result_position_order
+        , results.points AS result_points
+        -- , results.statusId
+        , results.laps AS laps_completed
+        , results.time AS finishing_time
+        , results.milliseconds AS finishing_time_milliseconds
+        , COALESCE(results.fastestlap_rank = 1, FALSE) AS has_fastest_lap
+        , results.fastestlap AS fastest_lap_number
+        , results.fastestlap_rank AS fastest_lap_position
+        , results.fastestlaptime AS fastest_lap_time
+        , results.fastestlapspeed AS fastest_lap_avg_speed
         , qualifying.qualifying_position
         , qualifying.q1 AS qualifying1_lap_time
         , qualifying.q2 AS qualifying2_lap_time
