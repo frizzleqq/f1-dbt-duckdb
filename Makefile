@@ -15,13 +15,13 @@ endif
 
 .PHONY: requirements
 requirements: .venv  ## Install/refresh Python project requirements
-	$(VENV_BIN)/python -m pip install --upgrade pip
-	$(VENV_BIN)/python -m pip install --editable .[dev]
+	$(VENV_BIN)/python -m pip install --upgrade uv
+	$(VENV_BIN)/uv pip install --editable .[dev]
 	"$(VENV_BIN)/dbt" deps --project-dir="./dbt" --profiles-dir="./dbt"
 
 .PHONY: build
 build:
-	$(VENV_BIN)/python -m pip install build
+	$(VENV_BIN)/uv pip install build
 	$(VENV_BIN)/python -m build
 
 .PHONY: dagster
