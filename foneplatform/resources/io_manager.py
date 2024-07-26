@@ -12,9 +12,7 @@ class LocalCsvIOManager(ConfigurableIOManager):  # type: ignore
     """Translates between Pandas DataFrames and CSVs on the local filesystem."""
 
     base_path: str = Field(description="The base path for the CSVs.")
-    extension: str = Field(
-        description="The file extension for the CSVs.", default="csv"
-    )
+    extension: str = Field(description="The file extension for the CSVs.", default="csv")
 
     @property
     def _log(self) -> logging.Logger:
@@ -60,9 +58,7 @@ class LocalParquetIOManager(ConfigurableIOManager):  # type: ignore
     """Translates between Pandas DataFrames and parquet on the local filesystem."""
 
     base_path: str = Field(description="The base path for the Parquet.")
-    extension: str = Field(
-        description="The file extension for the Parquet.", default="parquet"
-    )
+    extension: str = Field(description="The file extension for the Parquet.", default="parquet")
 
     @property
     def _log(self) -> logging.Logger:

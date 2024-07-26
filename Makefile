@@ -17,6 +17,7 @@ endif
 requirements: .venv  ## Install/refresh Python project requirements
 	$(VENV_BIN)/python -m pip install --upgrade pip
 	$(VENV_BIN)/python -m pip install --editable .[dev]
+	"$(VENV_BIN)/dbt" deps --project-dir="./dbt" --profiles-dir="./dbt"
 
 .PHONY: build
 build:
@@ -30,12 +31,10 @@ dagster:
 
 .PHONY: dbt
 dbt:
-	"$(VENV_BIN)/dbt" deps --project-dir="./dbt" --profiles-dir="./dbt"
 	"$(VENV_BIN)/dbt" build --project-dir="./dbt" --profiles-dir="./dbt"
 
 .PHONY: dbt-parse
 dbt-parse:
-	"$(VENV_BIN)/dbt" deps --project-dir="./dbt" --profiles-dir="./dbt"
 	"$(VENV_BIN)/dbt" parse --project-dir="./dbt" --profiles-dir="./dbt"
 
 .PHONY: doc
@@ -58,8 +57,7 @@ lint:
 .PHONY: lint-sql
 lint-sql:
 	mkdir -p data
-	$(VENV_BIN)/dbt deps --project-dir="./dbt" --profiles-dir="./dbt"
-	$(VENV_BIN)/sqlfluff lint dbt/models
+	$(VENV_BIN)/sqlfluff lint dbt/models --processes 4
 
 .PHONY: load
 load:

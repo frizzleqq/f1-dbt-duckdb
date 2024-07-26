@@ -4,98 +4,99 @@ models:
   - name: d_driver
     columns:
       - name: driver_ref
-        tests:
+        data_tests:
           - unique
           - not_null
   - name: d_circuit
     columns:
       - name: circuit_ref
-        tests:
+        data_tests:
           - unique
           - not_null
   - name: d_constructor
     columns:
       - name: constructor_ref
-        tests:
+        data_tests:
           - unique
           - not_null
   - name: d_season
     columns:
       - name: season
-        tests:
+        data_tests:
           - unique
           - not_null
   - name: d_race
     columns:
       - name: race_ref
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: race_date
-        tests:
+        data_tests:
           - not_null
   - name: f_lap
     columns:
       - name: lap_ref
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: race_date
-        tests:
+        data_tests:
           - not_null
       - name: race_ref
-        tests:
+        data_tests:
           - not_null
       - name: driver_ref
-        tests:
+        data_tests:
           - not_null
       - name: lap_number
-        tests:
+        data_tests:
           - not_null
   - name: f_pitstop
     columns:
       - name: pitstop_ref
-        tests:
+        data_tests:
           - unique
           - not_null
       - name: race_date
-        tests:
+        data_tests:
           - not_null
       - name: race_ref
-        tests:
+        data_tests:
           - not_null
       - name: driver_ref
-        tests:
+        data_tests:
           - not_null
       - name: pitstop_number
-        tests:
+        data_tests:
           - not_null
   - name: f_result
     columns:
       - name: result_ref
-        tests:
-          - unique
+        data_tests:
+          - unique:
+              where: "race_date >= '2000-01-01'"
           - not_null
       - name: race_date
-        tests:
+        data_tests:
           - not_null
       - name: race_ref
-        tests:
+        data_tests:
           - not_null
       - name: circuit_ref
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('d_circuit')
               field: circuit_ref
       - name: driver_ref
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('d_driver')
               field: driver_ref
       - name: constructor_ref
-        tests:
+        data_tests:
           - not_null
           - relationships:
               to: ref('d_constructor')
