@@ -14,13 +14,14 @@ classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
 ]
 
 dependencies = [
   "dagster-dbt>=0.23.0, <0.24.0",
   "dagster-webserver>=1.7.0, <1.8.0",
   "dbt-duckdb>=1.8.0, <1.9.0",
-  "duckdb>=0.7.0",
+  "duckdb>=1.0.0, <2.0.0",
 ]
 
 [project.optional-dependencies]
@@ -52,7 +53,7 @@ module = "ergast,staging,requests.adapters"
 ignore_missing_imports = true
 
 [tool.ruff]
-line-length = 88
+line-length = 100
 
 [tool.ruff.lint]
 select = [
@@ -60,6 +61,7 @@ select = [
   "W", # pycodestyle
   "F", # Pyflakes
   "I", # isort
+  "T201", # print statements
 ]
 ignore = [
   "E501", # Line length is regulated by formatter
