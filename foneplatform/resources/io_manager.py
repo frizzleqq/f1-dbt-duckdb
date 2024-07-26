@@ -12,10 +12,7 @@ def _get_dagster_table_schema(df: duckdb.DuckDBPyRelation):
     """Returns a TableSchema for the given duckdb dataframe."""
 
     return dagster.TableSchema(
-        columns=[
-            dagster.TableColumn(name=col[0], type=col[1])
-            for col in df.description
-        ]
+        columns=[dagster.TableColumn(name=col[0], type=col[1]) for col in df.description]
     )
 
 
