@@ -1,7 +1,10 @@
 import io
 import tempfile
+import time
+import urllib
 import urllib.request
 import zipfile
+from http.client import HTTPMessage
 from pathlib import Path
 
 import dagster
@@ -25,13 +28,28 @@ ergast_tables = {
 }
 
 
+def url_retrieve(
+    url: str, filename: Path, retries: int = 1, retry_delay=3
+) -> tuple[str, HTTPMessage]:
+    """Download a file from a URL to a local file, with retries."""
+    for attempt in range(1 + retries):
+        try:
+            return urllib.request.urlretrieve(url, filename)
+        except urllib.error.URLError as e:
+            if attempt < retries:
+                time.sleep(retry_delay)
+            else:
+                raise e
+    raise ValueError(f"retries must be a non-negative integer, got {retries}")
+
+
 @dagster.multi_asset(outs=ergast_tables, can_subset=True, compute_kind="Python")
 def download_ergast_image(context: dagster.AssetExecutionContext):
     db_con = duckdb.connect(":memory:")
     with tempfile.TemporaryDirectory() as tmpdirname:
         tmp_path = Path(tmpdirname)
         zip_path = tmp_path / "f1db_csv.zip"
-        urllib.request.urlretrieve("http://ergast.com/downloads/f1db_csv.zip", zip_path)
+        url_retrieve("http://ergast.com/downloads/f1db_csv.zip", zip_path)
         with zipfile.ZipFile(zip_path, "r") as zip:
             for table in context.op_execution_context.selected_output_names:
                 with zip.open(f"{table}.csv", "r") as f:
