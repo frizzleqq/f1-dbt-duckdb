@@ -8,6 +8,14 @@ from dagster._core.definitions.metadata import MetadataValue
 from pydantic import Field
 
 
+def _get_dagster_table_schema(df: duckdb.DuckDBPyRelation):
+    """Returns a TableSchema for the given duckdb dataframe."""
+
+    return dagster.TableSchema(
+        columns=[dagster.TableColumn(name=col[0], type=col[1]) for col in df.description]
+    )
+
+
 class LocalCsvIOManager(ConfigurableIOManager):  # type: ignore
     """Translates between Pandas DataFrames and CSVs on the local filesystem."""
 
@@ -31,13 +39,10 @@ class LocalCsvIOManager(ConfigurableIOManager):  # type: ignore
 
         context.add_output_metadata(
             {
-                "Rows": MetadataValue.int(df.count("*").fetchall()[0]),
-                "Path": MetadataValue.path(fpath),
-                # "Sample": MetadataValue.md(df.head(5).to_markdown()),
-                "Resolved version": MetadataValue.text(context.version),
-                # "Schema": MetadataValue.table_schema(
-                #     self.get_schema(context.dagster_type)
-                # ),
+                "dagster/row_count": MetadataValue.int(df.count("*").fetchall()[0]),
+                "path": MetadataValue.path(fpath),
+                # "sample": MetadataValue.md(df.head(5).to_markdown()),
+                "dagster/column_schema": _get_dagster_table_schema(df),
             }
         )
 
@@ -77,13 +82,10 @@ class LocalParquetIOManager(ConfigurableIOManager):  # type: ignore
 
         context.add_output_metadata(
             {
-                "Rows": MetadataValue.int(df.count("*").fetchall()[0][0]),
-                "Path": MetadataValue.path(fpath),
-                # "Sample": MetadataValue.md(df.display().to_markdown()),
-                "Resolved version": MetadataValue.text(context.version),
-                # "Schema": MetadataValue.table_schema(
-                #     self.get_schema(context.dagster_type)
-                # ),
+                "dagster/row_count": MetadataValue.int(df.count("*").fetchall()[0][0]),
+                "path": MetadataValue.path(fpath),
+                # "sample": MetadataValue.md(df.display().to_markdown()),
+                "dagster/column_schema": _get_dagster_table_schema(df),
             }
         )
 
