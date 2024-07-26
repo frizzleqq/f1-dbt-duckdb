@@ -12,18 +12,18 @@ Cutout of the dagster lineage graph:
 ## Development
 
 * Python >= 3.10 https://www.python.org/downloads/
-* pip >= 21.3 (for editable installs, see [PEP 660](https://peps.python.org/pep-0660/))
-  * `python -m pip install --upgrade pip`
 
 This project uses `pyproject.toml` to describe package metadata
-(see [PEP 621](https://peps.python.org/pep-0621/)).
+(see [PEP 621](https://peps.python.org/pep-0621/)) and [uv](https://github.com/astral-sh/uv)
+to manage dependencies.
 
 ### Setup Virtual environment
 
 Following commands create and activate a virtual environment.
-The `[dev]` also installs development tools.
-The `--editable` makes the CLI script available.
+* The `[dev]` also installs development tools.
+* The `--editable` makes the CLI script available.
 
+Commands:
 * Bash:
     ```bash
     make requirements
@@ -33,15 +33,15 @@ The `--editable` makes the CLI script available.
     ```powershell
     python -m venv .venv
     .venv\Scripts\Activate.ps1
-    python -m pip install --upgrade pip
-    pip install --editable .[dev]
+    python -m pip install --upgrade uv
+    uv pip install --editable .[dev]
     ```
 * Windows CMD:
     ```
     python -m venv .venv
     .venv\Scripts\activate.bat
-    python -m pip install --upgrade pip
-    pip install --editable .[dev]
+    python -m pip install --upgrade uv
+    uv pip install --editable .[dev]
     ```
 
 ### Dagster
