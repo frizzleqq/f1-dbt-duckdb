@@ -7,7 +7,7 @@ Project with
 * Data Source: [Ergast API](http://ergast.com/mrd/)
 
 Cutout of the dagster lineage graph:
-<img src="docs/dagster_lineage.png" alt="alt text" title="dagster-lineage" height="550px">
+![alt text](docs/dagster_lineage.png "dagster lineage")
 
 ## Development
 
