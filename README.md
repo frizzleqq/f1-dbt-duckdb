@@ -7,7 +7,7 @@ Project with
 * Data Source: [Ergast API](http://ergast.com/mrd/)
 
 Cutout of the dagster lineage graph:
-![alt text](docs/dagster_lineage.png "Title")
+<img src="docs/dagster_lineage.png" alt="alt text" title="dagster-lineage" height="550px">
 
 ## Development
 
@@ -69,17 +69,14 @@ dagster job execute -m foneplatform -j ergast_job
 
 ## File Locations
 
-Ideally the environment variable `DATA_DIR` is set to a location where the processed
-F1 data will be located. Dagster uses `.env` to set the path.
-Note that DuckDB is only in-memory.
+Ideally the environment variable `DATA_DIR` is set to a location where both the DuckDB
+database and the F1 data will be located (fallback is "data" within the project directory).
+Dagster uses `.env` to set the path.
 
 The data directory will look like this:
 ```
 data
-├── d_circuit.parquet
-├── d_constructor.parquet
-├── f_result.parquet
-├── ...
+├── f1.duckdb
 └── ergast
     ├── circuits.parquet
     ├── constructors.parquet
@@ -92,7 +89,7 @@ data
 Staging is done by a Dagster Multi-Asset ([./foneplatform/assets/ergast.py](./foneplatform/assets/ergast.py)):
 1. Downloading ZIP of CSV files (http://ergast.com/downloads/f1db_csv.zip)
 1. Read CSV using DuckDB and store the asset-result as Parquet using the `LocalParquetIOManager`
-1. (dbt will create in-memory external tables using the Parquet files)
+1. (dbt will create views on top of external Parquet files)
 
 ## dbt
 

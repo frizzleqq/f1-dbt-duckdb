@@ -22,8 +22,6 @@ vars:
   end_date: '3000-12-31'
 
 models:
-  +post-hook:
-    - "{{ dagster.log_column_level_metadata() }}"
   f1warehouse:
       core:
         +materialized: table

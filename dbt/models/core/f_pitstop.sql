@@ -1,5 +1,3 @@
-{{ config(materialized='external', format='parquet') }}
-
 WITH pitstops AS (
     SELECT *
     FROM {{ ref('ergast_pit_stops') }}

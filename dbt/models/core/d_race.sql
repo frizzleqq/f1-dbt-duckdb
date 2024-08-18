@@ -1,5 +1,3 @@
-{{ config(materialized='external', format='parquet') }}
-
 WITH circuits AS (
     SELECT *
     FROM {{ ref('ergast_circuits') }}

@@ -1,5 +1,3 @@
-{{ config(materialized='external', format='parquet') }}
-
 WITH lap_times AS (
     SELECT *
     FROM {{ ref('ergast_lap_times') }}

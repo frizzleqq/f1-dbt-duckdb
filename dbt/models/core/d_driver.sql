@@ -1,5 +1,3 @@
-{{ config(materialized='external', format='parquet') }}
-
 WITH drivers AS (
     SELECT *
     FROM {{ ref('ergast_drivers') }}

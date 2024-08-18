@@ -1,5 +1,3 @@
-{{ config(materialized='external', format='parquet') }}
-
 WITH results AS (
     SELECT *
     FROM {{ ref('ergast_results') }}

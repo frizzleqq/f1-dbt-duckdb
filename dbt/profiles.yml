@@ -5,7 +5,7 @@ f1warehouse_duckdb:
       type: duckdb
       schema: public
       threads: 4
-      path: ":memory:"
+      path: "{{ env_var('DATA_DIR', 'data') }}/f1.duckdb"
       extensions:
         - parquet
       external_root: "{{ env_var('DATA_DIR', 'data') }}"
@@ -15,7 +15,7 @@ f1warehouse_duckdb:
       type: duckdb
       schema: public
       threads: 4
-      path: ":memory:"
+      path: "{{ env_var('DATA_DIR', '../data') }}/f1.duckdb"
       extensions:
         - parquet
       external_root: "{{ env_var('DATA_DIR', '../data') }}"

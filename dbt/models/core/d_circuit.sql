@@ -1,5 +1,3 @@
-{{ config(materialized='external', format='parquet') }}
-
 SELECT
     circuitid AS circuit_id
     , circuitref AS circuit_ref

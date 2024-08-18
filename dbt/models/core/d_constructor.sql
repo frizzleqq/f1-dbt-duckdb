@@ -1,5 +1,3 @@
-{{ config(materialized='external', format='parquet') }}
-
 SELECT
     constructorid AS constructor_id
     , constructorref AS constructor_ref
