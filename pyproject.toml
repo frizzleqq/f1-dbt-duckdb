@@ -28,16 +28,14 @@ dependencies = [
 dev = [
   # development & testing tools
   "mypy>=1.0.0, <2.0.0",
-  "ruff>=0.5.0, <0.6.0",
+  "ruff>=0.5.0",
   "sqlfluff-templater-dbt>=3.0.0, <4.0.0",
+  "build>=1.0.0, <2.0.0",
 ]
 
-[tool.dagster]
-module_name = "foneplatform"
-code_location_name = "foneplatform"
-
-[tool.setuptools]
-packages = ["foneplatform", "dbt"]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["foneplatform*", "dbt*"]
 
 [tool.setuptools.package-data]
 dbt = [
@@ -47,6 +45,10 @@ dbt = [
   "models/export/*",
   "models/stage/ergast/*",
 ]
+
+[tool.dagster]
+module_name = "foneplatform"
+code_location_name = "foneplatform"
 
 [[tool.mypy.overrides]]
 module = "ergast,staging,requests.adapters"

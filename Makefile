@@ -21,7 +21,6 @@ requirements: .venv  ## Install/refresh Python project requirements
 
 .PHONY: build
 build:
-	$(VENV_BIN)/uv pip install build
 	$(VENV_BIN)/python -m build
 
 .PHONY: dagster
