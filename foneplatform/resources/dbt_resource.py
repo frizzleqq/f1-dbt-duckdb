@@ -9,8 +9,9 @@ dbt_project = DbtProject(project_dir=Path(__file__).parent.parent.parent.joinpat
 
 def get_dbt_executable() -> str:
     """
-    If we're in a virtualenv, we want to use the dbt executable in the virtualenv.
     Returns the path to the dbt executable.
+
+    If we're in a virtualenv, we want to use the dbt executable in the virtualenv.
     """
     if sys.prefix != sys.base_prefix:
         if os.name == "nt":
@@ -24,7 +25,8 @@ def get_dbt_executable() -> str:
 def get_dbt_resource() -> DbtCliResource:
     """
     Returns a DbtCliResource.
-    If DAGSTER_DBT_PARSE_PROJECT_ON_LOAD is set, a manifest will be created at run time.
+
+    On 'dagster dev', a manifest will be created at run time.
     """
     dbt_resource = DbtCliResource(
         project_dir=dbt_project,
