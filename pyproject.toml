@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "f1dbtduckdb"
-version = "0.5.0"
+version = "0.6.0"
 description = "Experimenting with dbt/DuckDB using Ergast API as main source"
 readme = "README.md"
 requires-python = ">= 3.10"
@@ -18,9 +18,9 @@ classifiers = [
 ]
 
 dependencies = [
-  "dagster-dbt>=0.23.0, <0.24.0",
-  "dagster-webserver>=1.7.0, <1.8.0",
-  "dbt-duckdb>=1.8.0, <1.9.0",
+  "dagster-dbt>=0.23.0",
+  "dagster-webserver>=1.7.0, <1.10.0",
+  "dbt-duckdb>=1.8.0, <1.10.0",
   "duckdb>=1.0.0, <2.0.0",
 ]
 
@@ -28,16 +28,14 @@ dependencies = [
 dev = [
   # development & testing tools
   "mypy>=1.0.0, <2.0.0",
-  "ruff>=0.5.0, <0.6.0",
+  "ruff>=0.5.0",
   "sqlfluff-templater-dbt>=3.0.0, <4.0.0",
+  "build>=1.0.0, <2.0.0",
 ]
 
-[tool.dagster]
-module_name = "foneplatform"
-code_location_name = "foneplatform"
-
-[tool.setuptools]
-packages = ["foneplatform", "dbt"]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["foneplatform*", "dbt*"]
 
 [tool.setuptools.package-data]
 dbt = [
@@ -47,6 +45,10 @@ dbt = [
   "models/export/*",
   "models/stage/ergast/*",
 ]
+
+[tool.dagster]
+module_name = "foneplatform"
+code_location_name = "foneplatform"
 
 [[tool.mypy.overrides]]
 module = "ergast,staging,requests.adapters"
