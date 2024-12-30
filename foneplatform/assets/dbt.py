@@ -6,7 +6,7 @@ from dagster_dbt import (
     dbt_assets,
 )
 
-from ..resources.dbt_resource import DBT_MANIFEST_PATH
+from ..resources.dbt_resource import dbt_project
 
 
 class DbtConfig(Config):  # type: ignore
@@ -14,7 +14,7 @@ class DbtConfig(Config):  # type: ignore
 
 
 @dbt_assets(
-    manifest=DBT_MANIFEST_PATH,
+    manifest=dbt_project.manifest_path,
     dagster_dbt_translator=DagsterDbtTranslator(
         settings=DagsterDbtTranslatorSettings(enable_asset_checks=True)
     ),
