@@ -18,6 +18,7 @@ classifiers = [
 ]
 
 dependencies = [
+  "dagster-duckdb>=0.23.0",
   "dagster-dbt>=0.23.0",
   "dagster-webserver>=1.7.0, <1.10.0",
   "dbt-duckdb>=1.8.0, <1.10.0",
