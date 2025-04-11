@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools >= 77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -20,9 +20,9 @@ classifiers = [
 dependencies = [
   "dagster-duckdb>=0.23.0",
   "dagster-dbt>=0.23.0",
-  "dagster-webserver>=1.7.0, <1.10.0",
-  "dbt-duckdb>=1.8.0, <1.10.0",
-  "duckdb>=1.0.0, <2.0.0",
+  "dagster-webserver>=1.7.0,<2.0.0",
+  "dbt-duckdb>=1.8.0,<2.0.0",
+  "duckdb>=1.0.0,<2.0.0",
 ]
 
 [project.optional-dependencies]

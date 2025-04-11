@@ -47,7 +47,7 @@ def url_retrieve(
     raise ValueError(f"retries must be a non-negative integer, got {retries}")
 
 
-@dagster.multi_asset(outs=ergast_tables, can_subset=True, compute_kind="Python")
+@dagster.multi_asset(outs=ergast_tables, can_subset=True, compute_kind="DuckDB")
 def download_ergast_image(context: dagster.AssetExecutionContext, duckdb_resource: DuckDBResource):
     with duckdb_resource.get_connection() as db_con:
         with tempfile.TemporaryDirectory() as tmpdirname:

@@ -21,4 +21,6 @@ class DbtConfig(Config):  # type: ignore
 )
 def f1warehouse_dbt_assets(context: AssetExecutionContext, dbt: DbtCliResource, config: DbtConfig):
     args = ["build", "--full-refresh"] if config.full_refresh else ["build"]
-    yield from dbt.cli(args, context=context).stream().fetch_column_metadata().fetch_row_counts()
+    # fetch-metadata does not work with motherduck
+    # yield from dbt.cli(args, context=context).stream().fetch_column_metadata().fetch_row_counts()
+    yield from dbt.cli(args, context=context).stream()

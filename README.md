@@ -46,7 +46,7 @@ Start local dagster server
 dagster dev
 ```
 
-#### Dagster CLI
+### Dagster CLI
 
 Launch dagster job without
 ```bash
@@ -60,29 +60,15 @@ dagster job execute -m foneplatform -j ergast_job
 * SQL linting/formatting: `sqlfluff`
 
 
-## File Locations
+## Environments
 
-Ideally the environment variable `DATA_DIR` is set to a location where both the DuckDB
-database and the F1 data will be located (fallback is "data" within the project directory).
-Dagster uses `.env` to set the path.
+Based on the environment variable `ENVIRONMENT` we do:
 
-The data directory will look like this:
-```
-data
-├── f1.duckdb
-└── ergast
-    ├── circuits.parquet
-    ├── constructors.parquet
-    ├── drivers.parquet
-    ...
-```
+* `dev`: Locally a `f1.duckdb` database will be created within the `DATA_DIR` (defaults to "data" within project directory)
+* `md`: Connects to MotherDuck to store the `f1` database using the `MOTHERDUCK_TOKEN`
 
-### Staging:
+Use the `.env` file to set environment variables
 
-Staging is done by a Dagster Multi-Asset ([./foneplatform/assets/ergast.py](./foneplatform/assets/ergast.py)):
-1. Downloading ZIP of CSV files (http://ergast.com/downloads/f1db_csv.zip)
-1. Read CSV using DuckDB and store the asset-result as Parquet using the `LocalParquetIOManager`
-1. (dbt will create views on top of external Parquet files)
 
 ## dbt
 
@@ -108,3 +94,10 @@ Run SQL linter on dbt models:
 ```
 sqlfluff lint ./dbt/models/core
 ```
+
+## Staging
+
+Staging is done by a Dagster Multi-Asset ([./foneplatform/assets/ergast.py](./foneplatform/assets/ergast.py)):
+1. Downloading ZIP of CSV files (http://ergast.com/downloads/f1db_csv.zip)
+1. Read CSV using DuckDB and store the asset-result in DuckDB using the `DuckDBDuckDBIOManager`
+1. dbt will create models in the same DuckDB database
