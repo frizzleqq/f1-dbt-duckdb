@@ -3,8 +3,6 @@ version: 2
 sources:
   - name: ergast
     schema: stage_ergast
-    meta:
-      external_location: "{{ env_var('DATA_DIR', 'data') }}/ergast/{name}.parquet"
     tables:
       - name: circuits
       - name: constructor_results

@@ -1,5 +1,5 @@
 f1warehouse_duckdb:
-  target: "{{ env_var('DBT_ENVIRONMENT', 'dev') }}"
+  target: "{{ env_var('ENVIRONMENT', 'dev') }}"
   outputs:
     dev:
       type: duckdb

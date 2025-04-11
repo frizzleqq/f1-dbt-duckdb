@@ -8,7 +8,7 @@ from http.client import HTTPMessage
 from pathlib import Path
 
 import dagster
-import duckdb
+from dagster_duckdb import DuckDBResource
 
 ergast_tables = {
     "circuits": dagster.AssetOut(is_required=False),
@@ -44,22 +44,23 @@ def url_retrieve(
 
 
 @dagster.multi_asset(outs=ergast_tables, can_subset=True, compute_kind="Python")
-def download_ergast_image(context: dagster.AssetExecutionContext):
-    db_con = duckdb.connect(":memory:")
-    with tempfile.TemporaryDirectory() as tmpdirname:
-        tmp_path = Path(tmpdirname)
-        zip_path = tmp_path / "f1db_csv.zip"
-        url_retrieve("http://ergast.com/downloads/f1db_csv.zip", zip_path)
-        with zipfile.ZipFile(zip_path, "r") as zip:
-            for table in context.op_execution_context.selected_output_names:
-                with zip.open(f"{table}.csv", "r") as f:
-                    df = db_con.read_csv(
-                        io.TextIOWrapper(f, encoding="utf-8"),
-                        header=True,
-                        delimiter=",",
-                        encoding="utf-8",
-                        quotechar='"',
-                        na_values=r"\N",
-                    )
-                    yield dagster.Output(df, output_name=table)
-    db_con.close()
+def download_ergast_image(context: dagster.AssetExecutionContext, duckdb_resource: DuckDBResource):
+    context.add_output_metadata({"dagster/uri": "http://ergast.com/downloads/f1db_csv.zip"})
+
+    with duckdb_resource.get_connection() as db_con:
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            tmp_path = Path(tmpdirname)
+            zip_path = tmp_path / "f1db_csv.zip"
+            url_retrieve("http://ergast.com/downloads/f1db_csv.zip", zip_path)
+            with zipfile.ZipFile(zip_path, "r") as zip:
+                for table in context.op_execution_context.selected_output_names:
+                    with zip.open(f"{table}.csv", "r") as f:
+                        df = db_con.read_csv(
+                            io.TextIOWrapper(f, encoding="utf-8"),
+                            header=True,
+                            delimiter=",",
+                            encoding="utf-8",
+                            quotechar='"',
+                            na_values=r"\N",
+                        )
+                        yield dagster.Output(df, output_name=table)
