@@ -4,38 +4,54 @@ Project with
 * Orchestration: [dagster](https://docs.dagster.io/)
 * Transformation & Testing: [dbt](https://docs.getdbt.com/)
 * Processing Engine & Database: [DuckDB](https://duckdb.org/)
-* Data Source: [Ergast API](http://ergast.com/mrd/)
+* Data Source: [Ergast API](http://ergast.com/mrd/) (Ergast is no longer being updated post 2024 season)
 
 Cutout of the dagster lineage graph:
 ![alt text](docs/dagster_lineage.png "dagster lineage")
+
+Example data in MotherDuck:
+![alt text](docs/motherduck.png "Motherduck")
 
 ## Development
 
 * Python >= 3.10 https://www.python.org/downloads/
 
-This project uses `pyproject.toml` to describe package metadata
-(see [PEP 621](https://peps.python.org/pep-0621/)) and [uv](https://github.com/astral-sh/uv)
-to manage dependencies.
+This project uses `pyproject.toml` to describe package metadata and [uv](https://github.com/astral-sh/uv) to manage dependencies.
 
-### Setup Virtual environment
+### Install uv
 
-Following commands create and activate a virtual environment.
+https://docs.astral.sh/uv/getting-started/installation/
+
+### Setup environment
+
+Create virtual environment
+```bash
+uv venv
+```
+
+Following command installs Python dependencies:
 * The `[dev]` also installs development tools.
 * The `--editable` makes the CLI script available.
+```bash
+uv pip install --editable .[dev]
+```
 
-Commands:
-* Bash:
-    ```bash
-    make requirements
-    source .venv/bin/activate
-    ```
-* Windows:
-    ```powershell
-    python -m venv .venv
-    .venv\Scripts\activate
-    python -m pip install --upgrade uv
-    uv pip install --editable .[dev]
-    ```
+Sync `uv` environment:
+```bash
+uv sync --extra dev
+```
+
+### Activate virtual environment
+
+Bash:
+```bash
+source .venv/bin/activate
+```
+
+Windows:
+```powershell
+.venv\Scripts\activate
+```
 
 ### Dagster
 
@@ -46,7 +62,7 @@ Start local dagster server
 dagster dev
 ```
 
-#### Dagster CLI
+### Dagster CLI
 
 Launch dagster job without
 ```bash
@@ -60,29 +76,15 @@ dagster job execute -m foneplatform -j ergast_job
 * SQL linting/formatting: `sqlfluff`
 
 
-## File Locations
+## Environments
 
-Ideally the environment variable `DATA_DIR` is set to a location where both the DuckDB
-database and the F1 data will be located (fallback is "data" within the project directory).
-Dagster uses `.env` to set the path.
+Based on the environment variable `ENVIRONMENT` we do:
 
-The data directory will look like this:
-```
-data
-├── f1.duckdb
-└── ergast
-    ├── circuits.parquet
-    ├── constructors.parquet
-    ├── drivers.parquet
-    ...
-```
+* `dev`: Locally a `f1.duckdb` database will be created within the `DATA_DIR` (defaults to "data" within project directory)
+* `md`: Connects to MotherDuck to store the `f1` database using the `MOTHERDUCK_TOKEN`
 
-### Staging:
+Use the `.env` file to set environment variables
 
-Staging is done by a Dagster Multi-Asset ([./foneplatform/assets/ergast.py](./foneplatform/assets/ergast.py)):
-1. Downloading ZIP of CSV files (http://ergast.com/downloads/f1db_csv.zip)
-1. Read CSV using DuckDB and store the asset-result as Parquet using the `LocalParquetIOManager`
-1. (dbt will create views on top of external Parquet files)
 
 ## dbt
 
@@ -108,3 +110,10 @@ Run SQL linter on dbt models:
 ```
 sqlfluff lint ./dbt/models/core
 ```
+
+## Staging
+
+Staging is done by a Dagster Multi-Asset ([./foneplatform/assets/ergast.py](./foneplatform/assets/ergast.py)):
+1. Downloading ZIP of CSV files (http://ergast.com/downloads/f1db_csv.zip)
+1. Read CSV using DuckDB and store the asset-result in DuckDB using the `DuckDBDuckDBIOManager`
+1. dbt will create models in the same DuckDB database

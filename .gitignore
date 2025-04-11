@@ -19,7 +19,11 @@ dbt_packages/
 logs/
 target/
 
+# dagster
+.tmp*
+
 # misc
+.env
 airflow/
 data/
 tmp*/
