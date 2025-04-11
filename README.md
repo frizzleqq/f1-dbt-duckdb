@@ -4,7 +4,7 @@ Project with
 * Orchestration: [dagster](https://docs.dagster.io/)
 * Transformation & Testing: [dbt](https://docs.getdbt.com/)
 * Processing Engine & Database: [DuckDB](https://duckdb.org/)
-* Data Source: [Ergast API](http://ergast.com/mrd/)
+* Data Source: [Ergast API](http://ergast.com/mrd/) (Ergast is no longer being updated post 2024 season)
 
 Cutout of the dagster lineage graph:
 ![alt text](docs/dagster_lineage.png "dagster lineage")
