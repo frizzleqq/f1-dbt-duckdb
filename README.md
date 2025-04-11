@@ -13,29 +13,42 @@ Cutout of the dagster lineage graph:
 
 * Python >= 3.10 https://www.python.org/downloads/
 
-This project uses `pyproject.toml` to describe package metadata
-(see [PEP 621](https://peps.python.org/pep-0621/)) and [uv](https://github.com/astral-sh/uv)
-to manage dependencies.
+This project uses `pyproject.toml` to describe package metadata and [uv](https://github.com/astral-sh/uv) to manage dependencies.
 
-### Setup Virtual environment
+### Install uv
 
-Following commands create and activate a virtual environment.
+https://docs.astral.sh/uv/getting-started/installation/
+
+### Setup environment
+
+Create virtual environment
+```bash
+uv venv
+```
+
+Following command installs Python dependencies:
 * The `[dev]` also installs development tools.
 * The `--editable` makes the CLI script available.
+```bash
+uv pip install --editable .[dev]
+```
 
-Commands:
-* Bash:
-    ```bash
-    make requirements
-    source .venv/bin/activate
-    ```
-* Windows:
-    ```powershell
-    python -m venv .venv
-    .venv\Scripts\activate
-    python -m pip install --upgrade uv
-    uv pip install --editable .[dev]
-    ```
+Sync `uv` environment:
+```bash
+uv sync --extra dev
+```
+
+### Activate virtual environment
+
+Bash:
+```bash
+source .venv/bin/activate
+```
+
+Windows:
+```powershell
+.venv\Scripts\activate
+```
 
 ### Dagster
 
