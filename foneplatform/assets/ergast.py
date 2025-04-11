@@ -10,21 +10,25 @@ from pathlib import Path
 import dagster
 from dagster_duckdb import DuckDBResource
 
+ERGAST_URI = "http://ergast.com/downloads/f1db_csv.zip"
+
+_metadata = {"dagster/uri": ERGAST_URI}
+
 ergast_tables = {
-    "circuits": dagster.AssetOut(is_required=False),
-    "constructor_results": dagster.AssetOut(is_required=False),
-    "constructor_standings": dagster.AssetOut(is_required=False),
-    "constructors": dagster.AssetOut(is_required=False),
-    "driver_standings": dagster.AssetOut(is_required=False),
-    "drivers": dagster.AssetOut(is_required=False),
-    "lap_times": dagster.AssetOut(is_required=False),
-    "pit_stops": dagster.AssetOut(is_required=False),
-    "qualifying": dagster.AssetOut(is_required=False),
-    "races": dagster.AssetOut(is_required=False),
-    "results": dagster.AssetOut(is_required=False),
-    "seasons": dagster.AssetOut(is_required=False),
-    "sprint_results": dagster.AssetOut(is_required=False),
-    "status": dagster.AssetOut(is_required=False),
+    "circuits": dagster.AssetOut(is_required=False, metadata=_metadata),
+    "constructor_results": dagster.AssetOut(is_required=False, metadata=_metadata),
+    "constructor_standings": dagster.AssetOut(is_required=False, metadata=_metadata),
+    "constructors": dagster.AssetOut(is_required=False, metadata=_metadata),
+    "driver_standings": dagster.AssetOut(is_required=False, metadata=_metadata),
+    "drivers": dagster.AssetOut(is_required=False, metadata=_metadata),
+    "lap_times": dagster.AssetOut(is_required=False, metadata=_metadata),
+    "pit_stops": dagster.AssetOut(is_required=False, metadata=_metadata),
+    "qualifying": dagster.AssetOut(is_required=False, metadata=_metadata),
+    "races": dagster.AssetOut(is_required=False, metadata=_metadata),
+    "results": dagster.AssetOut(is_required=False, metadata=_metadata),
+    "seasons": dagster.AssetOut(is_required=False, metadata=_metadata),
+    "sprint_results": dagster.AssetOut(is_required=False, metadata=_metadata),
+    "status": dagster.AssetOut(is_required=False, metadata=_metadata),
 }
 
 
@@ -45,13 +49,11 @@ def url_retrieve(
 
 @dagster.multi_asset(outs=ergast_tables, can_subset=True, compute_kind="Python")
 def download_ergast_image(context: dagster.AssetExecutionContext, duckdb_resource: DuckDBResource):
-    context.add_output_metadata({"dagster/uri": "http://ergast.com/downloads/f1db_csv.zip"})
-
     with duckdb_resource.get_connection() as db_con:
         with tempfile.TemporaryDirectory() as tmpdirname:
             tmp_path = Path(tmpdirname)
             zip_path = tmp_path / "f1db_csv.zip"
-            url_retrieve("http://ergast.com/downloads/f1db_csv.zip", zip_path)
+            url_retrieve(ERGAST_URI, zip_path)
             with zipfile.ZipFile(zip_path, "r") as zip:
                 for table in context.op_execution_context.selected_output_names:
                     with zip.open(f"{table}.csv", "r") as f:

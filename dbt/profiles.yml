@@ -6,9 +6,6 @@ f1warehouse_duckdb:
       schema: public
       threads: 4
       path: "{{ env_var('DATA_DIR', 'data') }}/f1.duckdb"
-      extensions:
-        - parquet
-      external_root: "{{ env_var('DATA_DIR', 'data') }}"
     dev-sqlfluff:
       # sqlfluff relative location starts within dbt directory (unlike dbt),
       # so to make it work without setting DATA_DIR we have another target.
@@ -16,6 +13,8 @@ f1warehouse_duckdb:
       schema: public
       threads: 4
       path: "{{ env_var('DATA_DIR', '../data') }}/f1.duckdb"
-      extensions:
-        - parquet
-      external_root: "{{ env_var('DATA_DIR', '../data') }}"
+    prod:
+      type: duckdb
+      schema: public
+      threads: 4
+      path: "md:f1?motherduck_token={{env_var('MOTHERDUCK_TOKEN')}}"

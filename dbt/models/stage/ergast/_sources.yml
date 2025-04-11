@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: ergast
-    schema: stage_ergast
+    schema: ergast
     tables:
       - name: circuits
       - name: constructor_results
