@@ -9,6 +9,9 @@ Project with
 Cutout of the dagster lineage graph:
 ![alt text](docs/dagster_lineage.png "dagster lineage")
 
+Example data in MotherDuck:
+![alt text](docs/motherduck.png "Motherduck")
+
 ## Development
 
 * Python >= 3.10 https://www.python.org/downloads/
