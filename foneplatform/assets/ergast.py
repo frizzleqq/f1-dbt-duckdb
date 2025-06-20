@@ -10,7 +10,9 @@ from pathlib import Path
 import dagster
 from dagster_duckdb import DuckDBResource
 
-ERGAST_URI = "http://ergast.com/downloads/f1db_csv.zip"
+# ERGAST is no longer available, so we use a mirror until we change to a new source
+# ERGAST_URI = "http://ergast.com/downloads/f1db_csv.zip"
+ERGAST_URI = "https://github.com/frizzleqq/f1-dbt-duckdb/blob/main/f1db/f1db_csv.zip?raw=true"
 
 _metadata = {"dagster/uri": ERGAST_URI}
 

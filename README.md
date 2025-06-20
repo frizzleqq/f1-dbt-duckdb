@@ -56,6 +56,7 @@ Windows:
 ### Dagster
 
 Dagster uses environment variables located in [.env](.env).
+Please copy the `.env_template` over to `.env` or set the `DATA_DIR` environment variable.
 
 Start local dagster server
 ```bash
